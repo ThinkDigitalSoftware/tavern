@@ -13,6 +13,7 @@ dependencies:
   bloc: ^0.14.2
   flutter_bloc: ^0.15.1
   floating_search_bar: ^0.2.0
+  groovin_material_icons: ^1.1.6
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

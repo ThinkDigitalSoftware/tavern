@@ -1,30 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'screens/home/home.dart';
 
-void main() => runApp(
-      MaterialApp(
-        theme: ThemeData(
-            accentColor: Color(0xFF38bffc),
-            appBarTheme:
-                AppBarTheme(iconTheme: IconThemeData(color: Colors.white))),
-        home: Home(),
-      ),
-    );
+void main() => runApp(PubDevClientApp());
 
-class Home extends StatelessWidget {
+class PubDevClientApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFF122030),
-        title: Image.asset('images/dart-packages-white.png'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {},
-          )
-        ],
+    return MaterialApp(
+      theme: ThemeData(
+        accentColor: Color(0xFF38bffc),
+        appBarTheme: AppBarTheme(
+          iconTheme: IconThemeData(color: Colors.white),
+        ),
       ),
+      home: Home(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
