@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:floating_search_bar/floating_search_bar.dart';
-import 'package:groovin_material_icons/groovin_material_icons.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   TextEditingController _searchController = TextEditingController();
 
   @override
