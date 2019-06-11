@@ -8,26 +8,37 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.only(top: 8),
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverFloatingBar(
-              leading: Icon(
-                GroovinMaterialIcons.dart_logo,
-                color: Theme.of(context).accentColor, // change to specific dart color
-              ),
-              title: TextField(
-                controller: _searchController,
-                onChanged: (searchQuery) {},
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Search pub.dev',
-                ),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            backgroundColor: Color(0xFF122030),
+            title: Image.asset('images/dart-packages-white.png'),
+          ),
+          SliverFloatingBar(
+            floating: true,
+            elevation: 4,
+            title: TextField(
+              controller: _searchController,
+              onChanged: (searchQuery) {},
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Search Dart packages',
               ),
             ),
-          ],
-        ),
+            trailing: IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {}, //TODO: launch search with query
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              //TODO: return 'Top Packages'
+              return ListTile(
+                title: Text('$index'),
+              );
+            })
+          ),
+        ],
       ),
     );
   }
