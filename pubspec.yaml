@@ -1,7 +1,7 @@
 name: pub_dev_client
 description: An open-source pub.dev client for searching and subscribing to packages
 
-version: 0.1.1
+version: 0.1.2
 
 environment:
   sdk: ">=2.1.0 <3.0.0"

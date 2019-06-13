@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:floating_search_bar/floating_search_bar.dart';
+import 'package:flutter/material.dart';
+import 'package:pub_client/pub_client.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -32,7 +33,11 @@ class _HomeState extends State<Home> {
             ),
             trailing: IconButton(
               icon: Icon(Icons.search),
-              onPressed: () async {}, //TODO: launch search with query
+              onPressed: () async {
+                PubHtmlParsingClient client = PubHtmlParsingClient();
+                var result = await client.get(_searchController.text);
+                print(result);
+              }, //TODO: launch search with query
             ),
           ),
           SliverList(delegate: SliverChildBuilderDelegate((context, index) {
