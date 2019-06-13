@@ -12,14 +12,15 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFF122030),
+        title: Image.asset('images/dart-packages-white.png'),
+      ),
       body: CustomScrollView(
         slivers: <Widget>[
-          SliverAppBar(
-            backgroundColor: Color(0xFF122030),
-            title: Image.asset('images/dart-packages-white.png'),
-          ),
           SliverFloatingBar(
             floating: true,
+            snap: true,
             elevation: 4,
             title: TextField(
               controller: _searchController,
@@ -31,17 +32,15 @@ class _HomeState extends State<Home> {
             ),
             trailing: IconButton(
               icon: Icon(Icons.search),
-              onPressed: () {}, //TODO: launch search with query
+              onPressed: () async {}, //TODO: launch search with query
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate((context, index) {
-              //TODO: return 'Top Packages'
-              return ListTile(
-                title: Text('$index'),
-              );
-            })
-          ),
+          SliverList(delegate: SliverChildBuilderDelegate((context, index) {
+            //TODO: return 'Top Packages'
+            return ListTile(
+              title: Text('$index'),
+            );
+          })),
         ],
       ),
     );
