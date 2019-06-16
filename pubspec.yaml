@@ -4,7 +4,7 @@ description: An open-source pub.dev client for searching and subscribing to pack
 version: 0.1.2
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -16,7 +16,8 @@ dependencies:
   groovin_material_icons: ^1.1.6
   pub_client:
       git: https://github.com/ThinkDigitalSoftware/pub_client.git
-
+  flutter_markdown: ^0.2.0
+  html2md: ^0.3.1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2

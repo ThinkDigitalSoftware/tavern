@@ -40,12 +40,16 @@ class _HomeState extends State<Home> {
               }, //TODO: launch search with query
             ),
           ),
-          SliverList(delegate: SliverChildBuilderDelegate((context, index) {
-            //TODO: return 'Top Packages'
-            return ListTile(
-              title: Text('$index'),
-            );
-          })),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                //TODO: return 'Top Packages'
+                return ListTile(
+                  title: Text('$index'),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
