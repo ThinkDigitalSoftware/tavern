@@ -1,7 +1,8 @@
 name: pub_dev_client
 description: An open-source pub.dev client for searching and subscribing to packages
-
-version: 0.1.2
+authors:
+  - Jonathan White <jwhite@thinkdigital.software>
+version: 0.2.0
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -18,8 +19,6 @@ dependencies:
       git: https://github.com/ThinkDigitalSoftware/pub_client.git
   flutter_markdown: ^0.2.0
   html2md: ^0.3.1
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
 
 dev_dependencies:

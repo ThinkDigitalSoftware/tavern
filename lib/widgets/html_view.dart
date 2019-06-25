@@ -12,6 +12,18 @@ class HtmlView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var string =
+    '''[![Go to the documentation of bloc 0.10.0](/static/img/ic_drive_document_black_24dp.svg)](/documentation/bloc/0.10.0/Go to the documentation of bloc 0.10.0) 
+
+  [![Download bloc 0.10.0 archive](/static/img/ic_get_app_black_24dp.svg)](https://storage.googleapis.com/pub-packages/packages/bloc-0.10.0.tar.gzDownload bloc 0.10.0 archive) ''';
+    string.splitMapJoin(RegExp(r'\(.*\)[^\)]'), onMatch: (match) {
+      var matchText = match.group(0);
+
+      if (!matchText.startsWith("(https://")) {
+        print("fix this one");
+        print(matchText);
+      }
+    });
     return Markdown(
       data: markdown,
     );
