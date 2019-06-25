@@ -1,6 +1,7 @@
 import 'package:floating_search_bar/floating_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:pub_client/pub_client.dart';
+import 'package:material_segmented_control/material_segmented_control.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -11,6 +12,14 @@ class _HomeState extends State<Home> {
   TextEditingController _searchController = TextEditingController();
   PubClient _client = PubClient();
   PubHtmlParsingClient _htmlParsingClient = PubHtmlParsingClient();
+
+  Map<int, Widget> _children() => {
+    0: Text('Flutter'),
+    1: Text('Web'),
+    2: Text('All'),
+  };
+
+  int _currentSelection = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +42,7 @@ class _HomeState extends State<Home> {
                 SliverFloatingBar(
                   floating: true,
                   snap: true,
-                  elevation: 4,
+                  elevation: 2,
                   title: TextField(
                     controller: _searchController,
                     onChanged: (searchQuery) {},
@@ -51,6 +60,24 @@ class _HomeState extends State<Home> {
                     }, //TODO: launch search with query
                   ),
                 ),
+                SliverList(delegate: SliverChildListDelegate([
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: MaterialSegmentedControl(
+                      children: _children(),
+                      selectionIndex: _currentSelection,
+                      borderColor: Color.fromRGBO(71, 99, 132, 1),
+                      selectedColor: Theme.of(context).accentColor,
+                      unselectedColor: Colors.white,
+                      borderRadius: 32.0,
+                      onSegmentChosen: (index) {
+                        setState(() {
+                          _currentSelection = index;
+                        });
+                      },
+                    ),
+                  ),
+                ])),
                 SliverList(delegate: SliverChildBuilderDelegate((context, index) {
                   //TODO: return 'Top Packages'
                   return FutureBuilder<FullPackage>(
@@ -73,15 +100,6 @@ class _HomeState extends State<Home> {
                 },
                 childCount: page.packages.length
                 )),
-                /*SliverList(delegate: SliverChildListDelegate([
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text('Page 1'),
-                    ],
-                  ),
-                ])),*/
-
               ],
             );
           }
