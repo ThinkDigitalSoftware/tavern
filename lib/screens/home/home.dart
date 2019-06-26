@@ -5,7 +5,6 @@ import 'package:pub_client/pub_client.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
 import 'package:intl/intl.dart';
-import 'package:pub_dev_client/widgets/default_pacakges_list.dart';
 import 'package:pub_dev_client/widgets/pub_header.dart';
 
 class Home extends StatefulWidget {
@@ -14,6 +13,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
   PubClient _client = PubClient();
   PubHtmlParsingClient _htmlParsingClient = PubHtmlParsingClient();
   Page firstPage;
@@ -51,133 +51,79 @@ class _HomeState extends State<Home> {
             );
           } else {
             final page = snapshot.data;
-            //convertToFullPackagesFromPage(page);
-            //print(packagesFromPage.length);
-            return NestedScrollView(
-              headerSliverBuilder: (context, innerBoxScrolled) {
-                return <Widget>[
-                  SliverToBoxAdapter(
-                    child: PubHeader(),
+            convertToFullPackagesFromPage(page);
+            print(packagesFromPage.length);
+            return Column(
+              children: <Widget>[
+                NestedScrollView(
+                  headerSliverBuilder: (context, innerBoxScrolled) {
+                    return <Widget>[
+                      PubHeader(),
+                    ];
+                  },
+                  body: ListView.builder(
+                    itemCount: packagesFromPage.length,
+                    itemBuilder: (context, index) {
+                      return GroovinExpansionTile(
+                        title: Text(
+                          packagesFromPage[index].name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text(
+                          "v " +
+                          packagesFromPage[index].latestVersion.major.toString() +
+                          '.' +
+                          packagesFromPage[index].latestVersion.minor.toString() +
+                          '.' +
+                          packagesFromPage[index].latestVersion.patch.toString() +
+                          ' updated ' +
+                          _dateFormat.format(packagesFromPage[index].dateModified),
+                        ),
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16, right: 16),
+                            child: Text(packagesFromPage[index].description),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16, right: 16),
+                            child: Row(
+                              children: <Widget>[
+                                ...packagesFromPage[index].compatibilityTags.map<Widget>((t) =>
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: RaisedButton.icon(
+                                        icon: Icon(GroovinMaterialIcons.tag),
+                                        label: Text(t),
+                                        disabledColor: Colors.blue[100],
+                                      ),
+                                    )),
+                              ],
+                            ),
+                          ),
+                          ListView.builder(
+                            itemCount: packagesFromPage[index].compatibilityTags.length,
+                            itemBuilder: (context, index) {
+                              return Text(
+                                  packagesFromPage[index].compatibilityTags[index].toString());
+                            },
+                            scrollDirection: Axis.horizontal,
+                          ),
+                        ],
+                        trailing: CircleAvatar(
+                          child: packagesFromPage[index].score == null
+                              ? Text('?')
+                              : Text(packagesFromPage[index].score.toString()),
+                        ),
+                      );
+                    },
                   ),
-                ];
-              },
-              body: ListView.builder(
-                itemCount: 15,
-                itemBuilder: (context, index) {
-                  return MockPackageTile();
-                },
-              ),
-              /*body: DefaultPackagesList(
-                packagesFromPage: packagesFromPage,
-              ),*/
+                ),
+              ],
             );
           }
         },
-      ),
-    );
-  }
-}
-
-
-class MockPackageTile extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return GroovinExpansionTile(
-      title: Text(
-        'mock_package',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      subtitle: Text(
-        "v " +
-            '1' +
-            '.' +
-            '0' +
-            '.' +
-            '0' +
-            ' updated ' +
-            'June 26, 2019',
-      ),
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16),
-          child: Row(
-            children: <Widget>[
-              Text('This is a package description for a mock package'),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: Container(
-                  height: 30,
-                  width: 86,
-                  color: Colors.blue[100],
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8),
-                    child: Row(
-                      children: <Widget>[
-                        Icon(GroovinMaterialIcons.tag, size: 16, color: Colors.black38,),
-                        SizedBox(
-                          width: 6,
-                        ),
-                        Text('Flutter', style: TextStyle(color: Colors.black38),),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: Container(
-                  height: 30,
-                  width: 80,
-                  color: Colors.blue[100],
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8),
-                    child: Row(
-                      children: <Widget>[
-                        Icon(GroovinMaterialIcons.tag, size: 16, color: Colors.black38,),
-                        SizedBox(
-                          width: 6,
-                        ),
-                        Text('Web', style: TextStyle(color: Colors.black38),),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: Container(
-                  height: 30,
-                  width: 72,
-                  color: Colors.blue[100],
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8),
-                    child: Row(
-                      children: <Widget>[
-                        Icon(GroovinMaterialIcons.tag, size: 16, color: Colors.black38,),
-                        SizedBox(
-                          width: 6,
-                        ),
-                        Text('All', style: TextStyle(color: Colors.black38),),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-      trailing: CircleAvatar(
-        child: Text('100'),
       ),
     );
   }
