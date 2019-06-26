@@ -226,10 +226,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: e391a8130c1b8502afa1e67d431f2e7dcaec6ab4
+      resolved-ref: b0232fa87a858a6b788c76c8fe4682928ca62e43
       url: "https://github.com/ThinkDigitalSoftware/pub_client.git"
     source: git
-    version: "3.1.5"
+    version: "3.1.4"
   pub_semver:
     dependency: transitive
     description:

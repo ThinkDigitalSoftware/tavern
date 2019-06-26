@@ -91,14 +91,15 @@ class _HomeState extends State<Home> {
                             child: Row(
                               children: <Widget>[
                                 ...packagesFromPage[index].compatibilityTags.map<Widget>((t) =>
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 8),
-                                      child: RaisedButton.icon(
-                                        icon: Icon(GroovinMaterialIcons.tag),
-                                        label: Text(t),
-                                        disabledColor: Colors.blue[100],
-                                      ),
-                                    )),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: RaisedButton.icon(
+                                      icon: Icon(GroovinMaterialIcons.tag),
+                                      label: Text(t),
+                                      disabledColor: Colors.blue[100],
+
+                                    ),
+                                  )),
                               ],
                             ),
                           ),
