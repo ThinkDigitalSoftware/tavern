@@ -102,7 +102,11 @@ class MockPackageTile extends StatelessWidget {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(left: 16, right: 16),
-          child: Text('This is a package description for a mock package'),
+          child: Row(
+            children: <Widget>[
+              Text('This is a package description for a mock package'),
+            ],
+          ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 16, right: 16, top: 8),

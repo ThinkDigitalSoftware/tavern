@@ -44,7 +44,7 @@ class _PubHeaderState extends State<PubHeader> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     ListTile(
-                      title: Text('Settings button here'),
+                      title: Text('Theme toggle'),
                     ),
                     ListTile(
                       title: Text('App Version here'),
