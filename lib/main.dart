@@ -9,6 +9,7 @@ class PubDevClientApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        fontFamily: 'Metropolis',
         accentColor: Color(0xFF38bffc),
         appBarTheme: AppBarTheme(
           iconTheme: IconThemeData(color: Colors.white),

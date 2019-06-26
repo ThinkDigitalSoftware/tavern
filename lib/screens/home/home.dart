@@ -20,6 +20,7 @@ class _HomeState extends State<Home> {
   int FIRST_PAGE = 1;
   List<FullPackage> packagesFromPage = [];
   DateFormat _dateFormat = DateFormat("MMM d, yyyy");
+  var _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   /// Takes a Page of Packages and gets the FullPackage
   /// equivalents of each Package
@@ -38,9 +39,127 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFF122030),
-        title: Image.asset('images/dart-packages-white.png'),
+      key: _scaffoldKey,
+      drawer: Drawer(
+        child: Column(
+          //padding: EdgeInsets.zero,
+          children: <Widget>[
+            //Get under the status bar without losing dark color
+            Container(
+              color: PubColors().darkColor,
+              height: 16,
+            ),
+            Container(
+              color: PubColors().darkColor,
+              child: ListTile(
+                leading: Icon(GroovinMaterialIcons.dart_logo, color: Colors.blue,),
+                title: Text(
+                  'pub.dev',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            Row(
+              //mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'Getting Started:',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            GroovinExpansionTile(
+              title: Text(
+                'Flutter:',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              children: <Widget>[
+                ListTile(
+                  title: Text('Using Packages'),
+                  trailing: Icon(Icons.launch),
+                  onTap: () {}, //TODO: launch https://flutter.dev/docs/development/packages-and-plugins/using-packages
+                ),
+                ListTile(
+                  title: Text('Developing Packages and Plugins'),
+                  trailing: Icon(Icons.launch),
+                  onTap: () {}, //TODO: launch https://flutter.dev/docs/development/packages-and-plugins/developing-packages
+                ),
+              ],
+            ),
+            GroovinExpansionTile(
+              title: Text(
+                'Web and Server:',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              children: <Widget>[
+                ListTile(
+                  title: Text('Using Packages'),
+                  trailing: Icon(Icons.launch),
+                  onTap: () {}, //TODO: launch hhttps://dart.dev/guides/packages
+                ),
+                ListTile(
+                  title: Text('Publishing a Package'),
+                  trailing: Icon(Icons.launch),
+                  onTap: () {}, //TODO: launch https://dart.dev/tools/pub/publishing
+                ),
+                ListTile(
+                  title: Text('Overview'),
+                  trailing: Icon(Icons.launch),
+                  onTap: () {}, //TODO: launch https://dart.dev/tools/pub/cmd
+                ),
+              ],
+            ),
+            Divider(
+              color: PubColors().darkColor,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16, bottom: 8, top: 8),
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    'Settings:',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              title: Text(
+                'Toggle Dark Theme',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ), //TODO: change text based on which theme is on
+              trailing: Icon(Icons.brightness_3),
+              onTap: () {}, //TODO: toggle theme via DynamicTheme package
+            ),
+            Expanded(child: Container()),
+            Divider(
+              color: PubColors().darkColor,
+            ),
+            ListTile(
+              title: Text('Version 0.1.0'), //TODO: dynamically show version number based on build.gradle using package_info plugin
+              subtitle: Text('Authored by ThinkDigitalRepair and GroovinChip'),
+            ),
+          ],
+        ),
       ),
       body: FutureBuilder<Page>(
         future: _client.getPageOfPackages(1),
@@ -111,6 +230,7 @@ class MockPackageTile extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
           child: Row(
+            //TODO: extract tags into their own widgets
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(right: 8),
@@ -181,4 +301,9 @@ class MockPackageTile extends StatelessWidget {
       ),
     );
   }
+}
+
+//TODO: pass this class down from above MaterialApp with Provider
+class PubColors {
+  Color darkColor = Color.fromRGBO(18, 32, 48, 1);
 }

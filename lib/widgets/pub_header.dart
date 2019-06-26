@@ -12,10 +12,10 @@ class _PubHeaderState extends State<PubHeader> {
   TextEditingController _searchController = TextEditingController();
 
   Map<int, Widget> _children() => {
-    0: Text('Flutter'),
-    1: Text('Web'),
-    2: Text('All'),
-  };
+        0: Text('Flutter'),
+        1: Text('Web'),
+        2: Text('All'),
+      };
 
   int _currentSelection = 2;
 
@@ -38,23 +38,7 @@ class _PubHeaderState extends State<PubHeader> {
                 Icons.menu,
                 color: Colors.white,
               ),
-              onPressed: () => showModalBottomSheet(
-                context: context,
-                builder: (context) => Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                      title: Text('Theme toggle'),
-                    ),
-                    ListTile(
-                      title: Text('App Version here'),
-                    ),
-                    ListTile(
-                      title: Text('Etc'),
-                    ),
-                  ],
-                ),
-              ),
+              onPressed: () => Scaffold.of(context).openDrawer(),
             ),
             title: TextField(
               controller: _searchController,
@@ -77,7 +61,8 @@ class _PubHeaderState extends State<PubHeader> {
               }, //TODO: launch search with query
             ),
           ),
-          SliverList(delegate: SliverChildListDelegate([
+          SliverList(
+              delegate: SliverChildListDelegate([
             Container(
               color: Color.fromRGBO(18, 32, 48, 1),
               child: Padding(
