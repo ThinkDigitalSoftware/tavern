@@ -25,6 +25,7 @@ class _PubHeaderState extends State<PubHeader> {
       color: Color.fromRGBO(18, 32, 48, 1),
       //child: Placeholder(),
       child: CustomScrollView(
+        shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         slivers: <Widget>[
           SliverFloatingBar(
@@ -32,6 +33,29 @@ class _PubHeaderState extends State<PubHeader> {
             snap: true,
             elevation: 2,
             backgroundColor: Color(0xFF35404d),
+            leading: IconButton(
+              icon: Icon(
+                Icons.menu,
+                color: Colors.white,
+              ),
+              onPressed: () => showModalBottomSheet(
+                context: context,
+                builder: (context) => Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListTile(
+                      title: Text('Settings button here'),
+                    ),
+                    ListTile(
+                      title: Text('App Version here'),
+                    ),
+                    ListTile(
+                      title: Text('Etc'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             title: TextField(
               controller: _searchController,
               onChanged: (searchQuery) {},
