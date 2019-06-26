@@ -28,7 +28,7 @@ packages:
       name: bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.14.2"
+    version: "0.14.4"
   boolean_selector:
     dependency: transitive
     description:
@@ -220,16 +220,16 @@ packages:
       name: petitparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.1"
+    version: "2.3.0"
   pub_client:
     dependency: "direct main"
     description:
       path: "."
       ref: HEAD
-      resolved-ref: b0232fa87a858a6b788c76c8fe4682928ca62e43
+      resolved-ref: e391a8130c1b8502afa1e67d431f2e7dcaec6ab4
       url: "https://github.com/ThinkDigitalSoftware/pub_client.git"
     source: git
-    version: "3.1.4"
+    version: "3.1.5"
   pub_semver:
     dependency: transitive
     description:
@@ -332,7 +332,7 @@ packages:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.4.1"
+    version: "3.5.0"
 sdks:
-  dart: ">=2.2.2 <3.0.0"
+  dart: ">=2.3.0 <3.0.0"
   flutter: ">=0.5.0"
