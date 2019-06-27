@@ -1,6 +1,7 @@
 import 'package:floating_search_bar/floating_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
+import 'package:provider/provider.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
@@ -23,6 +24,16 @@ class _HomeState extends State<Home> {
   DateFormat _dateFormat = DateFormat("MMM d, yyyy");
   var _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  Map<int, Widget> _children() => {
+    0: Text('Flutter'),
+    1: Text('Web'),
+    2: Text('All'),
+  };
+
+  int _currentSelection = 2;
+
+  TextEditingController _searchController = TextEditingController();
+
   /// Takes a Page of Packages and gets the FullPackage
   /// equivalents of each Package
   void convertToFullPackagesFromPage(Page page) async {
@@ -42,37 +53,118 @@ class _HomeState extends State<Home> {
     return Scaffold(
       key: _scaffoldKey,
       drawer: MainDrawer(),
-      body: FutureBuilder<Page>(
-        future: _client.getPageOfPackages(1),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            final page = snapshot.data;
-            //convertToFullPackagesFromPage(page);
-            //print(packagesFromPage.length);
-            return NestedScrollView(
-              headerSliverBuilder: (context, innerBoxScrolled) {
-                return <Widget>[
-                  SliverToBoxAdapter(
-                    child: PubHeader(),
+      body: Stack(
+        children: <Widget>[
+          FutureBuilder<Page>(
+            future: _client.getPageOfPackages(1),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                final page = snapshot.data;
+                //convertToFullPackagesFromPage(page);
+                //print(packagesFromPage.length);
+                return CustomScrollView(
+                  slivers: <Widget>[
+                    SliverAppBar(
+                      elevation: 0,
+                      backgroundColor: Theme.of(context).canvasColor,
+                      centerTitle: true,
+                      automaticallyImplyLeading: false,
+                      snap: true,
+                      floating: true,
+                      title: Text(
+                        'Browse Packages',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      bottom: PreferredSize(
+                        preferredSize: Size(MediaQuery.of(context).size.width, 40),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: MaterialSegmentedControl(
+                                children: _children(),
+                                selectionIndex: _currentSelection,
+                                borderColor: Color.fromRGBO(71, 99, 132, 1),
+                                selectedColor: Theme.of(context).accentColor,
+                                //unselectedColor: Provider.of<PubColors>(context).darkColor,
+                                borderRadius: 5.0,
+                                onSegmentChosen: (index) {
+                                  setState(() {
+                                    _currentSelection = index;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index){
+                        return MockPackageTile();
+                      },
+                      childCount: 15,
+                      ),
+                    ),
+                  ],
+                );
+              }
+            },
+          ),
+          Positioned(
+            bottom: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Material(
+                elevation: 8,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10))
+                ),
+                child: Container(
+                  width: MediaQuery.of(context).size.width - 16,
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.menu,
+                            //color: Colors.white,
+                          ),
+                          onPressed: () => _scaffoldKey.currentState.openDrawer(),
+                        ),
+                      ),
+                      Expanded(
+                        child: TextField(
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            labelText: 'Search Dart packages',
+                            suffixIcon: Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: IconButton(
+                                icon: Icon(Icons.search),
+                                onPressed: () {
+                                  print(_searchController.text);
+                                }, //TODO: launch search with query
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ];
-              },
-              body: ListView.builder(
-                itemCount: 15,
-                itemBuilder: (context, index) {
-                  return MockPackageTile();
-                },
+                ),
               ),
-              /*body: DefaultPackagesList(
-                packagesFromPage: packagesFromPage,
-              ),*/
-            );
-          }
-        },
+            ),
+          ),
+        ],
       ),
     );
   }

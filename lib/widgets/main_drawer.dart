@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
+import 'package:provider/provider.dart';
+
+import '../main.dart';
 
 class MainDrawer extends StatelessWidget {
   @override
@@ -10,11 +13,11 @@ class MainDrawer extends StatelessWidget {
         children: <Widget>[
           //Get under the status bar without losing dark color
           Container(
-            color: PubColors().darkColor,
+            color: Provider.of<PubColors>(context).darkColor,
             height: 16,
           ),
           Container(
-            color: PubColors().darkColor,
+            color: Provider.of<PubColors>(context).darkColor,
             child: ListTile(
               leading: Icon(
                 GroovinMaterialIcons.dart_logo,
@@ -94,7 +97,7 @@ class MainDrawer extends StatelessWidget {
             ],
           ),
           Divider(
-            color: PubColors().darkColor,
+            color: Provider.of<PubColors>(context).darkColor,
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16, bottom: 8, top: 8),
@@ -122,7 +125,7 @@ class MainDrawer extends StatelessWidget {
           ),
           Expanded(child: Container()),
           Divider(
-            color: PubColors().darkColor,
+            color: Provider.of<PubColors>(context).darkColor,
           ),
           ListTile(
             title: Text(
@@ -133,9 +136,4 @@ class MainDrawer extends StatelessWidget {
       ),
     );
   }
-}
-
-//TODO: pass this class down from above MaterialApp with Provider
-class PubColors {
-  Color darkColor = Color.fromRGBO(18, 32, 48, 1);
 }

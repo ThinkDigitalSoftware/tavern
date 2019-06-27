@@ -1,7 +1,10 @@
 import 'package:floating_search_bar/ui/sliver_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
+import 'package:provider/provider.dart';
 import 'package:pub_client/pub_client.dart';
+
+import '../main.dart';
 
 class PubHeader extends StatefulWidget {
   @override
@@ -22,12 +25,14 @@ class _PubHeaderState extends State<PubHeader> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Color.fromRGBO(18, 32, 48, 1),
-      //child: Placeholder(),
+      color: Provider.of<PubColors>(context).darkColor,
       child: CustomScrollView(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         slivers: <Widget>[
+          SliverPadding(
+            padding: EdgeInsets.only(top: 8),
+          ),
           SliverFloatingBar(
             floating: true,
             snap: true,
@@ -72,7 +77,7 @@ class _PubHeaderState extends State<PubHeader> {
                   selectionIndex: _currentSelection,
                   borderColor: Color.fromRGBO(71, 99, 132, 1),
                   selectedColor: Theme.of(context).accentColor,
-                  unselectedColor: Color.fromRGBO(18, 32, 48, 1),
+                  unselectedColor: Provider.of<PubColors>(context).darkColor,
                   borderRadius: 5.0,
                   onSegmentChosen: (index) {
                     setState(() {
