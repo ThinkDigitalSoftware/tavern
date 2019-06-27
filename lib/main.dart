@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pub_dev_client/screens/search_screen.dart';
 import 'screens/home/home.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,9 @@ class PubDevClientApp extends StatelessWidget {
         ),
         home: Home(),
         debugShowCheckedModeBanner: false,
+        routes: <String, WidgetBuilder>{
+          "/SearchScreen": (BuildContext context) => SearchScreen(),
+        },
       ),
     );
   }
