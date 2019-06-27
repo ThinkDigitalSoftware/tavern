@@ -6,9 +6,9 @@ import 'package:pub_client/pub_client.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:pub_dev_client/screens/search_screen.dart';
 import 'package:pub_dev_client/widgets/default_pacakges_list.dart';
 import 'package:pub_dev_client/widgets/main_drawer.dart';
-import 'package:pub_dev_client/widgets/pub_header.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -121,44 +121,72 @@ class _HomeState extends State<Home> {
             bottom: 2,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Material(
-                elevation: 8,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10))
+              child: GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    transitionDuration: Duration(seconds: 1),
+                    pageBuilder: (_, __, ___) => SearchScreen(),
+                  ),
                 ),
-                child: Container(
-                  width: MediaQuery.of(context).size.width - 16,
-                  child: Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.menu,
-                            //color: Colors.white,
-                          ),
-                          onPressed: () => _scaffoldKey.currentState.openDrawer(),
-                        ),
-                      ),
-                      Expanded(
-                        child: TextField(
-                          controller: _searchController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            labelText: 'Search Dart packages',
-                            suffixIcon: Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: IconButton(
-                                icon: Icon(Icons.search),
-                                onPressed: () {
-                                  print(_searchController.text);
-                                }, //TODO: launch search with query
+                child: Hero(
+                  tag: 'SearchBar',
+                  child: Material(
+                    elevation: 8,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))
+                    ),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width - 16,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.menu,
+                                //color: Colors.white,
                               ),
+                              onPressed: () => _scaffoldKey.currentState.openDrawer(),
                             ),
                           ),
-                        ),
+                          Text(
+                            'Search Dart packages',
+                            style: TextStyle(
+                              color: Colors.black45,
+                              fontSize: 16,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 16),
+                            child: Icon(
+                              Icons.search,
+                              color: Colors.black45,
+                            ),
+                          ),
+                          /*Expanded(
+                            child: Hero(
+                              tag: 'SearchBar',
+                              child: TextField(
+                                onTap: () => Navigator.pushNamed(context, '/SearchScreen'),
+                                enabled: false,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  labelText: 'Search Dart packages',
+                                  suffixIcon: Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: Icon(
+                                      Icons.search,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),*/
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
