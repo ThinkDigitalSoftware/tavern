@@ -1,3 +1,4 @@
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:floating_search_bar/floating_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
@@ -10,6 +11,8 @@ import 'package:pub_dev_client/screens/search_screen.dart';
 import 'package:pub_dev_client/widgets/main_drawer.dart';
 import 'package:pub_dev_client/widgets/package_tile.dart';
 
+import '../../main.dart';
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -21,7 +24,7 @@ class _HomeState extends State<Home> {
   Page firstPage;
 
   /// Defaults to 1 for the first page
-  int CURRENT_PAGE = 1;
+  int currentPage = 1;
 
   List<FullPackage> packagesFromPage = [];
 
@@ -86,7 +89,7 @@ class _HomeState extends State<Home> {
       body: Stack(
         children: <Widget>[
           FutureBuilder<Page>(
-            future: _htmlParsingClient.getPageOfPackages(CURRENT_PAGE),
+            future: _htmlParsingClient.getPageOfPackages(currentPage),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Center(
@@ -108,7 +111,7 @@ class _HomeState extends State<Home> {
                       title: Text(
                         'Browse $titleFilter Packages',
                         style: TextStyle(
-                          color: Colors.black,
+                          color: DynamicTheme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -116,7 +119,7 @@ class _HomeState extends State<Home> {
                         PopupMenuButton(
                           icon: Icon(
                             GroovinMaterialIcons.filter_outline,
-                            color: Colors.black, //TODO: fix color for dynamic theme
+                            color: DynamicTheme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
                           ),
                           itemBuilder: (context) => [
                             PopupMenuItem(
@@ -149,7 +152,7 @@ class _HomeState extends State<Home> {
                                 selectionIndex: _currentSelection,
                                 borderColor: Color.fromRGBO(71, 99, 132, 1),
                                 selectedColor: Theme.of(context).accentColor,
-                                //unselectedColor: Provider.of<PubColors>(context).darkColor,
+                                unselectedColor: DynamicTheme.of(context).brightness == Brightness.light ? Theme.of(context).canvasColor : Provider.of<PubColors>(context).darkAccent,
                                 borderRadius: 5.0,
                                 onSegmentChosen: (index) {
                                   setState(() {
@@ -175,20 +178,20 @@ class _HomeState extends State<Home> {
                     SliverList(
                       delegate: SliverChildListDelegate([
                         ListTile(
-                          leading: CURRENT_PAGE == 1 ? Container(width: 1,) : FlatButton(
-                            child: Text('Page ' + (CURRENT_PAGE - 1).toString()),
+                          leading: currentPage == 1 ? Container(width: 1,) : FlatButton(
+                            child: Text('Page ' + (currentPage - 1).toString()),
                             onPressed: () {
                               setState(() {
-                                CURRENT_PAGE -= 1;
+                                currentPage -= 1;
                                 _scrollController.animateTo(0, curve: Curves.linear, duration: Duration(milliseconds: 250));
                               });
                             },
                           ),
                           trailing: FlatButton(
-                            child: Text('Page ' + (CURRENT_PAGE + 1).toString()),
+                            child: Text('Page ' + (currentPage + 1).toString()),
                             onPressed: () {
                               setState(() {
-                                CURRENT_PAGE += 1;
+                                currentPage += 1;
                                 _scrollController.animateTo(0.0, curve: Curves.linear, duration: Duration(milliseconds: 250));
                               });
                             },
@@ -221,6 +224,7 @@ class _HomeState extends State<Home> {
                 child: Hero(
                   tag: 'SearchBar',
                   child: Material(
+                    color: DynamicTheme.of(context).brightness == Brightness.light ? Theme.of(context).canvasColor : Provider.of<PubColors>(context).darkAccent,
                     elevation: 8,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))
@@ -235,7 +239,6 @@ class _HomeState extends State<Home> {
                             child: IconButton(
                               icon: Icon(
                                 Icons.menu,
-                                //color: Colors.white,
                               ),
                               onPressed: () => _scaffoldKey.currentState.openDrawer(),
                             ),
@@ -243,7 +246,7 @@ class _HomeState extends State<Home> {
                           Text(
                             'Search Dart packages',
                             style: TextStyle(
-                              color: Colors.black45,
+                              color: DynamicTheme.of(context).brightness == Brightness.light ? Provider.of<PubColors>(context).searchBarItemsColor : Colors.white,
                               fontSize: 16,
                             ),
                           ),
@@ -251,7 +254,7 @@ class _HomeState extends State<Home> {
                             padding: const EdgeInsets.only(right: 16),
                             child: Icon(
                               Icons.search,
-                              color: Colors.black45,
+                              color: DynamicTheme.of(context).brightness == Brightness.light ? Provider.of<PubColors>(context).searchBarItemsColor : Colors.white,
                             ),
                           ),
                         ],
