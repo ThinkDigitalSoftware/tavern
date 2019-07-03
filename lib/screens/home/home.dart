@@ -17,12 +17,16 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   PubHtmlParsingClient _htmlParsingClient = PubHtmlParsingClient();
+
   Page firstPage;
 
   /// Defaults to 1 for the first page
   int CURRENT_PAGE = 1;
+
   List<FullPackage> packagesFromPage = [];
+
   var _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   String titleFilter = "Top";
 
   Map<int, Widget> _children() => {
@@ -32,6 +36,8 @@ class _HomeState extends State<Home> {
   };
 
   int _currentSelection = 2;
+
+  ScrollController _scrollController;
 
   void _handleFilterSelection(String selection) {
     switch (selection) {
@@ -61,6 +67,18 @@ class _HomeState extends State<Home> {
   }
 
   @override
+  void initState() {
+    _scrollController = ScrollController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
@@ -78,6 +96,7 @@ class _HomeState extends State<Home> {
                 final page = snapshot.data;
 
                 return CustomScrollView(
+                  controller: _scrollController,
                   slivers: <Widget>[
                     SliverAppBar(
                       elevation: 0,
@@ -150,7 +169,7 @@ class _HomeState extends State<Home> {
                           index: index,
                         );
                       },
-                      childCount: page.packages.length
+                      childCount: page.packages.length,
                       ),
                     ),
                     SliverList(
@@ -161,6 +180,7 @@ class _HomeState extends State<Home> {
                             onPressed: () {
                               setState(() {
                                 CURRENT_PAGE -= 1;
+                                _scrollController.animateTo(0, curve: Curves.linear, duration: Duration(milliseconds: 250));
                               });
                             },
                           ),
@@ -169,6 +189,7 @@ class _HomeState extends State<Home> {
                             onPressed: () {
                               setState(() {
                                 CURRENT_PAGE += 1;
+                                _scrollController.animateTo(0.0, curve: Curves.linear, duration: Duration(milliseconds: 250));
                               });
                             },
                           ),
