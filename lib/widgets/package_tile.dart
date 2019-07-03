@@ -42,17 +42,21 @@ class PackageTile extends StatelessWidget {
           child: Row(
             children: <Widget>[
               ...page.packages[index].packageTags.map<Widget>(
-                    (tag) => Padding(
+                (tag) => Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: Container(
                     height: 30,
-                    width: 86,
+                    width: tag == 'Flutter' ? 94 : 84,
                     color: Colors.blue[100],
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8, right: 8),
                       child: Row(
                         children: <Widget>[
-                          Icon(GroovinMaterialIcons.tag, size: 16, color: Colors.black38,),
+                          Icon(
+                            GroovinMaterialIcons.tag,
+                            size: 16,
+                            color: Colors.black38,
+                          ),
                           SizedBox(
                             width: 6,
                           ),
@@ -76,8 +80,8 @@ class PackageTile extends StatelessWidget {
         child: page.packages[index].score == null
             ? Text('?')
             : Text(
-          page.packages[index].score.toString(),
-        ),
+                page.packages[index].score.toString(),
+              ),
       ),
     );
   }
