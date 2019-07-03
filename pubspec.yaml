@@ -28,6 +28,7 @@ dependencies:
   provider: ^3.0.0+1
   url_launcher: ^5.0.3
   dynamic_theme: ^1.0.1
+  package_info: ^0.4.0+4
 
 dev_dependencies:
   flutter_test:

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
 import 'package:provider/provider.dart';
-
+import 'package:package_info/package_info.dart';
 import '../main.dart';
 
 class MainDrawer extends StatefulWidget {
@@ -12,6 +12,27 @@ class MainDrawer extends StatefulWidget {
 }
 
 class _MainDrawerState extends State<MainDrawer> {
+
+  PackageInfo _packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+  );
+
+  @override
+  void initState() {
+    _initPackageInfo();
+    super.initState();
+  }
+
+  Future<void> _initPackageInfo() async {
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -143,8 +164,7 @@ class _MainDrawerState extends State<MainDrawer> {
             color: Provider.of<PubColors>(context).darkColor,
           ),
           ListTile(
-            title: Text(
-                'Version 0.1.0'), //TODO: dynamically show version number based on build.gradle using package_info plugin
+            title: Text('Version ' + _packageInfo.version),
             subtitle: Text('Authored by ThinkDigitalRepair and GroovinChip'),
           ),
         ],
