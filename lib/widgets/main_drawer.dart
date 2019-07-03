@@ -1,3 +1,4 @@
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
@@ -5,9 +6,20 @@ import 'package:provider/provider.dart';
 
 import '../main.dart';
 
-class MainDrawer extends StatelessWidget {
+class MainDrawer extends StatefulWidget {
+  @override
+  _MainDrawerState createState() => _MainDrawerState();
+}
+
+class _MainDrawerState extends State<MainDrawer> {
   @override
   Widget build(BuildContext context) {
+
+    void toggleTheme() {
+      DynamicTheme.of(context).setBrightness(Theme.of(context).brightness == Brightness.dark ? Brightness.light: Brightness.dark);
+      print(DynamicTheme.of(context).brightness);
+    }
+
     return Drawer(
       child: Column(
         children: <Widget>[
@@ -120,8 +132,11 @@ class MainDrawer extends StatelessWidget {
                 fontSize: 18,
               ),
             ), //TODO: change text based on which theme is on
-            trailing: Icon(Icons.brightness_3),
-            onTap: () {}, //TODO: toggle theme via DynamicTheme package
+            trailing: Icon(DynamicTheme.of(context).brightness ==  Brightness.light ? Icons.brightness_3 : Icons.brightness_6),
+            onTap: () {
+              toggleTheme();
+              Navigator.pop(context);
+            },
           ),
           Expanded(child: Container()),
           Divider(
