@@ -157,7 +157,7 @@ class _HomeState extends State<Home> {
                       delegate: SliverChildListDelegate([
                         ListTile(
                           leading: CURRENT_PAGE == 1 ? Container(width: 1,) : FlatButton(
-                            child: Text('Previous'),
+                            child: Text('Page ' + (CURRENT_PAGE - 1).toString()),
                             onPressed: () {
                               setState(() {
                                 CURRENT_PAGE -= 1;
@@ -165,7 +165,7 @@ class _HomeState extends State<Home> {
                             },
                           ),
                           trailing: FlatButton(
-                            child: Text('Next Page'),
+                            child: Text('Page ' + (CURRENT_PAGE + 1).toString()),
                             onPressed: () {
                               setState(() {
                                 CURRENT_PAGE += 1;
