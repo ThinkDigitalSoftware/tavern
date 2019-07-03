@@ -7,8 +7,8 @@ import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:pub_dev_client/screens/search_screen.dart';
-import 'package:pub_dev_client/widgets/default_pacakges_list.dart';
 import 'package:pub_dev_client/widgets/main_drawer.dart';
+import 'package:pub_dev_client/widgets/package_tile.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -16,13 +16,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  PubClient _client = PubClient();
   PubHtmlParsingClient _htmlParsingClient = PubHtmlParsingClient();
   Page firstPage;
-  int FIRST_PAGE = 1;
+
+  /// Defaults to 1 for the first page
+  int CURRENT_PAGE = 1;
   List<FullPackage> packagesFromPage = [];
-  DateFormat _dateFormat = DateFormat("MMM d, yyyy");
   var _scaffoldKey = new GlobalKey<ScaffoldState>();
+  String titleFilter = "Top";
 
   Map<int, Widget> _children() => {
     0: Text('Flutter'),
@@ -32,19 +33,30 @@ class _HomeState extends State<Home> {
 
   int _currentSelection = 2;
 
-  TextEditingController _searchController = TextEditingController();
-
-  /// Takes a Page of Packages and gets the FullPackage
-  /// equivalents of each Package
-  void convertToFullPackagesFromPage(Page page) async {
-    for (int i = 0; i < page.packages.length; i++) {
-      String packageName = page.packages[i].name;
-      try {
-        FullPackage _fullPackage = await _htmlParsingClient.get(packageName);
-        packagesFromPage.add(_fullPackage);
-      } catch (e) {
-        print(e);
-      }
+  void _handleFilterSelection(String selection) {
+    switch (selection) {
+      case 'Overall Score':
+        setState(() {
+          titleFilter = 'Top';
+        });
+        break;
+      case 'Recently Updated':
+        setState(() {
+          titleFilter = 'Updated';
+        });
+        break;
+      case 'Newest Package':
+        setState(() {
+          titleFilter = 'New';
+        });
+        break;
+      case 'Popularity':
+        setState(() {
+          titleFilter = 'Popular';
+        });
+        break;
+      default:
+        break;
     }
   }
 
@@ -56,7 +68,7 @@ class _HomeState extends State<Home> {
       body: Stack(
         children: <Widget>[
           FutureBuilder<Page>(
-            future: _client.getPageOfPackages(1),
+            future: _htmlParsingClient.getPageOfPackages(CURRENT_PAGE),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Center(
@@ -64,8 +76,7 @@ class _HomeState extends State<Home> {
                 );
               } else {
                 final page = snapshot.data;
-                //convertToFullPackagesFromPage(page);
-                //print(packagesFromPage.length);
+
                 return CustomScrollView(
                   slivers: <Widget>[
                     SliverAppBar(
@@ -76,12 +87,39 @@ class _HomeState extends State<Home> {
                       snap: true,
                       floating: true,
                       title: Text(
-                        'Browse Packages',
+                        'Browse $titleFilter Packages',
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                      actions: <Widget>[
+                        PopupMenuButton(
+                          icon: Icon(
+                            GroovinMaterialIcons.filter_outline,
+                            color: Colors.black, //TODO: fix color for dynamic theme
+                          ),
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              child: Text('Overall Score'),
+                              value: 'Overall Score',
+                            ),
+                            PopupMenuItem(
+                              child: Text('Recently Updated'),
+                              value: 'Recently Updated',
+                            ),
+                            PopupMenuItem(
+                              child: Text('Newest Package'),
+                              value: 'Newest Package',
+                            ),
+                            PopupMenuItem(
+                              child: Text('Popularity'),
+                              value: 'Popularity',
+                            ),
+                          ],
+                          onSelected: _handleFilterSelection,
+                        ),
+                      ],
                       bottom: PreferredSize(
                         preferredSize: Size(MediaQuery.of(context).size.width, 40),
                         child: Row(
@@ -107,10 +145,40 @@ class _HomeState extends State<Home> {
                     ),
                     SliverList(
                       delegate: SliverChildBuilderDelegate((context, index){
-                        return MockPackageTile();
+                        return PackageTile(
+                          page: page,
+                          index: index,
+                        );
                       },
-                      childCount: 15,
+                      childCount: page.packages.length
                       ),
+                    ),
+                    SliverList(
+                      delegate: SliverChildListDelegate([
+                        ListTile(
+                          leading: CURRENT_PAGE == 1 ? Container(width: 1,) : FlatButton(
+                            child: Text('Previous'),
+                            onPressed: () {
+                              setState(() {
+                                CURRENT_PAGE -= 1;
+                              });
+                            },
+                          ),
+                          trailing: FlatButton(
+                            child: Text('Next Page'),
+                            onPressed: () {
+                              setState(() {
+                                CURRENT_PAGE += 1;
+                              });
+                            },
+                          ),
+                        ),
+                        /// Acts as a buffer since the last item in the list
+                        /// will be hidden under the search bar
+                        ListTile(
+                          title: Text(''),
+                        ),
+                      ]),
                     ),
                   ],
                 );
@@ -125,7 +193,7 @@ class _HomeState extends State<Home> {
                 onTap: () => Navigator.push(
                   context,
                   PageRouteBuilder(
-                    transitionDuration: Duration(seconds: 1),
+                    transitionDuration: Duration(milliseconds: 500),
                     pageBuilder: (_, __, ___) => SearchScreen(),
                   ),
                 ),
@@ -165,25 +233,6 @@ class _HomeState extends State<Home> {
                               color: Colors.black45,
                             ),
                           ),
-                          /*Expanded(
-                            child: Hero(
-                              tag: 'SearchBar',
-                              child: TextField(
-                                onTap: () => Navigator.pushNamed(context, '/SearchScreen'),
-                                enabled: false,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  labelText: 'Search Dart packages',
-                                  suffixIcon: Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: Icon(
-                                      Icons.search,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),*/
                         ],
                       ),
                     ),
@@ -196,115 +245,4 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-}
-
-
-class MockPackageTile extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return GroovinExpansionTile(
-      title: Text(
-        'mock_package',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      subtitle: Text(
-        "v " +
-            '1' +
-            '.' +
-            '0' +
-            '.' +
-            '0' +
-            ' updated ' +
-            'June 26, 2019',
-      ),
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16),
-          child: Row(
-            children: <Widget>[
-              Text('This is a package description for a mock package'),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
-          child: Row(
-            //TODO: extract tags into their own widgets
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: Container(
-                  height: 30,
-                  width: 86,
-                  color: Colors.blue[100],
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8),
-                    child: Row(
-                      children: <Widget>[
-                        Icon(GroovinMaterialIcons.tag, size: 16, color: Colors.black38,),
-                        SizedBox(
-                          width: 6,
-                        ),
-                        Text('Flutter', style: TextStyle(color: Colors.black38),),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: Container(
-                  height: 30,
-                  width: 80,
-                  color: Colors.blue[100],
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8),
-                    child: Row(
-                      children: <Widget>[
-                        Icon(GroovinMaterialIcons.tag, size: 16, color: Colors.black38,),
-                        SizedBox(
-                          width: 6,
-                        ),
-                        Text('Web', style: TextStyle(color: Colors.black38),),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: Container(
-                  height: 30,
-                  width: 72,
-                  color: Colors.blue[100],
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8),
-                    child: Row(
-                      children: <Widget>[
-                        Icon(GroovinMaterialIcons.tag, size: 16, color: Colors.black38,),
-                        SizedBox(
-                          width: 6,
-                        ),
-                        Text('All', style: TextStyle(color: Colors.black38),),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-      trailing: CircleAvatar(
-        child: Text('100'),
-      ),
-    );
-  }
-}
-
-//TODO: pass this class down from above MaterialApp with Provider
-class PubColors {
-  Color darkColor = Color.fromRGBO(18, 32, 48, 1);
 }
