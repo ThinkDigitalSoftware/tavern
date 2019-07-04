@@ -19,8 +19,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 child: Material(
                   elevation: 8,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))
-                  ),
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: Container(
                     width: MediaQuery.of(context).size.width - 16,
                     child: Row(
@@ -30,15 +29,23 @@ class _SearchScreenState extends State<SearchScreen> {
                             //controller: _searchController,
                             autofocus: true,
                             decoration: InputDecoration(
-                              border: InputBorder.none,
-                              labelText: 'Search Dart packages',
-                              prefixIcon: Padding(
-                                padding: const EdgeInsets.only(left: 8),
-                                child: Icon(
-                                  Icons.search,
+                                border: InputBorder.none,
+                                labelText: 'Search Dart packages',
+                                icon: IconButton(
+                                  padding: EdgeInsets.only(left: 8),
+                                  icon: Icon(
+                                    Icons.arrow_back,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
                                 ),
-                              ),
-                            ),
+                                suffixIcon: Padding(
+                                  padding: EdgeInsets.only(left: 8),
+                                  child: Icon(
+                                    Icons.search,
+                                  ),
+                                )),
                           ),
                         ),
                       ],

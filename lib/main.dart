@@ -1,11 +1,15 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pub_dev_client/screens/search_screen.dart';
-import 'screens/home/home.dart';
 import 'package:provider/provider.dart';
+import 'package:pub_dev_client/screens/search_screen.dart';
+import 'package:pub_dev_client/src/pub_colors.dart';
 
-void main() => runApp(PubDevClientApp());
+import 'screens/home/home.dart';
+
+void main() {
+  runApp(PubDevClientApp());
+}
 
 class PubDevClientApp extends StatelessWidget {
   @override
@@ -16,9 +20,6 @@ class PubDevClientApp extends StatelessWidget {
         fontFamily: 'Metropolis',
         accentColor: Color(0xFF38bffc),
         brightness: brightness,
-        /*appBarTheme: AppBarTheme(
-          iconTheme: IconThemeData(color: Colors.white),
-        ),*/
       ),
       themedWidgetBuilder: (context, theme) {
         return Provider<PubColors>(
@@ -28,17 +29,11 @@ class PubDevClientApp extends StatelessWidget {
             home: Home(),
             debugShowCheckedModeBanner: false,
             routes: <String, WidgetBuilder>{
-              "/SearchScreen": (BuildContext context) => SearchScreen(),
+              "/searchScreen": (BuildContext context) => SearchScreen(),
             },
           ),
         );
       },
     );
   }
-}
-
-class PubColors {
-  Color darkColor = Color.fromRGBO(18, 32, 48, 1);
-  Color darkAccent = Colors.grey[800];
-  Color searchBarItemsColor = Colors.black45;
 }

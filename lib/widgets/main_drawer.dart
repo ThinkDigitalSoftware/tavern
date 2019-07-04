@@ -2,9 +2,9 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
-import 'package:provider/provider.dart';
 import 'package:package_info/package_info.dart';
-import '../main.dart';
+import 'package:provider/provider.dart';
+import 'package:pub_dev_client/src/pub_colors.dart';
 
 class MainDrawer extends StatefulWidget {
   @override
@@ -12,7 +12,6 @@ class MainDrawer extends StatefulWidget {
 }
 
 class _MainDrawerState extends State<MainDrawer> {
-
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',
@@ -35,9 +34,13 @@ class _MainDrawerState extends State<MainDrawer> {
 
   @override
   Widget build(BuildContext context) {
-
     void toggleTheme() {
-      DynamicTheme.of(context).setBrightness(Theme.of(context).brightness == Brightness.dark ? Brightness.light: Brightness.dark);
+      DynamicTheme.of(context).setBrightness(
+          Theme
+              .of(context)
+              .brightness == Brightness.dark
+              ? Brightness.light
+              : Brightness.dark);
       print(DynamicTheme.of(context).brightness);
     }
 
@@ -153,7 +156,12 @@ class _MainDrawerState extends State<MainDrawer> {
                 fontSize: 18,
               ),
             ), //TODO: change text based on which theme is on
-            trailing: Icon(DynamicTheme.of(context).brightness ==  Brightness.light ? Icons.brightness_3 : Icons.brightness_6),
+            trailing: Icon(
+                DynamicTheme
+                    .of(context)
+                    .brightness == Brightness.light
+                    ? Icons.brightness_3
+                    : Icons.brightness_6),
             onTap: () {
               toggleTheme();
               Navigator.pop(context);
