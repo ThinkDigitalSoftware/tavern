@@ -36,9 +36,7 @@ class _MainDrawerState extends State<MainDrawer> {
   Widget build(BuildContext context) {
     void toggleTheme() {
       DynamicTheme.of(context).setBrightness(
-          Theme
-              .of(context)
-              .brightness == Brightness.dark
+          Theme.of(context).brightness == Brightness.dark
               ? Brightness.light
               : Brightness.dark);
       print(DynamicTheme.of(context).brightness);
@@ -157,9 +155,7 @@ class _MainDrawerState extends State<MainDrawer> {
               ),
             ), //TODO: change text based on which theme is on
             trailing: Icon(
-                DynamicTheme
-                    .of(context)
-                    .brightness == Brightness.light
+                DynamicTheme.of(context).brightness == Brightness.light
                     ? Icons.brightness_3
                     : Icons.brightness_6),
             onTap: () {

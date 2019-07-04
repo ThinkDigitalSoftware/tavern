@@ -17,10 +17,10 @@ class PubDevClientApp extends StatelessWidget {
     return DynamicTheme(
       defaultBrightness: Brightness.light,
       data: (brightness) => ThemeData(
-        fontFamily: 'Metropolis',
-        accentColor: Color(0xFF38bffc),
-        brightness: brightness,
-      ),
+            fontFamily: 'Metropolis',
+            accentColor: Color(0xFF38bffc),
+            brightness: brightness,
+          ),
       themedWidgetBuilder: (context, theme) {
         return Provider<PubColors>(
           builder: (context) => PubColors(),

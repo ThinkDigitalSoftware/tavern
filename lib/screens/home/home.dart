@@ -98,9 +98,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     slivers: <Widget>[
                       SliverAppBar(
                         elevation: 0,
-                        backgroundColor: Theme
-                            .of(context)
-                            .canvasColor,
+                        backgroundColor: Theme.of(context).canvasColor,
                         centerTitle: true,
                         automaticallyImplyLeading: false,
                         snap: true,
@@ -108,10 +106,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         title: Text(
                           'Browse $titleFilter Packages',
                           style: TextStyle(
-                            color: DynamicTheme
-                                .of(context)
-                                .brightness ==
-                                Brightness.light
+                            color: DynamicTheme.of(context).brightness ==
+                                    Brightness.light
                                 ? Colors.black
                                 : Colors.white,
                             fontWeight: FontWeight.bold,
@@ -121,41 +117,35 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           PopupMenuButton(
                             icon: Icon(
                               GroovinMaterialIcons.filter_outline,
-                              color: DynamicTheme
-                                  .of(context)
-                                  .brightness ==
-                                  Brightness.light
+                              color: DynamicTheme.of(context).brightness ==
+                                      Brightness.light
                                   ? Colors.black
                                   : Colors.white,
                             ),
-                            itemBuilder: (context) =>
-                            [
-                              PopupMenuItem(
-                                child: Text('Overall Score'),
-                                value: 'Overall Score',
-                              ),
-                              PopupMenuItem(
-                                child: Text('Recently Updated'),
-                                value: 'Recently Updated',
-                              ),
-                              PopupMenuItem(
-                                child: Text('Newest Package'),
-                                value: 'Newest Package',
-                              ),
-                              PopupMenuItem(
-                                child: Text('Popularity'),
-                                value: 'Popularity',
-                              ),
-                            ],
+                            itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    child: Text('Overall Score'),
+                                    value: 'Overall Score',
+                                  ),
+                                  PopupMenuItem(
+                                    child: Text('Recently Updated'),
+                                    value: 'Recently Updated',
+                                  ),
+                                  PopupMenuItem(
+                                    child: Text('Newest Package'),
+                                    value: 'Newest Package',
+                                  ),
+                                  PopupMenuItem(
+                                    child: Text('Popularity'),
+                                    value: 'Popularity',
+                                  ),
+                                ],
                             onSelected: _handleFilterSelection,
                           ),
                         ],
                         bottom: PreferredSize(
                           preferredSize:
-                          Size(MediaQuery
-                              .of(context)
-                              .size
-                              .width, 40),
+                              Size(MediaQuery.of(context).size.width, 40),
                           child: PlatformFilter(
                             value: _currentSelection,
                             onSegmentChosen: (index) {
@@ -168,7 +158,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       ),
                       SliverList(
                         delegate: SliverChildBuilderDelegate(
-                              (context, index) {
+                          (context, index) {
                             return PackageTile(
                               page: page,
                               index: index,
@@ -182,23 +172,23 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           ListTile(
                             leading: currentPage == 1
                                 ? Container(
-                              width: 1,
-                            )
+                                    width: 1,
+                                  )
                                 : FlatButton(
-                              child: Text('Page ${currentPage - 1}'),
-                              onPressed: () {
-                                setState(() {
-                                  currentPage--;
-                                  _scrollController.animateTo(0,
-                                      curve: Curves.linear,
-                                      duration:
-                                      Duration(milliseconds: 250));
-                                });
-                              },
-                            ),
+                                    child: Text('Page ${currentPage - 1}'),
+                                    onPressed: () {
+                                      setState(() {
+                                        currentPage--;
+                                        _scrollController.animateTo(0,
+                                            curve: Curves.linear,
+                                            duration:
+                                                Duration(milliseconds: 250));
+                                      });
+                                    },
+                                  ),
                             trailing: FlatButton(
                               child:
-                              Text('Page ' + (currentPage + 1).toString()),
+                                  Text('Page ' + (currentPage + 1).toString()),
                               onPressed: () {
                                 setState(() {
                                   currentPage++;
@@ -227,8 +217,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: GestureDetector(
-                  onTap: () =>
-                      Navigator.push(
+                  onTap: () => Navigator.push(
                         context,
                         PageRouteBuilder(
                             transitionDuration: Duration(milliseconds: 500),
