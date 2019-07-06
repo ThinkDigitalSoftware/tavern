@@ -1,10 +1,10 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide showSearch;
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:pub_dev_client/screens/search_screen.dart';
 import 'package:pub_dev_client/widgets/main_drawer.dart';
+import 'package:pub_dev_client/widgets/material_search.dart';
 import 'package:pub_dev_client/widgets/package_tile.dart';
 import 'package:pub_dev_client/widgets/platform_filter.dart';
 import 'package:pub_dev_client/widgets/pub_logo.dart';
@@ -16,7 +16,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with TickerProviderStateMixin {
-  PubHtmlParsingClient _htmlParsingClient = PubHtmlParsingClient();
+  final _htmlParsingClient = PubHtmlParsingClient();
 
   Page firstPage;
 
@@ -25,7 +25,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   List<FullPackage> packagesFromPage = [];
 
-  var _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String titleFilter = "Top";
 
@@ -187,8 +187,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     },
                                   ),
                             trailing: FlatButton(
-                              child:
-                                  Text('Page ' + (currentPage + 1).toString()),
+                              child: Text('Page ${currentPage + 1}'),
                               onPressed: () {
                                 setState(() {
                                   currentPage++;
@@ -217,21 +216,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: GestureDetector(
-                  onTap: () => Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                            transitionDuration: Duration(milliseconds: 500),
-                            pageBuilder: (_, __, ___) => SearchScreen(),
-                            transitionsBuilder: (BuildContext context,
-                                Animation<double> animation,
-                                Animation<double> secondaryAnimation,
-                                Widget child) {
-                              return FadeTransition(
-                                opacity: animation,
-                                child: child,
-                              );
-                            }),
-                      ),
+                  onTap: () {
+                    return showSearch(
+                        context: context, delegate: PubSearchDelegate());
+                  },
                   child: Hero(
                     tag: 'SearchBar',
                     child: SearchBar(scaffoldKey: _scaffoldKey),

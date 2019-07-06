@@ -23,14 +23,10 @@ class PackageTile extends StatelessWidget {
         ),
       ),
       subtitle: Text(
-        'v ' +
-            page.packages[index].latest.version.major.toString() +
-            '.' +
-            page.packages[index].latest.version.minor.toString() +
-            '.' +
-            page.packages[index].latest.version.patch.toString() +
-            ' updated ' +
-            page.packages[index].dateUpdated,
+        'v${page.packages[index].latest.version.major}'
+        '.${page.packages[index].latest.version.minor}'
+        '.${page.packages[index].latest.version.patch}'
+        ' updated ${page.packages[index].dateUpdated}',
       ),
       children: <Widget>[
         Padding(
@@ -43,34 +39,34 @@ class PackageTile extends StatelessWidget {
             children: <Widget>[
               ...page.packages[index].packageTags.map<Widget>(
                 (tag) => Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: Container(
-                    height: 30,
-                    width: tag == 'Flutter' ? 94 : 84,
-                    color: Colors.blue[100],
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8, right: 8),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            GroovinMaterialIcons.tag,
-                            size: 16,
-                            color: Colors.black38,
+                      padding: const EdgeInsets.only(right: 8),
+                      child: Container(
+                        height: 30,
+                        width: tag == 'Flutter' ? 94 : 84,
+                        color: Colors.blue[100],
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8, right: 8),
+                          child: Row(
+                            children: <Widget>[
+                              Icon(
+                                GroovinMaterialIcons.tag,
+                                size: 16,
+                                color: Colors.black38,
+                              ),
+                              SizedBox(
+                                width: 6,
+                              ),
+                              Text(
+                                tag,
+                                style: TextStyle(
+                                  color: Colors.black38,
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(
-                            width: 6,
-                          ),
-                          Text(
-                            tag,
-                            style: TextStyle(
-                              color: Colors.black38,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
               ),
             ],
           ),

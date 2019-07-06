@@ -17,7 +17,7 @@ class Feed {
   static Future<List<FeedPackage>> get packages async {
     var _atomFeed = await atomFeed;
     List<FeedPackage> packages = [];
-    for (AtomItem item in _atomFeed.items) {
+    for (final AtomItem item in _atomFeed.items) {
       packages.add(
         FeedPackage(
             title: item.title,
