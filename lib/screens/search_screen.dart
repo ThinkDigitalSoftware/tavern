@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart' hide SearchDelegate;
+import 'package:flutter/material.dart' as prefix0;
 import 'package:pub_client/pub_client.dart';
+import 'package:pub_dev_client/screens/package_details_page.dart';
 import 'package:pub_dev_client/widgets/material_search.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -19,6 +21,7 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Hero(
                 tag: 'SearchBar',
                 child: Material(
+
                   elevation: 8,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -63,17 +66,45 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 }
 
-_search(String query) async {
-  PubClient client = PubClient();
-  Future<List<Package>> _packages = client.search(query);
-  return _packages;
-}
-
 class PubSearchDelegate extends SearchDelegate {
+  PubHtmlParsingClient client = PubHtmlParsingClient();
+
   @override
   Widget buildResults(BuildContext context) {
-    //TODO: Implement BuildResults
-    return null;
+    if (query.isEmpty) {
+      return Center(
+        child: Text('No Search Results'),
+      );
+    } else {
+      return FutureBuilder<List<Package>>(
+          future: client.search(query),
+          builder: (context, snapshot) {
+            if (snapshot.data == null) {
+              return Center(child: CircularProgressIndicator());
+            }
+            final packages = snapshot.data;
+            return ListView.builder(
+              itemCount: packages.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  color: Theme.of(context).canvasColor,
+                  child: ListTile(
+                    title: Text(packages[index].name),
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      PackageDetailsPage.routeName,
+                      arguments: PackageDetailsArguments(
+                        packages[index].name,
+                        packages[index].score.toString(),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+      );
+    }
   }
 
   @override
@@ -83,16 +114,33 @@ class PubSearchDelegate extends SearchDelegate {
         child: Text('No Search Results'),
       );
     } else {
-      return ListView.builder(
-        itemCount: 4,
-        itemBuilder: (BuildContext context, int index) {
-          return Card(
-            color: Theme.of(context).canvasColor,
-            child: ListTile(
-              title: Text(query),
-            ),
-          );
-        },
+      return FutureBuilder<List<Package>>(
+          future: client.search(query),
+          builder: (context, snapshot) {
+            if (snapshot.data == null) {
+              return Center(child: CircularProgressIndicator());
+            }
+            final packages = snapshot.data;
+            return ListView.builder(
+              itemCount: packages.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  color: Theme.of(context).canvasColor,
+                  child: ListTile(
+                    title: Text(packages[index].name),
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      PackageDetailsPage.routeName,
+                      arguments: PackageDetailsArguments(
+                        packages[index].name,
+                        packages[index].score.toString(),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          }
       );
     }
   }
