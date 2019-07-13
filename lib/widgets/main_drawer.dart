@@ -34,14 +34,6 @@ class _MainDrawerState extends State<MainDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    void toggleTheme() {
-      DynamicTheme.of(context).setBrightness(
-          Theme.of(context).brightness == Brightness.dark
-              ? Brightness.light
-              : Brightness.dark);
-      print(DynamicTheme.of(context).brightness);
-    }
-
     return Drawer(
       child: Column(
         children: <Widget>[
@@ -133,34 +125,17 @@ class _MainDrawerState extends State<MainDrawer> {
           Divider(
             color: Provider.of<PubColors>(context).darkColor,
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16, bottom: 8, top: 8),
-            child: Row(
-              children: <Widget>[
-                Text(
-                  'Settings:',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
           ListTile(
             title: Text(
-              'Toggle Dark Theme',
+              'Settings',
               style: TextStyle(
                 fontSize: 18,
               ),
-            ), //TODO: change text based on which theme is on
-            trailing: Icon(
-                DynamicTheme.of(context).brightness == Brightness.light
-                    ? Icons.brightness_3
-                    : Icons.brightness_6),
+            ),
+            trailing: Icon(Icons.settings),
             onTap: () {
-              toggleTheme();
               Navigator.pop(context);
+              Navigator.pushNamed(context, '/SettingsScreen');
             },
           ),
           Expanded(child: Container()),

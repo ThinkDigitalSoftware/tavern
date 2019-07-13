@@ -9,6 +9,7 @@ import 'package:pub_dev_client/widgets/package_tile.dart';
 import 'package:pub_dev_client/widgets/platform_filter.dart';
 import 'package:pub_dev_client/widgets/pub_logo.dart';
 import 'package:pub_dev_client/widgets/search_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -67,9 +68,66 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     }
   }
 
+  void loadPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String sort = prefs.get('FeedSortSelection');
+    switch (sort) {
+      case 'OverallScore':
+        setState(() {
+          sortType = SortType.overAllScore;
+          titleFilter = "Top";
+        });
+        break;
+      case 'RecentlyUpdated':
+        setState(() {
+          sortType = SortType.recentlyUpdated;
+          titleFilter = 'Updated';
+        });
+        break;
+      case 'NewestPackage':
+        setState(() {
+          sortType = SortType.newestPackage;
+          titleFilter = 'New';
+        });
+        break;
+      case 'Popularity':
+        setState(() {
+          sortType = SortType.popularity;
+          titleFilter = 'Popular';
+        });
+        break;
+      default:
+        break;
+    }
+    String filter = prefs.get('FeedFilterSelection');
+    switch (filter) {
+      case 'All':
+        setState(() {
+          filterType = FilterType.all;
+          _currentSelection = 2;
+        });
+        break;
+      case 'Flutter':
+        setState(() {
+          filterType = FilterType.flutter;
+          _currentSelection = 0;
+        });
+        break;
+      case 'Web':
+        setState(() {
+          filterType = FilterType.web;
+          _currentSelection = 1;
+        });
+        break;
+      default:
+        break;
+    }
+  }
+
   @override
   void initState() {
     _scrollController = ScrollController();
+    loadPreferences();
     super.initState();
   }
 

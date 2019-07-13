@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pub_dev_client/screens/search_screen.dart';
+import 'package:pub_dev_client/screens/settings_screen.dart';
 import 'package:pub_dev_client/src/pub_colors.dart';
 
 import 'screens/home/home.dart';
@@ -32,6 +33,7 @@ class PubDevClientApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             routes: <String, WidgetBuilder>{
               "/searchScreen": (BuildContext context) => SearchScreen(),
+              "/SettingsScreen": (BuildContext context) => SettingsScreen(),
               PackageDetailsPage.routeName: (context) => PackageDetailsPage(),
             },
           ),
