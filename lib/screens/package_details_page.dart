@@ -199,7 +199,7 @@ class _PackageDetailsPageState extends State<PackageDetailsPage> with SingleTick
                       ) else Container(),
                       IconButton(
                         icon: Icon(
-                          Icons.star_border,
+                          Icons.favorite_border,
                           color: DynamicTheme.of(context).brightness ==
                               Brightness.light
                               ? Colors.black
