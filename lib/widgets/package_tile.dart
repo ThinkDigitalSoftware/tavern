@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:groovin_material_icons/groovin_material_icons.dart';
-import 'package:groovin_widgets/groovin_widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:pub_client/pub_client.dart';
+import 'package:pub_dev_client/screens/package_details_page.dart';
+import 'package:pub_dev_client/src/pub_colors.dart';
 
 class PackageTile extends StatelessWidget {
   const PackageTile({
@@ -15,73 +16,47 @@ class PackageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GroovinExpansionTile(
+    Color scoreColor;
+    if (page.packages[index].score <= 50 ||
+        page.packages[index].score == null) {
+      scoreColor = Provider.of<PubColors>(context).badPackageScore;
+    } else if (page.packages[index].score >= 51 &&
+        page.packages[index].score <= 69) {
+      scoreColor = Provider.of<PubColors>(context).goodPackageScore;
+    } else {
+      scoreColor = Provider.of<PubColors>(context).greatPackageScore;
+    }
+
+    final package = page.packages[index];
+
+    final packageVersion = 'v${package.latest.semanticVersion.major}'
+        '.${package.latest.semanticVersion.minor}'
+        '.${package.latest.semanticVersion.patch}'
+        ' updated ${package.dateUpdated}';
+
+    return ListTile(
       title: Text(
         page.packages[index].name,
         style: TextStyle(
           fontWeight: FontWeight.bold,
         ),
       ),
-      subtitle: Text(
-        'v ' +
-            page.packages[index].latest.version.major.toString() +
-            '.' +
-            page.packages[index].latest.version.minor.toString() +
-            '.' +
-            page.packages[index].latest.version.patch.toString() +
-            ' updated ' +
-            page.packages[index].dateUpdated,
-      ),
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16),
-          child: Text(page.packages[index].description),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
-          child: Row(
-            children: <Widget>[
-              ...page.packages[index].packageTags.map<Widget>(
-                (tag) => Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: Container(
-                    height: 30,
-                    width: tag == 'Flutter' ? 94 : 84,
-                    color: Colors.blue[100],
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8, right: 8),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            GroovinMaterialIcons.tag,
-                            size: 16,
-                            color: Colors.black38,
-                          ),
-                          SizedBox(
-                            width: 6,
-                          ),
-                          Text(
-                            tag,
-                            style: TextStyle(
-                              color: Colors.black38,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+      subtitle: Text(packageVersion),
       trailing: CircleAvatar(
-        child: page.packages[index].score == null
-            ? Text('?')
-            : Text(
-                page.packages[index].score.toString(),
-              ),
+          backgroundColor: scoreColor,
+          child: Text(
+            "${package.score ?? '--'}",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          )),
+      onTap: () => Navigator.pushNamed(
+        context,
+        PackageDetailsPage.routeName,
+        arguments: PackageDetailsArguments(
+          page.packages[index].name,
+          page.packages[index].score.toString(),
+        ),
       ),
     );
   }

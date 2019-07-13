@@ -1,10 +1,10 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide showSearch;
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:pub_dev_client/screens/search_screen.dart';
 import 'package:pub_dev_client/widgets/main_drawer.dart';
+import 'package:pub_dev_client/widgets/material_search.dart';
 import 'package:pub_dev_client/widgets/package_tile.dart';
 import 'package:pub_dev_client/widgets/platform_filter.dart';
 import 'package:pub_dev_client/widgets/pub_logo.dart';
@@ -16,7 +16,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with TickerProviderStateMixin {
-  PubHtmlParsingClient _htmlParsingClient = PubHtmlParsingClient();
+  final _htmlParsingClient = PubHtmlParsingClient();
 
   Page firstPage;
 
@@ -25,7 +25,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   List<FullPackage> packagesFromPage = [];
 
-  var _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String titleFilter = "Top";
 
@@ -33,26 +33,33 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   ScrollController _scrollController;
 
-  void _handleFilterSelection(String selection) {
+  SortType sortType = SortType.overAllScore;
+  FilterType filterType = FilterType.all;
+
+  void _handleFilterSelection(String selection, List<Package> packages) {
     switch (selection) {
       case 'Overall Score':
         setState(() {
           titleFilter = 'Top';
+          sortType = SortType.overAllScore;
         });
         break;
       case 'Recently Updated':
         setState(() {
           titleFilter = 'Updated';
+          sortType = SortType.recentlyUpdated;
         });
         break;
       case 'Newest Package':
         setState(() {
           titleFilter = 'New';
+          sortType = SortType.newestPackage;
         });
         break;
       case 'Popularity':
         setState(() {
           titleFilter = 'Popular';
+          sortType = SortType.popularity;
         });
         break;
       default:
@@ -81,14 +88,23 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         child: Stack(
           children: <Widget>[
             FutureBuilder<Page>(
-              future: _htmlParsingClient.getPageOfPackages(currentPage),
+              future: _htmlParsingClient.getPageOfPackages(
+                pageNumber: currentPage,
+                sortBy: sortType,
+                filterBy: filterType,
+              ),
               builder: (context, snapshot) {
                 var animationController = AnimationController(
                     duration: Duration(seconds: 1), vsync: this);
                 animationController.forward();
-                if (!snapshot.hasData) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return PubDevAnimatedLogo(
                       animationController: animationController);
+                } else if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasError) {
+                  return Center(
+                    child: Text(snapshot.error.toString()),
+                  );
                 } else {
                   animationController.dispose();
                   final page = snapshot.data;
@@ -98,7 +114,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     slivers: <Widget>[
                       SliverAppBar(
                         elevation: 0,
-                        backgroundColor: Theme.of(context).canvasColor,
+                        backgroundColor: Theme
+                            .of(context)
+                            .canvasColor,
                         centerTitle: true,
                         automaticallyImplyLeading: false,
                         snap: true,
@@ -106,8 +124,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         title: Text(
                           'Browse $titleFilter Packages',
                           style: TextStyle(
-                            color: DynamicTheme.of(context).brightness ==
-                                    Brightness.light
+                            color: DynamicTheme
+                                .of(context)
+                                .brightness ==
+                                Brightness.light
                                 ? Colors.black
                                 : Colors.white,
                             fontWeight: FontWeight.bold,
@@ -117,40 +137,61 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           PopupMenuButton(
                             icon: Icon(
                               GroovinMaterialIcons.filter_outline,
-                              color: DynamicTheme.of(context).brightness ==
-                                      Brightness.light
+                              color: DynamicTheme
+                                  .of(context)
+                                  .brightness ==
+                                  Brightness.light
                                   ? Colors.black
                                   : Colors.white,
                             ),
-                            itemBuilder: (context) => [
-                                  PopupMenuItem(
-                                    child: Text('Overall Score'),
-                                    value: 'Overall Score',
-                                  ),
-                                  PopupMenuItem(
-                                    child: Text('Recently Updated'),
-                                    value: 'Recently Updated',
-                                  ),
-                                  PopupMenuItem(
-                                    child: Text('Newest Package'),
-                                    value: 'Newest Package',
-                                  ),
-                                  PopupMenuItem(
-                                    child: Text('Popularity'),
-                                    value: 'Popularity',
-                                  ),
-                                ],
-                            onSelected: _handleFilterSelection,
+                            itemBuilder: (context) =>
+                            [
+                              PopupMenuItem(
+                                child: Text('Overall Score'),
+                                value: 'Overall Score',
+                              ),
+                              PopupMenuItem(
+                                child: Text('Recently Updated'),
+                                value: 'Recently Updated',
+                              ),
+                              PopupMenuItem(
+                                child: Text('Newest Package'),
+                                value: 'Newest Package',
+                              ),
+                              PopupMenuItem(
+                                child: Text('Popularity'),
+                                value: 'Popularity',
+                              ),
+                            ],
+                            onSelected: (selection) =>
+                                _handleFilterSelection(
+                                    selection, page.packages),
                           ),
                         ],
                         bottom: PreferredSize(
                           preferredSize:
-                              Size(MediaQuery.of(context).size.width, 40),
+                          Size(MediaQuery
+                              .of(context)
+                              .size
+                              .width, 40),
                           child: PlatformFilter(
                             value: _currentSelection,
                             onSegmentChosen: (index) {
                               setState(() {
                                 _currentSelection = index;
+                                switch (_currentSelection) {
+                                  case 0:
+                                    filterType = FilterType.flutter;
+                                    break;
+                                  case 1:
+                                    filterType = FilterType.web;
+                                    break;
+                                  case 2:
+                                    filterType = FilterType.all;
+                                    break;
+                                  default:
+                                    break;
+                                }
                               });
                             },
                           ),
@@ -158,7 +199,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       ),
                       SliverList(
                         delegate: SliverChildBuilderDelegate(
-                          (context, index) {
+                              (context, index) {
                             return PackageTile(
                               page: page,
                               index: index,
@@ -172,23 +213,22 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           ListTile(
                             leading: currentPage == 1
                                 ? Container(
-                                    width: 1,
-                                  )
+                              width: 1,
+                            )
                                 : FlatButton(
-                                    child: Text('Page ${currentPage - 1}'),
-                                    onPressed: () {
-                                      setState(() {
-                                        currentPage--;
-                                        _scrollController.animateTo(0,
-                                            curve: Curves.linear,
-                                            duration:
-                                                Duration(milliseconds: 250));
-                                      });
-                                    },
-                                  ),
+                              child: Text('Page ${currentPage - 1}'),
+                              onPressed: () {
+                                setState(() {
+                                  currentPage--;
+                                  _scrollController.animateTo(0,
+                                      curve: Curves.linear,
+                                      duration:
+                                      Duration(milliseconds: 250));
+                                });
+                              },
+                            ),
                             trailing: FlatButton(
-                              child:
-                                  Text('Page ' + (currentPage + 1).toString()),
+                              child: Text('Page ${currentPage + 1}'),
                               onPressed: () {
                                 setState(() {
                                   currentPage++;
@@ -217,21 +257,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: GestureDetector(
-                  onTap: () => Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                            transitionDuration: Duration(milliseconds: 500),
-                            pageBuilder: (_, __, ___) => SearchScreen(),
-                            transitionsBuilder: (BuildContext context,
-                                Animation<double> animation,
-                                Animation<double> secondaryAnimation,
-                                Widget child) {
-                              return FadeTransition(
-                                opacity: animation,
-                                child: child,
-                              );
-                            }),
-                      ),
+                  onTap: () {
+                    return showSearch(
+                      context: context,
+                      delegate: PubSearchDelegate(),
+                    );
+                  },
                   child: Hero(
                     tag: 'SearchBar',
                     child: SearchBar(scaffoldKey: _scaffoldKey),

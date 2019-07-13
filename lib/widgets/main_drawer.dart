@@ -168,8 +168,8 @@ class _MainDrawerState extends State<MainDrawer> {
             color: Provider.of<PubColors>(context).darkColor,
           ),
           ListTile(
-            title: Text('Version ' + _packageInfo.version),
-            subtitle: Text('Authored by ThinkDigitalRepair and GroovinChip'),
+            title: Text('Version ${_packageInfo.version}'),
+            subtitle: Text('Authored by ThinkDigitalSoftware and GroovinChip'),
           ),
         ],
       ),

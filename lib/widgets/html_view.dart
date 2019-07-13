@@ -7,7 +7,7 @@ class HtmlView extends StatelessWidget {
   final String markdown;
 
   HtmlView({Key key, this.html})
-      : this.markdown = html2md.convert(html),
+      : markdown = html2md.convert(html),
         super(key: key);
 
   @override

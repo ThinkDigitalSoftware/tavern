@@ -6,6 +6,7 @@ import 'package:pub_dev_client/screens/search_screen.dart';
 import 'package:pub_dev_client/src/pub_colors.dart';
 
 import 'screens/home/home.dart';
+import 'screens/package_details_page.dart';
 
 void main() {
   runApp(PubDevClientApp());
@@ -16,7 +17,8 @@ class PubDevClientApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return DynamicTheme(
       defaultBrightness: Brightness.light,
-      data: (brightness) => ThemeData(
+      data: (brightness) =>
+          ThemeData(
             fontFamily: 'Metropolis',
             accentColor: Color(0xFF38bffc),
             brightness: brightness,
@@ -30,6 +32,7 @@ class PubDevClientApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             routes: <String, WidgetBuilder>{
               "/searchScreen": (BuildContext context) => SearchScreen(),
+              PackageDetailsPage.routeName: (context) => PackageDetailsPage(),
             },
           ),
         );
