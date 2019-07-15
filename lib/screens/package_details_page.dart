@@ -7,6 +7,7 @@ import 'package:pub_dev_client/src/pub_colors.dart';
 import 'package:pub_dev_client/widgets/html_view.dart';
 import 'package:pub_dev_client/widgets/score_tab.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 
 class PackageDetailsPage extends StatefulWidget {
   static const routeName = '/PackageDetailsPage';
@@ -24,6 +25,7 @@ class _PackageDetailsPageState extends State<PackageDetailsPage> with SingleTick
   void initState() {
     _tabController = TabController(length: 7, vsync: this);
     _scrollViewController = ScrollController();
+    BackButtonInterceptor.add(interceptBackButton);
     super.initState();
   }
 
@@ -31,8 +33,16 @@ class _PackageDetailsPageState extends State<PackageDetailsPage> with SingleTick
   void dispose() {
     _scrollViewController.dispose();
     _tabController.dispose();
+    BackButtonInterceptor.remove(interceptBackButton);
     super.dispose();
   }
+
+  bool interceptBackButton(stopDefaultButtonEvent) {
+    Navigator.pop(context);
+    //Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    return true;
+  }
+
 
   @override
   Widget build(BuildContext context) {
