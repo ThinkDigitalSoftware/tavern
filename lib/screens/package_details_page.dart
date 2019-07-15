@@ -1,15 +1,12 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
-import 'package:groovin_widgets/groovin_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:pub_client/pub_client.dart' hide Tab;
 import 'package:pub_dev_client/src/pub_colors.dart';
 import 'package:pub_dev_client/widgets/html_view.dart';
 import 'package:pub_dev_client/widgets/score_tab.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:rounded_modal/rounded_modal.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
 
 class PackageDetailsPage extends StatefulWidget {
   static const routeName = '/PackageDetailsPage';
@@ -21,13 +18,12 @@ class PackageDetailsPage extends StatefulWidget {
 class _PackageDetailsPageState extends State<PackageDetailsPage> with SingleTickerProviderStateMixin {
   TabController _tabController;
   ScrollController _scrollViewController;
-  PubHtmlParsingClient _htmlParsingClient = PubHtmlParsingClient();
+  final PubHtmlParsingClient _htmlParsingClient = PubHtmlParsingClient();
 
   @override
   void initState() {
     _tabController = TabController(length: 7, vsync: this);
     _scrollViewController = ScrollController();
-    BackButtonInterceptor.add(interceptBackButton);
     super.initState();
   }
 
@@ -35,16 +31,8 @@ class _PackageDetailsPageState extends State<PackageDetailsPage> with SingleTick
   void dispose() {
     _scrollViewController.dispose();
     _tabController.dispose();
-    BackButtonInterceptor.remove(interceptBackButton);
     super.dispose();
   }
-
-  bool interceptBackButton(stopDefaultButtonEvent) {
-    Navigator.of(context).pushReplacementNamed('/');
-    //Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-    return true;
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -390,7 +378,7 @@ class AboutTab extends StatelessWidget {
               FlatButton.icon(
                 icon: Icon(Icons.mail_outline),
                 label: Text('Email'),
-                onPressed: () => launch('mailto:${uploader}'),
+                onPressed: () => launch('mailto:$uploader'),
               ),
             ],
           ),
