@@ -2,12 +2,11 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:pub_dev_client/screens/search_screen.dart';
-import 'package:pub_dev_client/screens/settings_screen.dart';
-import 'package:pub_dev_client/src/pub_colors.dart';
-
-import 'screens/home/home.dart';
-import 'screens/package_details_page.dart';
+import 'package:tavern/screens/home/home.dart';
+import 'package:tavern/screens/package_details_page.dart';
+import 'package:tavern/screens/search_screen.dart';
+import 'package:tavern/screens/settings_screen.dart';
+import 'package:tavern/src/pub_colors.dart';
 
 void main() {
   runApp(PubDevClientApp());
@@ -29,6 +28,7 @@ class PubDevClientApp extends StatelessWidget {
           builder: (context) => PubColors(),
           child: MaterialApp(
             theme: theme,
+            title: "Tavern",
             home: Home(),
             debugShowCheckedModeBanner: false,
             routes: <String, WidgetBuilder>{

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="software.thinkdigital.pub_dev_client">
+    package="software.thinkdigital.tavern">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -10,10 +10,10 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="pub_dev_client"
+        android:label="Tavern - A pub.dev client"
         android:icon="@mipmap/ic_launcher">
         <activity
-            android:name=".MainActivity"
+            android:name="software.thinkdigital.tavern.MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

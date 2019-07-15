@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pub_client/pub_client.dart';
-import 'package:pub_dev_client/screens/package_details_page.dart';
-import 'package:pub_dev_client/src/pub_colors.dart';
+import 'package:tavern/screens/package_details_page.dart';
+import 'package:tavern/src/pub_colors.dart';
 
 class PackageTile extends StatelessWidget {
   const PackageTile({

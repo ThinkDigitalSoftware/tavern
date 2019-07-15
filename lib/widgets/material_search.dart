@@ -53,12 +53,7 @@ Future<T> showSearch<T>({
 }
 
 /// Delegate for [showSearch] to define the content of the search page.
-///
-/// The search page always shows an [AppBar] at the top where users can
-/// enter their search queries. The buttons shown before and after the search
-/// query text field can be customized via [SearchDelegate.leading] and
-/// [SearchDelegate.actions].
-///
+
 /// The body below the [AppBar] can either show suggested queries (returned by
 /// [SearchDelegate.buildSuggestions]) or - once the user submits a search  - the
 /// results of the search as returned by [SearchDelegate.buildResults].
@@ -196,11 +191,6 @@ abstract class SearchDelegate<T> {
   }
 
   /// [Animation] triggered when the search pages fades in or out.
-  ///
-  /// This animation is commonly used to animate [AnimatedIcon]s of
-  /// [IconButton]s returned by [buildLeading] or [buildActions]. It can also be
-  /// used to animate [IconButton]s contained within the route below the search
-  /// page.
   Animation<double> get transitionAnimation => _proxyAnimation;
 
   final FocusNode _focusNode = FocusNode();

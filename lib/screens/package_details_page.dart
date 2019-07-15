@@ -1,13 +1,13 @@
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:pub_client/pub_client.dart' hide Tab;
-import 'package:pub_dev_client/src/pub_colors.dart';
-import 'package:pub_dev_client/widgets/html_view.dart';
-import 'package:pub_dev_client/widgets/score_tab.dart';
+import 'package:tavern/src/pub_colors.dart';
+import 'package:tavern/widgets/html_view.dart';
+import 'package:tavern/widgets/score_tab.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
 
 class PackageDetailsPage extends StatefulWidget {
   static const routeName = '/PackageDetailsPage';
@@ -16,7 +16,8 @@ class PackageDetailsPage extends StatefulWidget {
   _PackageDetailsPageState createState() => _PackageDetailsPageState();
 }
 
-class _PackageDetailsPageState extends State<PackageDetailsPage> with SingleTickerProviderStateMixin {
+class _PackageDetailsPageState extends State<PackageDetailsPage>
+    with SingleTickerProviderStateMixin {
   TabController _tabController;
   ScrollController _scrollViewController;
   final PubHtmlParsingClient _htmlParsingClient = PubHtmlParsingClient();
@@ -43,10 +44,13 @@ class _PackageDetailsPageState extends State<PackageDetailsPage> with SingleTick
     return true;
   }
 
-
   @override
   Widget build(BuildContext context) {
-    final PackageDetailsArguments args = ModalRoute.of(context).settings.arguments;
+    final PackageDetailsArguments args =
+        ModalRoute
+            .of(context)
+            .settings
+            .arguments;
 
     Color scoreColor;
     int score = int.parse(args.packageScore);
@@ -63,7 +67,11 @@ class _PackageDetailsPageState extends State<PackageDetailsPage> with SingleTick
         child: Text(
           'Readme',
           style: TextStyle(
-            color: DynamicTheme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
+            color: DynamicTheme
+                .of(context)
+                .brightness == Brightness.light
+                ? Colors.black
+                : Colors.white,
           ),
         ),
       ),
@@ -71,7 +79,11 @@ class _PackageDetailsPageState extends State<PackageDetailsPage> with SingleTick
         child: Text(
           'Changelog',
           style: TextStyle(
-            color: DynamicTheme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
+            color: DynamicTheme
+                .of(context)
+                .brightness == Brightness.light
+                ? Colors.black
+                : Colors.white,
           ),
         ),
       ),
@@ -79,7 +91,11 @@ class _PackageDetailsPageState extends State<PackageDetailsPage> with SingleTick
         child: Text(
           'Example',
           style: TextStyle(
-            color: DynamicTheme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
+            color: DynamicTheme
+                .of(context)
+                .brightness == Brightness.light
+                ? Colors.black
+                : Colors.white,
           ),
         ),
       ),
@@ -87,7 +103,11 @@ class _PackageDetailsPageState extends State<PackageDetailsPage> with SingleTick
         child: Text(
           'Installing',
           style: TextStyle(
-            color: DynamicTheme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
+            color: DynamicTheme
+                .of(context)
+                .brightness == Brightness.light
+                ? Colors.black
+                : Colors.white,
           ),
         ),
       ),
@@ -95,7 +115,11 @@ class _PackageDetailsPageState extends State<PackageDetailsPage> with SingleTick
         child: Text(
           'Versions',
           style: TextStyle(
-            color: DynamicTheme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
+            color: DynamicTheme
+                .of(context)
+                .brightness == Brightness.light
+                ? Colors.black
+                : Colors.white,
           ),
         ),
       ),
@@ -114,7 +138,11 @@ class _PackageDetailsPageState extends State<PackageDetailsPage> with SingleTick
         child: Text(
           'About',
           style: TextStyle(
-            color: DynamicTheme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
+            color: DynamicTheme
+                .of(context)
+                .brightness == Brightness.light
+                ? Colors.black
+                : Colors.white,
           ),
         ),
       ),
@@ -128,7 +156,8 @@ class _PackageDetailsPageState extends State<PackageDetailsPage> with SingleTick
             return Center(
               child: CircularProgressIndicator(),
             );
-          } else if (snapshot.connectionState == ConnectionState.done && snapshot.data == null) {
+          } else if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.data == null) {
             print(snapshot.error);
             return ErrorReport(
               snapshot: snapshot,
@@ -138,7 +167,7 @@ class _PackageDetailsPageState extends State<PackageDetailsPage> with SingleTick
             return NestedScrollView(
               controller: _scrollViewController,
               headerSliverBuilder: (context, innerBoxScrolled) {
-                return <Widget> [
+                return <Widget>[
                   SliverAppBar(
                     automaticallyImplyLeading: false,
                     backgroundColor: Theme.of(context).canvasColor,
@@ -175,26 +204,36 @@ class _PackageDetailsPageState extends State<PackageDetailsPage> with SingleTick
                         ),
                         onPressed: () => launch(_package.apiReferenceUrl),
                       ),
-                      if (_package.repositoryUrl != null) IconButton(
-                        icon: Icon(
-                          Icons.code,
-                          color: DynamicTheme.of(context).brightness ==
-                              Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                        ),
-                        onPressed: () => launch(_package.repositoryUrl),
-                      ) else Container(),
-                      if (_package.issuesUrl != null) IconButton(
-                        icon: Icon(
-                          Icons.bug_report,
-                          color: DynamicTheme.of(context).brightness ==
-                              Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                        ),
-                        onPressed: () => launch(_package.issuesUrl),
-                      ) else Container(),
+                      if (_package.repositoryUrl != null)
+                        IconButton(
+                          icon: Icon(
+                            Icons.code,
+                            color: DynamicTheme
+                                .of(context)
+                                .brightness ==
+                                Brightness.light
+                                ? Colors.black
+                                : Colors.white,
+                          ),
+                          onPressed: () => launch(_package.repositoryUrl),
+                        )
+                      else
+                        Container(),
+                      if (_package.issuesUrl != null)
+                        IconButton(
+                          icon: Icon(
+                            Icons.bug_report,
+                            color: DynamicTheme
+                                .of(context)
+                                .brightness ==
+                                Brightness.light
+                                ? Colors.black
+                                : Colors.white,
+                          ),
+                          onPressed: () => launch(_package.issuesUrl),
+                        )
+                      else
+                        Container(),
                       IconButton(
                         icon: Icon(
                           Icons.favorite_border,
@@ -203,7 +242,8 @@ class _PackageDetailsPageState extends State<PackageDetailsPage> with SingleTick
                               ? Colors.black
                               : Colors.white,
                         ),
-                        onPressed: () {}, //TODO handle favoriting and unfavoriting packages
+                        onPressed:
+                            () {}, //TODO handle favoriting and unfavoriting packages
                       ),
                     ],
                   ),
@@ -218,9 +258,11 @@ class _PackageDetailsPageState extends State<PackageDetailsPage> with SingleTick
                   ChangelogTab(
                     package: _package,
                   ),
-                  if (_package.tabs[2].content.isEmpty) Center(
-                    child: Text('No Example'),
-                  ) else
+                  if (_package.tabs[2].content.isEmpty)
+                    Center(
+                      child: Text('No Example'),
+                    )
+                  else
                     ExampleTab(
                       package: _package,
                     ),
@@ -379,20 +421,21 @@ class AboutTab extends StatelessWidget {
             ],
           ),
         ),
-        for (String uploader in package.uploaders) Padding(
-          padding: EdgeInsets.only(left: 8, right: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(uploader),
-              FlatButton.icon(
-                icon: Icon(Icons.mail_outline),
-                label: Text('Email'),
-                onPressed: () => launch('mailto:$uploader'),
-              ),
-            ],
+        for (String uploader in package.uploaders)
+          Padding(
+            padding: EdgeInsets.only(left: 8, right: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(uploader),
+                FlatButton.icon(
+                  icon: Icon(Icons.mail_outline),
+                  label: Text('Email'),
+                  onPressed: () => launch('mailto:$uploader'),
+                ),
+              ],
+            ),
           ),
-        ),
       ],
     );
   }
@@ -419,7 +462,8 @@ class ErrorReport extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text('This error was unexpected. Please file an issue on our GitHub repository so we can fix it.'),
+          child: Text(
+              'This error was unexpected. Please file an issue on our GitHub repository so we can fix it.'),
         ),
         RaisedButton.icon(
           icon: Icon(GroovinMaterialIcons.github_circle),

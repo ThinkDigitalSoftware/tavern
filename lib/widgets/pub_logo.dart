@@ -18,7 +18,7 @@ class PubDevAnimatedLogo extends StatelessWidget {
             child: Opacity(
               opacity: animationController.value,
               child: Text(
-                "Pub.dev",
+                "Tavern",
                 style: TextStyle(fontSize: 45),
               ),
             ),

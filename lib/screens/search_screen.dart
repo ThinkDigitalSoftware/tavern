@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart' hide SearchDelegate;
-import 'package:flutter/material.dart' as prefix0;
 import 'package:pub_client/pub_client.dart';
-import 'package:pub_dev_client/screens/package_details_page.dart';
-import 'package:pub_dev_client/widgets/material_search.dart';
+import 'package:tavern/screens/package_details_page.dart';
+import 'package:tavern/widgets/material_search.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -21,7 +20,6 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Hero(
                 tag: 'SearchBar',
                 child: Material(
-
                   elevation: 8,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -102,8 +100,7 @@ class PubSearchDelegate extends SearchDelegate {
                 );
               },
             );
-          }
-      );
+          });
     }
   }
 
@@ -140,8 +137,7 @@ class PubSearchDelegate extends SearchDelegate {
                 );
               },
             );
-          }
-      );
+          });
     }
   }
 

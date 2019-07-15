@@ -2,14 +2,14 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart' hide showSearch;
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:pub_client/pub_client.dart';
-import 'package:pub_dev_client/screens/search_screen.dart';
-import 'package:pub_dev_client/widgets/main_drawer.dart';
-import 'package:pub_dev_client/widgets/material_search.dart';
-import 'package:pub_dev_client/widgets/package_tile.dart';
-import 'package:pub_dev_client/widgets/platform_filter.dart';
-import 'package:pub_dev_client/widgets/pub_logo.dart';
-import 'package:pub_dev_client/widgets/search_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tavern/screens/search_screen.dart';
+import 'package:tavern/widgets/main_drawer.dart';
+import 'package:tavern/widgets/material_search.dart';
+import 'package:tavern/widgets/package_tile.dart';
+import 'package:tavern/widgets/platform_filter.dart';
+import 'package:tavern/widgets/pub_logo.dart';
+import 'package:tavern/widgets/search_bar.dart';
 
 class Home extends StatefulWidget {
   @override

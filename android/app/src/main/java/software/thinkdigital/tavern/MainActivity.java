@@ -1,4 +1,4 @@
-package software.thinkdigital.pub_dev_client;
+package software.thinkdigital.tavern;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

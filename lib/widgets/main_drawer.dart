@@ -3,7 +3,7 @@ import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
-import 'package:pub_dev_client/src/pub_colors.dart';
+import 'package:tavern/src/pub_colors.dart';
 
 class MainDrawer extends StatefulWidget {
   @override
