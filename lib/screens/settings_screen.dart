@@ -1,3 +1,4 @@
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,16 +44,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
   }
 
+  bool interceptBackButton(stopDefaultButtonEvent) {
+    Navigator.of(context).pushReplacementNamed('/');
+    return true;
+  }
+
   @override
   void initState() {
     loadFromPrefs();
+    BackButtonInterceptor.add(interceptBackButton);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.remove(interceptBackButton);
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pushReplacementNamed('/'),
+        ),
         elevation: 0,
         backgroundColor: Theme.of(context).canvasColor,
         title: Text(

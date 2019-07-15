@@ -71,57 +71,45 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   void loadPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String sort = prefs.get('FeedSortSelection');
-    switch (sort) {
-      case 'OverallScore':
-        setState(() {
+    setState(() {
+      switch (sort) {
+        case 'OverallScore':
           sortType = SortType.overAllScore;
           titleFilter = "Top";
-        });
-        break;
-      case 'RecentlyUpdated':
-        setState(() {
+          break;
+        case 'RecentlyUpdated':
           sortType = SortType.recentlyUpdated;
           titleFilter = 'Updated';
-        });
-        break;
-      case 'NewestPackage':
-        setState(() {
+          break;
+        case 'NewestPackage':
           sortType = SortType.newestPackage;
           titleFilter = 'New';
-        });
-        break;
-      case 'Popularity':
-        setState(() {
+          break;
+        case 'Popularity':
           sortType = SortType.popularity;
           titleFilter = 'Popular';
-        });
-        break;
-      default:
-        break;
-    }
-    String filter = prefs.get('FeedFilterSelection');
-    switch (filter) {
-      case 'All':
-        setState(() {
+          break;
+        default:
+          break;
+      }
+      String filter = prefs.get('FeedFilterSelection');
+      switch (filter) {
+        case 'All':
           filterType = FilterType.all;
           _currentSelection = 2;
-        });
-        break;
-      case 'Flutter':
-        setState(() {
+          break;
+        case 'Flutter':
           filterType = FilterType.flutter;
           _currentSelection = 0;
-        });
-        break;
-      case 'Web':
-        setState(() {
+          break;
+        case 'Web':
           filterType = FilterType.web;
           _currentSelection = 1;
-        });
-        break;
-      default:
-        break;
-    }
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   @override
