@@ -13,8 +13,7 @@ dependencies:
     sdk: flutter
   webfeed: ^0.4.2
   bloc: ^0.14.2
-  flutter_bloc: ^0.15.1
-  floating_search_bar: ^0.2.0
+  flutter_bloc: ^0.19.1
   groovin_material_icons: ^1.1.6
   pub_client:
     git: https://github.com/ThinkDigitalSoftware/pub_client.git
@@ -32,6 +31,7 @@ dependencies:
   rounded_modal: ^1.0.0
   back_button_interceptor: ^4.0.6
   shared_preferences: ^0.5.3+2
+  flutter_swiper: ^1.1.6
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,9 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/screens/home/home.dart';
 import 'package:tavern/screens/package_details_page.dart';
 import 'package:tavern/screens/search_screen.dart';
@@ -24,18 +26,25 @@ class PubDevClientApp extends StatelessWidget {
             brightness: brightness,
           ),
       themedWidgetBuilder: (context, theme) {
-        return Provider<PubColors>(
-          builder: (context) => PubColors(),
-          child: MaterialApp(
-            theme: theme,
-            title: "Tavern",
-            home: Home(),
-            debugShowCheckedModeBanner: false,
-            routes: <String, WidgetBuilder>{
-              "/searchScreen": (BuildContext context) => SearchScreen(),
-              "/SettingsScreen": (BuildContext context) => SettingsScreen(),
-              PackageDetailsPage.routeName: (context) => PackageDetailsPage(),
-            },
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider<HomeBloc>(
+              builder: (BuildContext context) => HomeBloc(),
+            )
+          ],
+          child: Provider<PubColors>(
+            builder: (context) => PubColors(),
+            child: MaterialApp(
+              theme: theme,
+              title: "Tavern",
+              home: Home(),
+              debugShowCheckedModeBanner: false,
+              routes: <String, WidgetBuilder>{
+                "/searchScreen": (BuildContext context) => SearchScreen(),
+                "/SettingsScreen": (BuildContext context) => SettingsScreen(),
+                PackageDetailsPage.routeName: (context) => PackageDetailsPage(),
+              },
+            ),
           ),
         );
       },
