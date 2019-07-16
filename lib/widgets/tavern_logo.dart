@@ -1,12 +1,31 @@
 import 'package:flutter/material.dart';
 
-class PubDevAnimatedLogo extends StatelessWidget {
-  const PubDevAnimatedLogo({
+class TavernAnimatedLogo extends StatefulWidget {
+  const TavernAnimatedLogo({
     Key key,
-    @required this.animationController,
   }) : super(key: key);
 
-  final AnimationController animationController;
+  @override
+  _TavernAnimatedLogoState createState() => _TavernAnimatedLogoState();
+}
+
+class _TavernAnimatedLogoState extends State<TavernAnimatedLogo>
+    with SingleTickerProviderStateMixin {
+  AnimationController animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController =
+        AnimationController(duration: Duration(seconds: 1), vsync: this);
+    animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

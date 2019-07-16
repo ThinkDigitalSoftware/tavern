@@ -2,11 +2,12 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:provider/provider.dart';
+import 'package:pub_client/pub_client.dart';
 import 'package:tavern/src/pub_colors.dart';
 
 class PlatformFilter extends StatelessWidget {
-  final ValueChanged onSegmentChosen;
-  final dynamic value;
+  final ValueChanged<FilterType> onSegmentChosen;
+  final FilterType value;
 
   const PlatformFilter(
       {Key key, @required this.value, @required this.onSegmentChosen})
@@ -17,11 +18,11 @@ class PlatformFilter extends StatelessWidget {
     return Row(
       children: <Widget>[
         Expanded(
-          child: MaterialSegmentedControl(
+          child: MaterialSegmentedControl<FilterType>(
             children: {
-              0: Text('Flutter'),
-              1: Text('Web'),
-              2: Text('All'),
+              FilterType.flutter: Text('Flutter'),
+              FilterType.web: Text('Web'),
+              FilterType.all: Text('All'),
             },
             selectionIndex: value,
             borderColor: Color.fromRGBO(71, 99, 132, 1),
