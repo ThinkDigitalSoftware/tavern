@@ -12,21 +12,27 @@ class GetPageOfPackagesEvent extends HomeEvent {
 
   GetPageOfPackagesEvent({
     this.pageNumber = 1,
-    this.sortBy,
-    this.filterBy,
-  });
+    @required this.sortBy,
+    @required this.filterBy,
+  })
+      : assert(sortBy != null, "sortBy cannot be null."),
+        assert(filterBy != null, "filterBy cannot be null.");
 
-  GetPageOfPackagesEvent copyWith(
-      {int pageNumber, SortType sortBy, FilterType filterBy}) {
+  GetPageOfPackagesEvent copyWith({
+    int pageNumber,
+    SortType sortBy,
+    FilterType filterBy,
+  }) {
     return GetPageOfPackagesEvent(
-        pageNumber: pageNumber ?? this.pageNumber,
-        sortBy: sortBy ?? this.sortBy,
-        filterBy: filterBy ?? this.filterBy);
+      pageNumber: pageNumber ?? this.pageNumber,
+      sortBy: sortBy ?? this.sortBy,
+      filterBy: filterBy ?? this.filterBy,
+    );
   }
 }
 
 class ChangeFilterTypeEvent extends HomeEvent {
   final FilterType filterType;
 
-  ChangeFilterTypeEvent(this.filterType);
+  ChangeFilterTypeEvent({@required this.filterType});
 }

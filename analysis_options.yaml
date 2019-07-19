@@ -1,5 +1,7 @@
 analyzer:
-  exclude:
+  errors:
+    # treat missing required parameters as a warning (not a hint)
+    missing_required_param: warning
 linter:
   rules:
     #    - always_declare_return_types

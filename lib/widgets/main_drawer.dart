@@ -134,7 +134,7 @@ class _MainDrawerState extends State<MainDrawer> {
             trailing: Icon(Icons.settings),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/SettingsScreen');
+              Navigator.pushNamed(context, '/settingsScreen');
             },
           ),
           Expanded(child: Container()),

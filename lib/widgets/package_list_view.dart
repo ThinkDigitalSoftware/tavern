@@ -2,27 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/widgets/package_tile.dart';
 
-class PackageListView extends StatefulWidget {
+class PackageListView extends StatelessWidget {
   final Page page;
 
-  const PackageListView({Key key, @required this.page}) : super(key: key);
-
-  @override
-  _PackageListViewState createState() => _PackageListViewState();
-}
-
-class _PackageListViewState extends State<PackageListView> {
+  const PackageListView({Key key, @required this.page})
+      : assert(page != null),
+        super(key: key);
   @override
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           return PackageTile(
-            page: widget.page,
+            page: page,
             index: index,
           );
         },
-        childCount: widget.page.packages.length,
+        childCount: page.packages.length,
       ),
     );
   }
