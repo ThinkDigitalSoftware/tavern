@@ -14,152 +14,159 @@ import 'package:tavern/widgets/search_bar.dart';
 import 'package:tavern/widgets/tavern_logo.dart';
 
 class Home extends StatefulWidget {
+  final HomeState homeState;
+
+  const Home({Key key, @required this.homeState}) : super(key: key);
+
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> with TickerProviderStateMixin {
-  HomeBloc homeBloc;
-
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  String titleFilter = "Top";
-
-  SortType sortType = SortType.overAllScore;
-  FilterType filterType = FilterType.all;
   ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
-    homeBloc = BlocProvider.of<HomeBloc>(context);
-    homeBloc.dispatch(GetPageOfPackagesEvent());
     _scrollController = ScrollController();
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
     super.dispose();
+    _scrollController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    HomeBloc _homeBloc = BlocProvider.of<HomeBloc>(context);
     return Scaffold(
       key: _scaffoldKey,
       drawer: MainDrawer(),
       body: SafeArea(
-        child: BlocBuilder(
-          bloc: homeBloc,
-          builder: (BuildContext context, HomeState state) {
-            if (state is InitialHomeState) {
-              return TavernAnimatedLogo();
-            }
-            return Stack(
-              children: <Widget>[
-                CustomScrollView(
-                  controller: _scrollController,
-                  slivers: <Widget>[
-                    SliverAppBar(
-                      elevation: 0,
-                      backgroundColor: Theme
+        child: (widget.homeState is InitialHomeState)
+            ? TavernAnimatedLogo()
+            : Stack(
+          children: <Widget>[
+            CustomScrollView(
+              controller: _scrollController,
+              slivers: <Widget>[
+                SliverAppBar(
+                  elevation: 0,
+                  backgroundColor: Theme
+                      .of(context)
+                      .canvasColor,
+                  centerTitle: true,
+                  automaticallyImplyLeading: false,
+                  snap: true,
+                  floating: true,
+                  title: Text(
+                    'Browse ${_convertFilterTypeToString(
+                        widget.homeState.filterType)} Packages',
+                    style: TextStyle(
+                      color: DynamicTheme
                           .of(context)
-                          .canvasColor,
-                      centerTitle: true,
-                      automaticallyImplyLeading: false,
-                      snap: true,
-                      floating: true,
-                      title: Text(
-                        'Browse $titleFilter Packages',
-                        style: TextStyle(
-                          color: DynamicTheme
-                              .of(context)
-                              .brightness ==
-                              Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                          .brightness ==
+                          Brightness.light
+                          ? Colors.black
+                          : Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  actions: <Widget>[
+                    PopupMenuButton<SortType>(
+                      icon: Icon(
+                        GroovinMaterialIcons.filter_outline,
+                        color: DynamicTheme
+                            .of(context)
+                            .brightness ==
+                            Brightness.light
+                            ? Colors.black
+                            : Colors.white,
                       ),
-                      actions: <Widget>[
-                        PopupMenuButton<SortType>(
-                          icon: Icon(
-                            GroovinMaterialIcons.filter_outline,
-                            color: DynamicTheme
-                                .of(context)
-                                .brightness ==
-                                Brightness.light
-                                ? Colors.black
-                                : Colors.white,
-                          ),
-                          itemBuilder: (context) =>
-                          [
-                            PopupMenuItem(
-                              child: Text('Overall Score'),
-                              value: SortType.overAllScore,
-                            ),
-                            PopupMenuItem(
-                              child: Text('Recently Updated'),
-                              value: SortType.recentlyUpdated,
-                            ),
-                            PopupMenuItem(
-                              child: Text('Newest Package'),
-                              value: SortType.newestPackage,
-                            ),
-                            PopupMenuItem(
-                              child: Text('Popularity'),
-                              value: SortType.popularity,
-                            ),
-                          ],
-                          onSelected: (selection) =>
-                              homeBloc.dispatch(
-                                  GetPageOfPackagesEvent(sortBy: selection)),
+                      itemBuilder: (context) =>
+                      [
+                        PopupMenuItem(
+                          child: Text('Overall Score'),
+                          value: SortType.overAllScore,
+                        ),
+                        PopupMenuItem(
+                          child: Text('Recently Updated'),
+                          value: SortType.recentlyUpdated,
+                        ),
+                        PopupMenuItem(
+                          child: Text('Newest Package'),
+                          value: SortType.newestPackage,
+                        ),
+                        PopupMenuItem(
+                          child: Text('Popularity'),
+                          value: SortType.popularity,
                         ),
                       ],
-                      bottom: PreferredSize(
-                        preferredSize:
-                        Size(MediaQuery
-                            .of(context)
-                            .size
-                            .width, 40),
-                        child: PlatformFilter(
-                          value: state.filterType,
-                          onSegmentChosen: (filterType) {
-                            homeBloc
-                                .dispatch(ChangeFilterTypeEvent(filterType));
-                          },
-                        ),
-                      ),
-                    ),
-                    PackageListView(page: state.page),
-                    SliverPadding(
-                      padding: EdgeInsets.symmetric(vertical: 25),
+                      onSelected: (selection) =>
+                          _homeBloc.dispatch(
+                            GetPageOfPackagesEvent(
+                              sortBy: selection,
+                              filterBy: widget.homeState.filterType,
+                            ),
+                          ),
                     ),
                   ],
-                ),
-                Positioned(
-                  bottom: 2,
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        return showSearch(
-                          context: context,
-                          delegate: PubSearchDelegate(),
-                        );
+                  bottom: PreferredSize(
+                    preferredSize:
+                    Size(MediaQuery
+                        .of(context)
+                        .size
+                        .width, 40),
+                    child: PlatformFilter(
+                      value: widget.homeState.filterType,
+                      onSegmentChosen: (filterType) {
+                        _homeBloc.dispatch(ChangeFilterTypeEvent(
+                            filterType: filterType));
                       },
-                      child: Hero(
-                        tag: 'SearchBar',
-                        child: SearchBar(scaffoldKey: _scaffoldKey),
-                      ),
                     ),
                   ),
                 ),
+                PackageListView(page: widget.homeState.page),
+                SliverPadding(
+                  padding: EdgeInsets.symmetric(vertical: 25),
+                ),
               ],
-            );
-          },
+            ),
+            Positioned(
+              bottom: 2,
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    return showSearch(
+                      context: context,
+                      delegate: PubSearchDelegate(),
+                    );
+                  },
+                  child: Hero(
+                    tag: 'SearchBar',
+                    child: SearchBar(scaffoldKey: _scaffoldKey),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  String _convertFilterTypeToString(FilterType filterType) {
+    switch (filterType) {
+      case FilterType.flutter:
+        return 'Flutter';
+      case FilterType.web:
+        return 'web';
+      case FilterType.all:
+      default:
+        return 'Dart';
+    }
   }
 }

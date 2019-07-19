@@ -6,19 +6,20 @@ import 'package:pub_client/pub_client.dart';
 class HomeState {
   final Page page;
   final FilterType filterType;
-
   final SortType sortType;
 
-  const HomeState(
-      {@required this.page,
-      @required this.filterType,
-      @required this.sortType});
+  const HomeState({
+    @required this.page,
+    @required this.filterType,
+    @required this.sortType,
+  });
 
   HomeState copyWith({Page page, FilterType filterType, SortType sortType}) {
     return HomeState(
-        page: page ?? this.page,
-        filterType: filterType ?? this.filterType,
-        sortType: sortType ?? this.sortType);
+      page: page ?? this.page,
+      filterType: filterType ?? this.filterType,
+      sortType: sortType ?? this.sortType,
+    );
   }
 }
 
