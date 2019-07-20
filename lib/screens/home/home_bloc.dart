@@ -34,6 +34,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         filterType: event.filterBy,
         sortType: event.sortBy,
       );
+      if (event.completer != null) {
+        event.completer.complete(page);
+      }
       return;
     }
     if (event is ChangeFilterTypeEvent) {

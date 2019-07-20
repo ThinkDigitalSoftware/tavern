@@ -3,7 +3,7 @@ description: An open-source pub.dev client for searching and subscribing to pack
 authors:
   - Jonathan White <jwhite@thinkdigital.software>
   - GroovinChip <groovinchip@gmail.com>
-version: 0.8.1
+version: 0.8.6
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -19,8 +19,6 @@ dependencies:
     git: https://github.com/ThinkDigitalSoftware/pub_client.git
   flutter_markdown: ^0.2.0
   html2md: ^0.3.1
-  #html2md:
-  #    git: https://github.com/GroovinChip/html2md
   material_segmented_control: ^2.0.3
   cupertino_icons: ^0.1.2
   groovin_widgets: ^1.4.2
@@ -31,7 +29,7 @@ dependencies:
   rounded_modal: ^1.0.0
   back_button_interceptor: ^4.0.6
   shared_preferences: ^0.5.3+2
-  flutter_swiper: ^1.1.6
+  flutter_pagewise:
 
 dev_dependencies:
   flutter_test:

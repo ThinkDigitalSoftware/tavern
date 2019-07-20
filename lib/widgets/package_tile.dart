@@ -1,33 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:pub_client/pub_client.dart';
-import 'package:tavern/screens/package_details_page.dart';
+import 'package:tavern/screens/bloc.dart';
+import 'package:tavern/screens/package_details/package_details_page.dart';
 import 'package:tavern/src/pub_colors.dart';
 
 class PackageTile extends StatelessWidget {
   const PackageTile({
     Key key,
-    @required this.page,
-    this.index,
+    @required this.package,
   }) : super(key: key);
 
-  final Page page;
-  final int index;
+  final Package package;
 
+  int get packageScore => package.score;
+
+  String get packageName => package.name;
   @override
   Widget build(BuildContext context) {
     Color scoreColor;
-    if (page.packages[index].score <= 50 ||
-        page.packages[index].score == null) {
+    if (packageScore <= 50 || packageScore == null) {
       scoreColor = Provider.of<PubColors>(context).badPackageScore;
-    } else if (page.packages[index].score >= 51 &&
-        page.packages[index].score <= 69) {
+    } else if (packageScore >= 51 && packageScore <= 69) {
       scoreColor = Provider.of<PubColors>(context).goodPackageScore;
     } else {
       scoreColor = Provider.of<PubColors>(context).greatPackageScore;
     }
-
-    final package = page.packages[index];
 
     final packageVersion = 'v${package.latest.semanticVersion.major}'
         '.${package.latest.semanticVersion.minor}'
@@ -36,7 +35,7 @@ class PackageTile extends StatelessWidget {
 
     return ListTile(
       title: Text(
-        page.packages[index].name,
+        packageName,
         style: TextStyle(
           fontWeight: FontWeight.bold,
         ),
@@ -50,14 +49,20 @@ class PackageTile extends StatelessWidget {
               color: Colors.white,
             ),
           )),
-      onTap: () => Navigator.pushNamed(
-        context,
-        PackageDetailsPage.routeName,
-        arguments: PackageDetailsArguments(
-          page.packages[index].name,
-          page.packages[index].score.toString(),
-        ),
-      ),
+      onTap: () async {
+        final getPackageDetailsEvent = GetPackageDetailsEvent(
+            packageName: packageName, packageScore: packageScore);
+        BlocProvider.of<PackageDetailsBloc>(context)
+          ..dispatch(Initialize())..dispatch(getPackageDetailsEvent);
+        return Navigator.pushNamed(
+          context,
+          PackageDetailsPage.routeName,
+          arguments: PackageDetailsArguments(
+            packageName,
+            packageScore.toString(),
+          ),
+        );
+      },
     );
   }
 }

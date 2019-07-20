@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/screens/home/home.dart';
-import 'package:tavern/screens/package_details_page.dart';
+import 'package:tavern/screens/package_details/package_details_page.dart';
 import 'package:tavern/screens/search_screen.dart';
 import 'package:tavern/screens/settings/settings_screen.dart';
 import 'package:tavern/src/pub_colors.dart';
@@ -24,12 +24,15 @@ class _PubDevClientAppState extends State<PubDevClientApp> {
   PubHtmlParsingClient _htmlParsingClient;
   SettingsBloc _settingsBloc;
   HomeBloc _homeBloc;
+  PackageDetailsBloc _packageDetailsBloc;
 
   @override
   void initState() {
     _htmlParsingClient = PubHtmlParsingClient();
     _settingsBloc = SettingsBloc();
     _homeBloc = HomeBloc(client: _htmlParsingClient);
+    _packageDetailsBloc = PackageDetailsBloc(client: _htmlParsingClient);
+
     super.initState();
   }
 
@@ -51,6 +54,9 @@ class _PubDevClientAppState extends State<PubDevClientApp> {
             ),
             BlocProvider<SettingsBloc>(
               builder: (BuildContext context) => _settingsBloc,
+            ),
+            BlocProvider<PackageDetailsBloc>(
+              builder: (BuildContext context) => _packageDetailsBloc,
             ),
           ],
           child: Provider<PubColors>(
@@ -76,7 +82,15 @@ class _PubDevClientAppState extends State<PubDevClientApp> {
                             settingsState: state,
                           );
                         }),
-                PackageDetailsPage.routeName: (context) => PackageDetailsPage(),
+                PackageDetailsPage.routeName: (context) =>
+                    BlocBuilder<PackageDetailsEvent, PackageDetailsState>(
+                      bloc: _packageDetailsBloc,
+                      builder:
+                          (BuildContext context, PackageDetailsState state) =>
+                          PackageDetailsPage(
+                            packageDetailsState: state,
+                          ),
+                    ),
               },
             ),
           ),

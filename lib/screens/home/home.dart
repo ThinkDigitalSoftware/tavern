@@ -48,112 +48,100 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         child: (widget.homeState is InitialHomeState)
             ? TavernAnimatedLogo()
             : Stack(
-          children: <Widget>[
-            CustomScrollView(
-              controller: _scrollController,
-              slivers: <Widget>[
-                SliverAppBar(
-                  elevation: 0,
-                  backgroundColor: Theme
-                      .of(context)
-                      .canvasColor,
-                  centerTitle: true,
-                  automaticallyImplyLeading: false,
-                  snap: true,
-                  floating: true,
-                  title: Text(
-                    'Browse ${_convertFilterTypeToString(
-                        widget.homeState.filterType)} Packages',
-                    style: TextStyle(
-                      color: DynamicTheme
-                          .of(context)
-                          .brightness ==
-                          Brightness.light
-                          ? Colors.black
-                          : Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  actions: <Widget>[
-                    PopupMenuButton<SortType>(
-                      icon: Icon(
-                        GroovinMaterialIcons.filter_outline,
-                        color: DynamicTheme
-                            .of(context)
-                            .brightness ==
-                            Brightness.light
-                            ? Colors.black
-                            : Colors.white,
-                      ),
-                      itemBuilder: (context) =>
-                      [
-                        PopupMenuItem(
-                          child: Text('Overall Score'),
-                          value: SortType.overAllScore,
+                children: <Widget>[
+                  CustomScrollView(
+                    controller: _scrollController,
+                    slivers: <Widget>[
+                      SliverAppBar(
+                        elevation: 0,
+                        backgroundColor: Theme.of(context).canvasColor,
+                        centerTitle: true,
+                        automaticallyImplyLeading: false,
+                        snap: true,
+                        floating: true,
+                        title: Text(
+                          'Browse ${_convertFilterTypeToString(widget.homeState.filterType)} Packages',
+                          style: TextStyle(
+                            color: DynamicTheme.of(context).brightness ==
+                                    Brightness.light
+                                ? Colors.black
+                                : Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        PopupMenuItem(
-                          child: Text('Recently Updated'),
-                          value: SortType.recentlyUpdated,
-                        ),
-                        PopupMenuItem(
-                          child: Text('Newest Package'),
-                          value: SortType.newestPackage,
-                        ),
-                        PopupMenuItem(
-                          child: Text('Popularity'),
-                          value: SortType.popularity,
-                        ),
-                      ],
-                      onSelected: (selection) =>
-                          _homeBloc.dispatch(
-                            GetPageOfPackagesEvent(
-                              sortBy: selection,
-                              filterBy: widget.homeState.filterType,
+                        actions: <Widget>[
+                          PopupMenuButton<SortType>(
+                            icon: Icon(
+                              GroovinMaterialIcons.filter_outline,
+                              color: DynamicTheme.of(context).brightness ==
+                                      Brightness.light
+                                  ? Colors.black
+                                  : Colors.white,
+                            ),
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                child: Text('Overall Score'),
+                                value: SortType.overAllScore,
+                              ),
+                              PopupMenuItem(
+                                child: Text('Recently Updated'),
+                                value: SortType.recentlyUpdated,
+                              ),
+                              PopupMenuItem(
+                                child: Text('Newest Package'),
+                                value: SortType.newestPackage,
+                              ),
+                              PopupMenuItem(
+                                child: Text('Popularity'),
+                                value: SortType.popularity,
+                              ),
+                            ],
+                            onSelected: (selection) => _homeBloc.dispatch(
+                              GetPageOfPackagesEvent(
+                                sortBy: selection,
+                                filterBy: widget.homeState.filterType,
+                              ),
                             ),
                           ),
-                    ),
-                  ],
-                  bottom: PreferredSize(
-                    preferredSize:
-                    Size(MediaQuery
-                        .of(context)
-                        .size
-                        .width, 40),
-                    child: PlatformFilter(
-                      value: widget.homeState.filterType,
-                      onSegmentChosen: (filterType) {
-                        _homeBloc.dispatch(ChangeFilterTypeEvent(
-                            filterType: filterType));
-                      },
+                        ],
+                        bottom: PreferredSize(
+                          preferredSize:
+                              Size(MediaQuery.of(context).size.width, 40),
+                          child: PlatformFilter(
+                            value: widget.homeState.filterType,
+                            onSegmentChosen: (filterType) {
+                              _homeBloc.dispatch(ChangeFilterTypeEvent(
+                                  filterType: filterType));
+                            },
+                          ),
+                        ),
+                      ),
+                      PackageListView(page: widget.homeState.page),
+                      SliverPadding(
+                        padding: EdgeInsets.symmetric(vertical: 25),
+                      ),
+                    ],
+                  ),
+                  Positioned(
+                    bottom: 2,
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          return showSearch(
+                            context: context,
+                            delegate: PubSearchDelegate(),
+                          );
+                        },
+                        child: Hero(
+                          tag: 'SearchBar',
+                          child: SearchBar(scaffoldKey: _scaffoldKey),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                PackageListView(page: widget.homeState.page),
-                SliverPadding(
-                  padding: EdgeInsets.symmetric(vertical: 25),
-                ),
-              ],
-            ),
-            Positioned(
-              bottom: 2,
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    return showSearch(
-                      context: context,
-                      delegate: PubSearchDelegate(),
-                    );
-                  },
-                  child: Hero(
-                    tag: 'SearchBar',
-                    child: SearchBar(scaffoldKey: _scaffoldKey),
-                  ),
-                ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }

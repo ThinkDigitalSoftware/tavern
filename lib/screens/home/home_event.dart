@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 import 'package:pub_client/pub_client.dart';
@@ -9,11 +11,13 @@ class GetPageOfPackagesEvent extends HomeEvent {
   final int pageNumber;
   final SortType sortBy;
   final FilterType filterBy;
+  final Completer<Page> completer;
 
   GetPageOfPackagesEvent({
     this.pageNumber = 1,
     @required this.sortBy,
     @required this.filterBy,
+    this.completer,
   })
       : assert(sortBy != null, "sortBy cannot be null."),
         assert(filterBy != null, "filterBy cannot be null.");

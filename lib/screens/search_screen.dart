@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart' hide SearchDelegate;
 import 'package:pub_client/pub_client.dart';
-import 'package:tavern/screens/package_details_page.dart';
+import 'package:tavern/screens/package_details/package_details_page.dart';
 import 'package:tavern/widgets/material_search.dart';
 
 class SearchScreen extends StatefulWidget {
