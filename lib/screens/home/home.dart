@@ -116,7 +116,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
-                      PackageListView(page: widget.homeState.page),
+                      PackageListView(
+                        pageQuery: PageQuery(
+                          filterType: widget.homeState.filterType,
+                          sortType: widget.homeState.sortType,
+                          pageNumber: widget.homeState.page.pageNumber,
+                        ),
+                      ),
                       SliverPadding(
                         padding: EdgeInsets.symmetric(vertical: 25),
                       ),

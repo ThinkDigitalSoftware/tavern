@@ -30,6 +30,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       children: <Widget>[
                         Expanded(
                           child: TextField(
+                            autofocus: true,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               labelText: 'Search Dart packages',

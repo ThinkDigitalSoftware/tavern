@@ -13,7 +13,8 @@ dependencies:
     sdk: flutter
   webfeed: ^0.4.2
   bloc: ^0.14.2
-  flutter_bloc: ^0.19.1
+  flutter_bloc: ^0.20.0
+  hydrated_bloc: ^0.3.1
   groovin_material_icons: ^1.1.6
   pub_client:
     git: https://github.com/ThinkDigitalSoftware/pub_client.git
