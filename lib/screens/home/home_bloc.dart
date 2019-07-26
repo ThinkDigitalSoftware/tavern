@@ -6,11 +6,12 @@ import 'package:pub_client/pub_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/src/cache.dart';
+import 'package:tavern/src/repository.dart';
 
 class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
   final PubHtmlParsingClient client;
   @override
-  HomeState get initialState => InitialHomeState();
+  HomeState get initialState => super.initialState ?? InitialHomeState();
   PageRepository _pageRepository;
 
   HomeBloc({@required this.client}) {
@@ -78,10 +79,22 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
   }
 
   @override
-  HomeState fromJson(Map<String, dynamic> json) => HomeState.fromJson(json);
+  HomeState fromJson(Map<String, dynamic> json) {
+    try {
+      return HomeState.fromJson(json);
+    } on Exception {
+      return null;
+    }
+  }
 
   @override
-  Map<String, dynamic> toJson(HomeState state) => state.toJson();
+  Map<String, dynamic> toJson(HomeState state) {
+    try {
+      return state.toJson();
+    } on Exception {
+      return null;
+    }
+  }
 }
 
 class HomePreferences {
@@ -91,8 +104,7 @@ class HomePreferences {
   HomePreferences({
     @required this.sortType,
     @required this.filterType,
-  })
-      : assert(sortType != null, "sortType cannot be null."),
+  })  : assert(sortType != null, "sortType cannot be null."),
         assert(filterType != null, "filterType cannot be null.");
 }
 
@@ -106,18 +118,17 @@ class PageQuery {
     @required this.sortType,
     @required this.filterType,
     @required this.pageNumber,
-  })
-      : assert(sortType != null, "sortType cannot be null."),
+  })  : assert(sortType != null, "sortType cannot be null."),
         assert(filterType != null, "filterType cannot be null.");
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is PageQuery &&
-              runtimeType == other.runtimeType &&
-              sortType == other.sortType &&
-              filterType == other.filterType &&
-              pageNumber == other.pageNumber;
+      other is PageQuery &&
+          runtimeType == other.runtimeType &&
+          sortType == other.sortType &&
+          filterType == other.filterType &&
+          pageNumber == other.pageNumber;
 
   @override
   int get hashCode =>
@@ -126,7 +137,7 @@ class PageQuery {
 
 class PageCache<PageQuery, Page> extends Cache {}
 
-class PageRepository {
+class PageRepository extends Repository<PageQuery, Page> {
   final PubHtmlParsingClient client;
   final PageCache<PageQuery, Page> _pageCache = PageCache();
 

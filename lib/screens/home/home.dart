@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/bloc.dart';
-import 'package:tavern/screens/search_screen.dart';
+import 'package:tavern/screens/search/search_screen.dart';
+import 'package:tavern/src/enums.dart';
 import 'package:tavern/widgets/main_drawer.dart';
-import 'package:tavern/widgets/material_search.dart';
 import 'package:tavern/widgets/package_list_view.dart';
 import 'package:tavern/widgets/platform_filter.dart';
 import 'package:tavern/widgets/search_bar.dart';
@@ -134,9 +134,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       padding: EdgeInsets.all(8.0),
                       child: GestureDetector(
                         onTap: () {
-                          return showSearch(
-                            context: context,
-                            delegate: PubSearchDelegate(),
+                          Navigator.of(context).pushNamed(
+                            Routes.searchScreen,
+                            arguments: PubSearchDelegate(
+                                searchBloc:
+                                BlocProvider.of<SearchBloc>(context)),
                           );
                         },
                         child: Hero(

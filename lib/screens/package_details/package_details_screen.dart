@@ -10,18 +10,17 @@ import 'package:tavern/widgets/html_view.dart';
 import 'package:tavern/widgets/score_tab.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class PackageDetailsPage extends StatefulWidget {
-  static const routeName = '/packageDetailsPage';
+class PackageDetailsScreen extends StatefulWidget {
   final PackageDetailsState packageDetailsState;
 
-  const PackageDetailsPage({Key key, @required this.packageDetailsState})
+  const PackageDetailsScreen({Key key, @required this.packageDetailsState})
       : super(key: key);
 
   @override
-  _PackageDetailsPageState createState() => _PackageDetailsPageState();
+  _PackageDetailsScreenState createState() => _PackageDetailsScreenState();
 }
 
-class _PackageDetailsPageState extends State<PackageDetailsPage>
+class _PackageDetailsScreenState extends State<PackageDetailsScreen>
     with SingleTickerProviderStateMixin {
   List<Tab> _tabs;
   TabController _tabController;

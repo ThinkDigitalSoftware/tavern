@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide SearchDelegate;
 import 'package:flutter/scheduler.dart';
+import 'package:tavern/src/enums.dart';
 
 /// Shows a full screen search page and returns the search result selected by
 /// the user when the page is closed.
@@ -47,9 +48,10 @@ Future<T> showSearch<T>({
   assert(context != null);
   delegate.query = query ?? delegate.query;
   delegate._currentBody = _SearchBody.suggestions;
-  return Navigator.of(context).push(_SearchPageRoute<T>(
-    delegate: delegate,
-  ));
+  return Navigator.of(context).pushNamed(
+    Routes.searchScreen,
+    arguments: delegate,
+  );
 }
 
 /// Delegate for [showSearch] to define the content of the search page.
@@ -209,7 +211,7 @@ abstract class SearchDelegate<T> {
     _currentBodyNotifier.value = value;
   }
 
-  _SearchPageRoute<T> _route;
+  SearchPageRoute<T> _route;
 }
 
 /// Describes the body that is currently shown under the [AppBar] in the
@@ -226,8 +228,8 @@ enum _SearchBody {
   results,
 }
 
-class _SearchPageRoute<T> extends PageRoute<T> {
-  _SearchPageRoute({
+class SearchPageRoute<T> extends PageRoute<T> {
+  SearchPageRoute({
     @required this.delegate,
   }) : assert(delegate != null) {
     assert(

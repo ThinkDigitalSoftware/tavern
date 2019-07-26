@@ -19,6 +19,7 @@ class PackageListView extends StatefulWidget {
 }
 
 class _PackageListViewState extends State<PackageListView> {
+  // used to reset the list when we change filter or sort types.
   Key pageWiseSliverListKey = GlobalKey();
 
   @override

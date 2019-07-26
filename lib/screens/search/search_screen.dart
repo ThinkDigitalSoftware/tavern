@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart' hide SearchDelegate;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pub_client/pub_client.dart';
-import 'package:tavern/screens/package_details/package_details_page.dart';
+import 'package:tavern/screens/bloc.dart';
+import 'package:tavern/screens/package_details/package_details_screen.dart';
+import 'package:tavern/src/enums.dart';
 import 'package:tavern/widgets/material_search.dart';
 
-class SearchScreen extends StatefulWidget {
-  @override
-  _SearchScreenState createState() => _SearchScreenState();
-}
+class SearchScreen extends StatelessWidget {
+  final SearchState searchState;
 
-class _SearchScreenState extends State<SearchScreen> {
+  const SearchScreen({Key key, @required this.searchState}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +68,9 @@ class _SearchScreenState extends State<SearchScreen> {
 }
 
 class PubSearchDelegate extends SearchDelegate {
-  PubHtmlParsingClient client = PubHtmlParsingClient();
+  final SearchBloc searchBloc;
+
+  PubSearchDelegate({@required this.searchBloc});
 
   @override
   Widget buildResults(BuildContext context) {
@@ -75,28 +79,30 @@ class PubSearchDelegate extends SearchDelegate {
         child: Text('No Search Results'),
       );
     } else {
-      return FutureBuilder<List<Package>>(
-          future: client.search(query),
-          builder: (context, snapshot) {
-            if (snapshot.data == null) {
+      return BlocBuilder<SearchBloc, SearchState>(
+          builder: (context, searchState) {
+            if (searchState.searchResults == null) {
               return Center(child: CircularProgressIndicator());
             }
-            final packages = snapshot.data;
+            final packages = searchState.searchResults;
             return ListView.builder(
               itemCount: packages.length,
               itemBuilder: (context, index) {
                 return Card(
-                  color: Theme.of(context).canvasColor,
+                  color: Theme
+                      .of(context)
+                      .canvasColor,
                   child: ListTile(
                     title: Text(packages[index].name),
-                    onTap: () => Navigator.pushNamed(
-                      context,
-                      PackageDetailsPage.routeName,
-                      arguments: PackageDetailsArguments(
-                        packages[index].name,
-                        packages[index].score.toString(),
-                      ),
-                    ),
+                    onTap: () =>
+                        Navigator.pushNamed(
+                          context,
+                          Routes.packageDetailsScreen,
+                          arguments: PackageDetailsArguments(
+                            packages[index].name,
+                            packages[index].score.toString(),
+                          ),
+                        ),
                   ),
                 );
               },
@@ -112,33 +118,27 @@ class PubSearchDelegate extends SearchDelegate {
         child: Text('No Search Results'),
       );
     } else {
-      return FutureBuilder<List<Package>>(
-          future: client.search(query),
-          builder: (context, snapshot) {
-            if (snapshot.data == null) {
-              return Center(child: CircularProgressIndicator());
-            }
-            final packages = snapshot.data;
-            return ListView.builder(
-              itemCount: packages.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  color: Theme.of(context).canvasColor,
-                  child: ListTile(
-                    title: Text(packages[index].name),
-                    onTap: () => Navigator.pushNamed(
-                      context,
-                      PackageDetailsPage.routeName,
-                      arguments: PackageDetailsArguments(
-                        packages[index].name,
-                        packages[index].score.toString(),
-                      ),
-                    ),
-                  ),
-                );
-              },
+      searchBloc.dispatch(
+        GetSearchResultsEvent(
+          query: SearchQuery(query),
+        ),
+      );
+      return BlocBuilder<SearchBloc, SearchState>(
+        builder: (context, searchState) {
+          final List<Package> packages = searchState.searchResults;
+          if (searchState is InitialSearchState) {
+            return Center(
+              child: CircularProgressIndicator(),
             );
-          });
+          }
+          return ListView.builder(
+            itemCount: packages.length,
+            itemBuilder: (context, index) {
+              return SuggestionTile(package: packages[index]);
+            },
+          );
+        },
+      );
     }
   }
 
@@ -177,17 +177,13 @@ class PubSearchDelegate extends SearchDelegate {
                         icon: Icon(
                           Icons.arrow_back,
                         ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
+                        onPressed: () => Navigator.of(context).pop(),
                       ),
                       suffixIcon: IconButton(
                         icon: Icon(
                           Icons.search,
                         ),
-                        onPressed: () {
-                          showResults(context);
-                        },
+                        onPressed: () => showResults(context),
                       ),
                     ),
                   ),
@@ -196,6 +192,36 @@ class PubSearchDelegate extends SearchDelegate {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class SuggestionTile extends StatelessWidget {
+  const SuggestionTile({
+    Key key,
+    @required this.package,
+  }) : super(key: key);
+
+  final Package package;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Theme
+          .of(context)
+          .canvasColor,
+      child: ListTile(
+        title: Text(package.name),
+        onTap: () =>
+            Navigator.pushNamed(
+              context,
+              Routes.packageDetailsScreen,
+              arguments: PackageDetailsArguments(
+                package.name,
+                package.score.toString(),
+              ),
+            ),
       ),
     );
   }
