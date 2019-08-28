@@ -16,11 +16,6 @@ class SettingsScreen extends StatelessWidget {
     final SettingsBloc settingsBloc = BlocProvider.of<SettingsBloc>(context);
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () =>
-              Navigator.of(context).popUntil(ModalRoute.withName('/')),
-        ),
         elevation: 0,
         backgroundColor: Theme
             .of(context)

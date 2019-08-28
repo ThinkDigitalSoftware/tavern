@@ -4,6 +4,7 @@ import 'package:groovin_widgets/groovin_widgets.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:tavern/src/pub_colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MainDrawer extends StatefulWidget {
   @override
@@ -84,14 +85,16 @@ class _MainDrawerState extends State<MainDrawer> {
               ListTile(
                 title: Text('Using Packages'),
                 trailing: Icon(Icons.launch),
-                onTap:
-                    () {}, //TODO: launch https://flutter.dev/docs/development/packages-and-plugins/using-packages
+                onTap: () =>
+                    launch(
+                        "https://flutter.dev/docs/development/packages-and-plugins/using-packages"),
               ),
               ListTile(
                 title: Text('Developing Packages and Plugins'),
                 trailing: Icon(Icons.launch),
-                onTap:
-                    () {}, //TODO: launch https://flutter.dev/docs/development/packages-and-plugins/developing-packages
+                onTap: () =>
+                    launch(
+                        "https://flutter.dev/docs/development/packages-and-plugins/developing-packages"),
               ),
             ],
           ),
@@ -104,21 +107,17 @@ class _MainDrawerState extends State<MainDrawer> {
             ),
             children: <Widget>[
               ListTile(
-                title: Text('Using Packages'),
-                trailing: Icon(Icons.launch),
-                onTap: () {}, //TODO: launch hhttps://dart.dev/guides/packages
-              ),
+                  title: Text('Using Packages'),
+                  trailing: Icon(Icons.launch),
+                  onTap: () => launch("https://dart.dev/guides/packages")),
               ListTile(
-                title: Text('Publishing a Package'),
-                trailing: Icon(Icons.launch),
-                onTap:
-                    () {}, //TODO: launch https://dart.dev/tools/pub/publishing
-              ),
+                  title: Text('Publishing a Package'),
+                  trailing: Icon(Icons.launch),
+                  onTap: () => launch("https://dart.dev/tools/pub/publishing")),
               ListTile(
-                title: Text('Overview'),
-                trailing: Icon(Icons.launch),
-                onTap: () {}, //TODO: launch https://dart.dev/tools/pub/cmd
-              ),
+                  title: Text('Overview'),
+                  trailing: Icon(Icons.launch),
+                  onTap: () => launch("https://dart.dev/tools/pub/cmd")),
             ],
           ),
           Divider(

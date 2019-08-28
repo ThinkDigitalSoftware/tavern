@@ -327,7 +327,8 @@ class _SearchPageState<T> extends State<_SearchPage<T>> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     SchedulerBinding.instance.addPostFrameCallback((duration) {
-      FocusScopeNode focusScopeNode = FocusScope.of(context);
+      FocusScopeNode focusScopeNode =
+      FocusScope.of(widget.delegate._focusNode.context);
       focusScopeNode.requestFocus(widget.delegate._focusNode);
     });
   }

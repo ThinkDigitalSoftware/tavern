@@ -3,7 +3,7 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:pub_client/pub_client.dart' hide Tab;
+import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/src/pub_colors.dart';
 import 'package:tavern/widgets/html_view.dart';
@@ -167,25 +167,27 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
             ),
             actions: <Widget>[
               IconButton(
+                tooltip: "API",
                 icon: Text(
                   'API',
                   style: TextStyle(
                     color:
-                        DynamicTheme.of(context).brightness == Brightness.light
-                            ? Colors.black
-                            : Colors.white,
+                    DynamicTheme.of(context).brightness == Brightness.light
+                        ? Colors.black
+                        : Colors.white,
                   ),
                 ),
                 onPressed: () => launch(_package.apiReferenceUrl),
               ),
               if (_package.repositoryUrl != null)
                 IconButton(
+                  tooltip: "Repo",
                   icon: Icon(
                     Icons.code,
                     color:
-                        DynamicTheme.of(context).brightness == Brightness.light
-                            ? Colors.black
-                            : Colors.white,
+                    DynamicTheme.of(context).brightness == Brightness.light
+                        ? Colors.black
+                        : Colors.white,
                   ),
                   onPressed: () => launch(_package.repositoryUrl),
                 )
@@ -193,18 +195,20 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                 Container(),
               if (_package.issuesUrl != null)
                 IconButton(
+                  tooltip: "Issues",
                   icon: Icon(
                     Icons.bug_report,
                     color:
-                        DynamicTheme.of(context).brightness == Brightness.light
-                            ? Colors.black
-                            : Colors.white,
+                    DynamicTheme.of(context).brightness == Brightness.light
+                        ? Colors.black
+                        : Colors.white,
                   ),
                   onPressed: () => launch(_package.issuesUrl),
                 )
               else
                 Container(),
               IconButton(
+                tooltip: "Favorite",
                 icon: Icon(
                   Icons.favorite_border,
                   color: DynamicTheme.of(context).brightness == Brightness.light
@@ -222,24 +226,26 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
         controller: _tabController,
         children: <Widget>[
           ReadmeTab(
-            package: _package,
-          ),
+              packageTab: _package.tabs.firstWhere(
+                      (tab) => tab is ReadMePackageTab,
+                  orElse: () => null)),
           ChangelogTab(
-            package: _package,
+            packageTab: _package.tabs.firstWhere(
+                    (tab) => tab is ChangelogPackageTab,
+                orElse: () => null),
           ),
-          if (_package.tabs[2].content.isEmpty)
-            Center(
-              child: Text('No Example'),
-            )
-          else
-            ExampleTab(
-              package: _package,
-            ),
+          ExampleTab(
+            packageTab: _package.tabs.firstWhere(
+                    (tab) => tab is ExamplePackageTab,
+                orElse: () => null),
+          ),
           InstallingTab(
-            package: _package,
+            packageTab: _package.tabs.firstWhere(
+                    (tab) => tab is InstallingPackageTab,
+                orElse: () => null),
           ),
           VersionsTab(
-            package: _package,
+            versions: _package.versions,
           ),
           ScoreTab(
             package: _package,
@@ -272,20 +278,25 @@ class PackageDetailsArguments {
 }
 
 class VersionsTab extends StatelessWidget {
-  final FullPackage package;
+  final List<Version> versions;
 
-  const VersionsTab({Key key, this.package}) : super(key: key);
+  const VersionsTab({Key key, this.versions}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (versions == null) {
+      return Center(
+        child: Text('No content'),
+      );
+    }
     return ListView.builder(
-      itemCount: package.versions.length,
+      itemCount: versions.length,
       itemBuilder: (context, index) {
         //TODO: Build a table with Version, Uploaded Date, Documentation URL, and Archive columns
         return ListTile(
-          title: Text('${package.versions[index].semanticVersion.major}'
-              '.${package.versions[index].semanticVersion.minor}'
-              '.${package.versions[index].semanticVersion.patch}'),
+          title: Text('${versions[index].semanticVersion.major}'
+              '.${versions[index].semanticVersion.minor}'
+              '.${versions[index].semanticVersion.patch}'),
         );
       },
     );
@@ -293,18 +304,21 @@ class VersionsTab extends StatelessWidget {
 }
 
 class InstallingTab extends StatelessWidget {
-  final FullPackage package;
+  final InstallingPackageTab packageTab;
 
-  const InstallingTab({Key key, this.package}) : super(key: key);
+  const InstallingTab({Key key, this.packageTab}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (packageTab == null) {
+      return Center(
+        child: Text('No content'),
+      );
+    }
     return Column(
       children: <Widget>[
         Expanded(
-          child: HtmlView(
-            html: package.tabs[3].content,
-          ),
+          child: HtmlView(html: packageTab.content),
         ),
       ],
     );
@@ -312,18 +326,21 @@ class InstallingTab extends StatelessWidget {
 }
 
 class ExampleTab extends StatelessWidget {
-  final FullPackage package;
+  final ExamplePackageTab packageTab;
 
-  const ExampleTab({Key key, this.package}) : super(key: key);
+  const ExampleTab({Key key, this.packageTab}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (packageTab == null) {
+      return Center(
+        child: Text('No content'),
+      );
+    }
     return Column(
       children: <Widget>[
         Expanded(
-          child: HtmlView(
-            html: package.tabs[2].content,
-          ),
+          child: HtmlView(html: packageTab.content),
         ),
       ],
     );
@@ -331,17 +348,22 @@ class ExampleTab extends StatelessWidget {
 }
 
 class ChangelogTab extends StatelessWidget {
-  final FullPackage package;
+  final ChangelogPackageTab packageTab;
 
-  const ChangelogTab({Key key, this.package}) : super(key: key);
+  const ChangelogTab({Key key, this.packageTab}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (packageTab == null) {
+      return Center(
+        child: Text('No content'),
+      );
+    }
     return Column(
       children: <Widget>[
         Expanded(
           child: HtmlView(
-            html: package.tabs[1].content,
+            html: packageTab.content,
           ),
         ),
       ],
@@ -350,18 +372,21 @@ class ChangelogTab extends StatelessWidget {
 }
 
 class ReadmeTab extends StatelessWidget {
-  final FullPackage package;
+  final ReadMePackageTab packageTab;
 
-  const ReadmeTab({Key key, this.package}) : super(key: key);
+  const ReadmeTab({Key key, this.packageTab}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (packageTab == null) {
+      return Center(
+        child: Text('No content'),
+      );
+    }
     return Column(
       children: <Widget>[
         Expanded(
-          child: HtmlView(
-            html: package.tabs[0].content,
-          ),
+          child: HtmlView(html: packageTab.content),
         ),
       ],
     );

@@ -13,6 +13,7 @@ import 'package:tavern/screens/package_details/package_details_screen.dart';
 import 'package:tavern/screens/settings/settings_screen.dart';
 import 'package:tavern/src/enums.dart';
 import 'package:tavern/src/pub_colors.dart';
+import 'package:tavern/src/subscription_bloc/bloc.dart';
 import 'package:tavern/widgets/material_search.dart';
 
 Future main() async {
@@ -38,6 +39,10 @@ Future main() async {
         BlocProvider<SearchBloc>(
           builder: (BuildContext context) =>
               SearchBloc(client: _htmlParsingClient),
+        ),
+        BlocProvider<SubscriptionBloc>(
+          builder: (BuildContext context) =>
+              SubscriptionBloc(client: _htmlParsingClient),
         )
       ],
       child: PubDevClientApp(),
