@@ -3,24 +3,29 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/screens/home/home.dart';
-import 'package:tavern/screens/package_details/package_details_bloc.dart';
 import 'package:tavern/screens/package_details/package_details_screen.dart';
 import 'package:tavern/screens/settings/settings_screen.dart';
 import 'package:tavern/src/enums.dart';
 import 'package:tavern/src/pub_colors.dart';
-import 'package:tavern/src/subscription_bloc/bloc.dart';
 import 'package:tavern/widgets/material_search.dart';
 
 Future main() async {
   BlocSupervisor.delegate = await HydratedBlocDelegate.build();
   PubHtmlParsingClient _htmlParsingClient;
-
+  final getIt = GetIt.instance;
   _htmlParsingClient = PubHtmlParsingClient();
+  getIt
+    ..registerSingleton<PubHtmlParsingClient>(_htmlParsingClient)
+    ..registerSingleton<PackageRepository>(
+      PackageRepository(client: _htmlParsingClient),
+    )
+    ..registerSingleton<PackageCache>(PackageCache());
   runApp(
     MultiBlocProvider(
       providers: [
@@ -33,8 +38,7 @@ Future main() async {
         ),
         BlocProvider<PackageDetailsBloc>(
           builder: (BuildContext context) =>
-          PackageDetailsBloc(client: _htmlParsingClient)
-            ..dispatch(Initialize()),
+              PackageDetailsBloc()..dispatch(InitializePackageDetailsBloc()),
         ),
         BlocProvider<SearchBloc>(
           builder: (BuildContext context) =>
@@ -55,12 +59,12 @@ class PubDevClientApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return DynamicTheme(
       defaultBrightness: Brightness.light,
-      data: (brightness) =>
-          ThemeData(
-            fontFamily: 'Metropolis',
-            accentColor: Color(0xFF38bffc),
-            brightness: brightness,
-          ),
+      data: (brightness) => ThemeData(
+          fontFamily: 'Metropolis',
+          accentColor: Color(0xFF38bffc),
+          brightness: brightness,
+          primaryColorBrightness: brightness,
+          appBarTheme: AppBarTheme(color: Theme.of(context).cardColor)),
       themedWidgetBuilder: (context, theme) {
         return Provider<PubColors>(
           builder: (context) => PubColors(),
@@ -76,9 +80,9 @@ class PubDevClientApp extends StatelessWidget {
                     return MaterialPageRoute(
                       builder: (BuildContext context) =>
                           BlocBuilder<HomeBloc, HomeState>(
-                            builder: (BuildContext context, HomeState state) =>
-                                Home(homeState: state),
-                          ),
+                        builder: (BuildContext context, HomeState state) =>
+                            Home(homeState: state),
+                      ),
                     );
                   }
 
@@ -93,36 +97,34 @@ class PubDevClientApp extends StatelessWidget {
                     return MaterialPageRoute(
                       builder: (BuildContext context) =>
                           BlocBuilder<SettingsBloc, SettingsState>(
-                            builder: (BuildContext context,
-                                SettingsState state) =>
-                                SettingsScreen(
+                        builder: (BuildContext context, SettingsState state) =>
+                            SettingsScreen(
                           settingsState: state,
-                                ),
-                          ),
+                        ),
+                      ),
                     );
                   }
                 case Routes.packageDetailsScreen:
                   {
                     final packageDetailsArguments =
-                    routeSettings.arguments as PackageDetailsArguments;
+                        routeSettings.arguments as PackageDetailsArguments;
                     assert(packageDetailsArguments is PackageDetailsArguments);
                     BlocProvider.of<PackageDetailsBloc>(context).dispatch(
                       GetPackageDetailsEvent(
                         packageName: packageDetailsArguments.packageName,
                         packageScore:
-                        int.tryParse(packageDetailsArguments.packageScore),
+                            int.tryParse(packageDetailsArguments.packageScore),
                       ),
                     );
                     return MaterialPageRoute(
                       builder: (BuildContext context) =>
                           BlocBuilder<PackageDetailsBloc, PackageDetailsState>(
-                            builder:
-                                (BuildContext context,
-                                PackageDetailsState state) =>
+                        builder:
+                            (BuildContext context, PackageDetailsState state) =>
                                 PackageDetailsScreen(
                           packageDetailsState: state,
                         ),
-                          ),
+                      ),
                     );
                   }
                 default:

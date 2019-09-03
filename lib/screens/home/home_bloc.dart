@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,10 +17,13 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
 
   HomeBloc({@required this.client}) {
     _loadPreferences().then((homePreferences) {
-      dispatch(GetPageOfPackagesEvent(
+      dispatch(
+        GetPageOfPackagesEvent(
           pageNumber: 1,
           sortBy: homePreferences.sortType,
-          filterBy: homePreferences.filterType));
+          filterBy: homePreferences.filterType,
+        ),
+      );
     });
     _pageRepository = PageRepository(client: client);
   }
@@ -29,9 +33,10 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
     if (event is GetPageOfPackagesEvent) {
       Page page;
       final pageQuery = PageQuery(
-          sortType: event.sortBy,
-          filterType: event.filterBy,
-          pageNumber: event.pageNumber);
+        sortType: event.sortBy,
+        filterType: event.filterBy,
+        pageNumber: event.pageNumber,
+      );
       page = await _pageRepository.get(pageQuery);
       yield currentState.copyWith(
         page: page,
@@ -52,6 +57,10 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
           filterBy: event.filterType,
         ),
       );
+      return;
+    }
+    if (event is ChangeBottomNavigationBarIndex) {
+      yield currentState.copyWith(bottomNavigationBarIndex: event.index);
       return;
     }
   }
@@ -135,13 +144,15 @@ class PageQuery {
       sortType.hashCode ^ filterType.hashCode ^ pageNumber.hashCode;
 }
 
-class PageCache<PageQuery, Page> extends Cache {}
+class PageCache extends Cache<PageQuery, Page> {}
 
 class PageRepository extends Repository<PageQuery, Page> {
   final PubHtmlParsingClient client;
-  final PageCache<PageQuery, Page> _pageCache = PageCache();
+  final PageCache _pageCache = PageCache();
+  final PackageCache _packageCache;
 
-  PageRepository({@required this.client});
+  PageRepository({@required this.client})
+      : _packageCache = GetIt.instance.get<PackageCache>();
 
   Future<Page> get(PageQuery query) async {
     if (_pageCache.containsKey(query)) {
@@ -153,6 +164,7 @@ class PageRepository extends Repository<PageQuery, Page> {
         filterBy: query.filterType,
       );
       _pageCache.add(query, page);
+      _packageCache.addAll({for (final package in page) package.name: package});
       return page;
     }
   }

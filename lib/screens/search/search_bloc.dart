@@ -31,11 +31,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 }
 
-class SearchCache<String, Search> extends Cache {}
+class SearchCache extends Cache<SearchQuery, List<Package>> {}
 
 class SearchRepository extends Repository<SearchQuery, List<Package>> {
   final PubHtmlParsingClient client;
-  final SearchCache<SearchQuery, List<Package>> _searchCache = SearchCache();
+  final SearchCache _searchCache = SearchCache();
 
   SearchRepository({@required this.client});
 

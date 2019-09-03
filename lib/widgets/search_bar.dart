@@ -18,7 +18,7 @@ class SearchBar extends StatelessWidget {
       color: DynamicTheme.of(context).brightness == Brightness.light
           ? Theme.of(context).canvasColor
           : Provider.of<PubColors>(context).darkAccent,
-      elevation: 8,
+      elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(10),

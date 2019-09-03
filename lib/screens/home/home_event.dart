@@ -18,8 +18,7 @@ class GetPageOfPackagesEvent extends HomeEvent {
     @required this.sortBy,
     @required this.filterBy,
     this.completer,
-  })
-      : assert(sortBy != null, "sortBy cannot be null."),
+  })  : assert(sortBy != null, "sortBy cannot be null."),
         assert(filterBy != null, "filterBy cannot be null.");
 
   GetPageOfPackagesEvent copyWith({
@@ -39,4 +38,10 @@ class ChangeFilterTypeEvent extends HomeEvent {
   final FilterType filterType;
 
   ChangeFilterTypeEvent({@required this.filterType});
+}
+
+class ChangeBottomNavigationBarIndex extends HomeEvent {
+  final int index;
+
+  ChangeBottomNavigationBarIndex(this.index);
 }

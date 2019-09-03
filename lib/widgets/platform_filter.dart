@@ -9,9 +9,11 @@ class PlatformFilter extends StatelessWidget {
   final ValueChanged<FilterType> onSegmentChosen;
   final FilterType value;
 
-  const PlatformFilter(
-      {Key key, @required this.value, @required this.onSegmentChosen})
-      : super(key: key);
+  const PlatformFilter({
+    Key key,
+    @required this.value,
+    @required this.onSegmentChosen,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -16,4 +16,4 @@ class GetPackageDetailsEvent extends PackageDetailsEvent {
   }) : assert(packageName != null);
 }
 
-class Initialize extends PackageDetailsEvent {}
+class InitializePackageDetailsBloc extends PackageDetailsEvent {}

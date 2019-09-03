@@ -321,14 +321,9 @@ class _SearchPageState<T> extends State<_SearchPage<T>> {
     widget.animation.addStatusListener(_onAnimationStatusChanged);
     widget.delegate._currentBodyNotifier.addListener(_onSearchBodyChanged);
     widget.delegate._focusNode.addListener(_onFocusChanged);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
     SchedulerBinding.instance.addPostFrameCallback((duration) {
       FocusScopeNode focusScopeNode =
-      FocusScope.of(widget.delegate._focusNode.context);
+          FocusScope.of(widget.delegate._focusNode.context);
       focusScopeNode.requestFocus(widget.delegate._focusNode);
     });
   }
@@ -348,7 +343,8 @@ class _SearchPageState<T> extends State<_SearchPage<T>> {
     }
     widget.animation.removeStatusListener(_onAnimationStatusChanged);
     if (widget.delegate._currentBody == _SearchBody.suggestions) {
-      FocusScope.of(context).requestFocus(widget.delegate._focusNode);
+      FocusScope.of(widget.delegate._focusNode.context)
+          .requestFocus(widget.delegate._focusNode);
     }
   }
 

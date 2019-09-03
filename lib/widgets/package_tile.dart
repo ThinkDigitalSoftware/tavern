@@ -43,7 +43,9 @@ class PackageTile extends StatelessWidget {
       ),
       subtitle: Text(packageVersion),
       trailing: CircleAvatar(
-          backgroundColor: scoreColor,
+          backgroundColor: Theme.of(context).brightness == Brightness.light
+              ? scoreColor
+              : scoreColor.withAlpha(75),
           child: Text(
             "${package.score ?? '--'}",
             style: TextStyle(
