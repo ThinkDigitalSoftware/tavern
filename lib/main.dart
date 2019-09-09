@@ -21,11 +21,11 @@ Future main() async {
   final getIt = GetIt.instance;
   _htmlParsingClient = PubHtmlParsingClient();
   getIt
-    ..registerSingleton<PubHtmlParsingClient>(_htmlParsingClient)
-    ..registerSingleton<PackageRepository>(
-      PackageRepository(client: _htmlParsingClient),
-    )
-    ..registerSingleton<PackageCache>(PackageCache());
+    ..registerSingleton<PubHtmlParsingClient>(_htmlParsingClient)..registerSingleton<
+      FullPackageRepository>(
+    FullPackageRepository(client: _htmlParsingClient),
+  );
+
   runApp(
     MultiBlocProvider(
       providers: [

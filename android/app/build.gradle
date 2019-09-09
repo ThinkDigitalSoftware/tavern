@@ -8,12 +8,21 @@ if (localPropertiesFile.exists()) {
 
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+    logger.error("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+}
+
+static String generateVersionCode() {
+    String result = "git rev-list HEAD --count".execute().text.trim() //unix
+    if(result.empty) result = "PowerShell -Command git rev-list HEAD --count".execute().text.trim() //windows
+    if(result.empty) throw new RuntimeException("Could not generate versioncode on this platform? Cmd output: ${result.text}")
+    return result;
 }
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
+    logger.warn('flutterVersionCode is null. Generating versionCode from git commmit count')
+    flutterVersionCode = generateVersionCode()
+    logger.warn('versionCode is ' + flutterVersionCode)
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')

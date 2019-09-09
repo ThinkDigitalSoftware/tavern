@@ -10,8 +10,8 @@ import '../bloc.dart';
 class SubscriptionBloc
     extends HydratedBloc<SubscriptionEvent, SubscriptionState> {
   final PubHtmlParsingClient client;
-  final PackageRepository _packageRepository =
-      GetIt.instance.get<PackageRepository>();
+  final FullPackageRepository _packageRepository =
+  GetIt.instance.get<FullPackageRepository>();
 
   @override
   SubscriptionState get initialState =>

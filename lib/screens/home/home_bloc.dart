@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -144,15 +143,18 @@ class PageQuery {
       sortType.hashCode ^ filterType.hashCode ^ pageNumber.hashCode;
 }
 
-class PageCache extends Cache<PageQuery, Page> {}
+class PageCache extends Cache<PageQuery, Page> {
+  PageCache() : super(shouldPersist: false) {
+    getIt.registerSingleton(this);
+  }
+}
 
 class PageRepository extends Repository<PageQuery, Page> {
   final PubHtmlParsingClient client;
   final PageCache _pageCache = PageCache();
-  final PackageCache _packageCache;
+  final PackageCache _packageCache = PackageCache();
 
-  PageRepository({@required this.client})
-      : _packageCache = GetIt.instance.get<PackageCache>();
+  PageRepository({@required this.client});
 
   Future<Page> get(PageQuery query) async {
     if (_pageCache.containsKey(query)) {

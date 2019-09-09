@@ -14,7 +14,7 @@ class ScoreTab extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: HtmlView(
-            html: package.tabs[4].content,
+            html: package.packageTabs[4].content,
           ),
         ),
       ],

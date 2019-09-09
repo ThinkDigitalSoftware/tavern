@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 export 'package:tavern/screens/home/home_bloc.dart';
@@ -17,6 +18,8 @@ export 'package:tavern/screens/settings/settings_state.dart';
 export 'package:tavern/screens/subscriptions/subscription_bloc.dart';
 export 'package:tavern/screens/subscriptions/subscription_event.dart';
 export 'package:tavern/screens/subscriptions/subscription_state.dart';
+
+GetIt getIt = GetIt.instance;
 
 class TavernBlocDelegate extends HydratedBlocDelegate {
   TavernBlocDelegate(HydratedStorage storage) : super(storage);

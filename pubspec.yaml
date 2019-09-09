@@ -3,7 +3,7 @@ description: An open-source pub.dev client for searching and subscribing to pack
 authors:
   - Jonathan White <jwhite@thinkdigital.software>
   - GroovinChip <groovinchip@gmail.com>
-version: 1.0.1
+version: 1.1.0
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -16,7 +16,7 @@ dependencies:
   flutter_bloc: ^0.21.0
   hydrated_bloc:
     git: https://github.com/ThinkDigitalSoftware/hydrated_bloc.git
-  get_it: ^2.0.3
+  get_it: ^3.0.0+1
   groovin_material_icons: ^1.1.6
   pub_client:
     git: https://github.com/ThinkDigitalSoftware/pub_client.git
@@ -36,12 +36,17 @@ dependencies:
   flutter_pagewise:
   syntax_highlighter: ^0.1.0
   dynamic_overflow_menu_bar: ^0.1.0
+  localstorage: ^2.0.0
+
 
 
 dev_dependencies:
   pedantic: ^1.8.0+1
   hanzo: ^1.0.2
   pubspec: ^0.1.2
+dependency_overrides:
+  pub_client:
+    path: ../pub_client
 
 
 # For information on the generic Dart part of this file, see the

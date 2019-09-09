@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:pub_client/pub_client.dart';
-import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/screens/package_details/package_details_screen.dart';
 import 'package:tavern/src/enums.dart';
 import 'package:tavern/src/pub_colors.dart';
@@ -53,12 +51,6 @@ class PackageTile extends StatelessWidget {
             ),
           )),
       onTap: () async {
-        final getPackageDetailsEvent = GetPackageDetailsEvent(
-          packageName: packageName,
-          packageScore: packageScore,
-        );
-        BlocProvider.of<PackageDetailsBloc>(context)
-            .dispatch(getPackageDetailsEvent);
         return Navigator.pushNamed(
           context,
           Routes.packageDetailsScreen,

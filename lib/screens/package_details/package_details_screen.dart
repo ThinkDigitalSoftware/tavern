@@ -161,19 +161,28 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
             floating: true,
             title: Row(
               children: <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      _package.name,
-                      style: Theme.of(context).primaryTextTheme.title,
-                    ),
-                    Text(
-                      _package.latestVersion.toString(),
-                      style: Theme.of(context).primaryTextTheme.subtitle,
-                    )
-                  ],
+                SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        _package.name,
+                        style: Theme
+                            .of(context)
+                            .primaryTextTheme
+                            .title,
+                      ),
+                      Text(
+                        _package.latestSemanticVersion.toString(),
+                        style: Theme
+                            .of(context)
+                            .primaryTextTheme
+                            .subtitle,
+                      )
+                    ],
+                  ),
+                  physics: NeverScrollableScrollPhysics(),
                 ),
                 Expanded(
                   child: DynamicOverflowMenuBar(
@@ -300,24 +309,15 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
-          ReadmeTab(
-              packageTab: _package.tabs.firstWhere(
-                  (tab) => tab is ReadMePackageTab,
-                  orElse: () => null)),
+          ReadmeTab(packageTab: _package.packageTabs['ReadMePackageTab']),
           ChangelogTab(
-            packageTab: _package.tabs.firstWhere(
-                (tab) => tab is ChangelogPackageTab,
-                orElse: () => null),
+            packageTab: _package.packageTabs['ChangelogPackageTab'],
           ),
           ExampleTab(
-            packageTab: _package.tabs.firstWhere(
-                (tab) => tab is ExamplePackageTab,
-                orElse: () => null),
+            packageTab: _package.packageTabs['ExamplePackageTab'],
           ),
           InstallingTab(
-            packageTab: _package.tabs.firstWhere(
-                (tab) => tab is InstallingPackageTab,
-                orElse: () => null),
+            packageTab: _package.packageTabs['InstallingPackageTab'],
           ),
           VersionsTab(
             versions: _package.versions,

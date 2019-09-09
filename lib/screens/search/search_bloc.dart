@@ -31,7 +31,19 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 }
 
-class SearchCache extends Cache<SearchQuery, List<Package>> {}
+class SearchCache extends Cache<SearchQuery, List<Package>> {
+  SearchCache()
+      : super(
+    shouldPersist: false,
+    keyToString: (searchQuery) => searchQuery.toString(),
+    valueToJsonEncodable: (packages) =>
+    [for (final package in packages) package.toJson()],
+    valueFromJsonEncodable: (json) =>
+    [for (final packageJson in json) Package.fromJson(packageJson)],
+  ) {
+    getIt.registerSingleton<SearchCache>(this);
+  }
+}
 
 class SearchRepository extends Repository<SearchQuery, List<Package>> {
   final PubHtmlParsingClient client;
@@ -62,6 +74,14 @@ class SearchQuery {
   final String query;
   final SortType sortBy;
   final FilterType filterBy;
+
+  @override
+  String toString() {
+    return 'SearchQuery{query: $query, sortBy: $sortBy, filterBy: $filterBy, '
+        'isExactPhrase: $isExactPhrase, isPrefix: $isPrefix, '
+        'isDependency: $isDependency, isEmail: $isEmail}';
+  }
+
   final bool isExactPhrase;
   final bool isPrefix;
   final bool isDependency;
