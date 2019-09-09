@@ -46,7 +46,7 @@ abstract class Cache<KeyType, ValueType> with MapMixin<KeyType, ValueType> {
       storage.setItem(
         'lastFetched',
         _lastFetched.map<String, int>(
-              (key, time) =>
+          (key, time) =>
               MapEntry(keyToString(key), time.millisecondsSinceEpoch),
         ),
       );
@@ -91,13 +91,11 @@ abstract class Cache<KeyType, ValueType> with MapMixin<KeyType, ValueType> {
     // debug output throttling
     if (_writeToPersistentCacheCount > 5) {
       debugPrint(
-          'Writing $_writeToPersistentCacheCount ${ValueType
-              .toString()}s to persistant cache.');
+          'Writing $_writeToPersistentCacheCount ${ValueType.toString()}s to persistant cache.');
     }
     if (_writeToLocalCacheCount > 5) {
       debugPrint(
-          'Writing $_writeToLocalCacheCount ${ValueType
-              .toString()}s to local cache.');
+          'Writing $_writeToLocalCacheCount ${ValueType.toString()}s to local cache.');
     }
     _writeToLocalCacheCount = 0;
     _writeToPersistentCacheCount = 0;

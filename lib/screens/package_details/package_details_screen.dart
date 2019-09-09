@@ -168,17 +168,11 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                     children: <Widget>[
                       Text(
                         _package.name,
-                        style: Theme
-                            .of(context)
-                            .primaryTextTheme
-                            .title,
+                        style: Theme.of(context).primaryTextTheme.title,
                       ),
                       Text(
                         _package.latestSemanticVersion.toString(),
-                        style: Theme
-                            .of(context)
-                            .primaryTextTheme
-                            .subtitle,
+                        style: Theme.of(context).primaryTextTheme.subtitle,
                       )
                     ],
                   ),

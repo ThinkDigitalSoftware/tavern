@@ -34,13 +34,13 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 class SearchCache extends Cache<SearchQuery, List<Package>> {
   SearchCache()
       : super(
-    shouldPersist: false,
-    keyToString: (searchQuery) => searchQuery.toString(),
-    valueToJsonEncodable: (packages) =>
-    [for (final package in packages) package.toJson()],
-    valueFromJsonEncodable: (json) =>
-    [for (final packageJson in json) Package.fromJson(packageJson)],
-  ) {
+          shouldPersist: false,
+          keyToString: (searchQuery) => searchQuery.toString(),
+          valueToJsonEncodable: (packages) =>
+              [for (final package in packages) package.toJson()],
+          valueFromJsonEncodable: (json) =>
+              [for (final packageJson in json) Package.fromJson(packageJson)],
+        ) {
     getIt.registerSingleton<SearchCache>(this);
   }
 }

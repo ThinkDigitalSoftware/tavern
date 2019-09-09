@@ -11,7 +11,7 @@ class SubscriptionBloc
     extends HydratedBloc<SubscriptionEvent, SubscriptionState> {
   final PubHtmlParsingClient client;
   final FullPackageRepository _packageRepository =
-  GetIt.instance.get<FullPackageRepository>();
+      GetIt.instance.get<FullPackageRepository>();
 
   @override
   SubscriptionState get initialState =>

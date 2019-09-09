@@ -28,11 +28,10 @@ class PackageDetailsBloc
 
       yield PackageDetailsState(package: package);
       FullPackage newerPackage =
-      await _packageRepository.getIfNewer(event.packageName);
+          await _packageRepository.getIfNewer(event.packageName);
       if (newerPackage != null) {
         debugPrint(
-            '${event
-                .packageName} has been updated since your last query. Updating');
+            '${event.packageName} has been updated since your last query. Updating');
         yield PackageDetailsState(package: newerPackage);
       }
       event.onComplete.complete();
@@ -48,10 +47,10 @@ class PackageDetailsBloc
 class PackageCache extends Cache<String, Package> {
   PackageCache()
       : super(
-    shouldPersist: true,
-    valueToJsonEncodable: (package) => package.toJson(),
-    valueFromJsonEncodable: (json) => Package.fromJson(json),
-  ) {
+          shouldPersist: true,
+          valueToJsonEncodable: (package) => package.toJson(),
+          valueFromJsonEncodable: (json) => Package.fromJson(json),
+        ) {
     getIt.registerSingleton<PackageCache>(this);
   }
 }
@@ -59,10 +58,10 @@ class PackageCache extends Cache<String, Package> {
 class FullPackageCache extends Cache<String, FullPackage> {
   FullPackageCache()
       : super(
-    shouldPersist: true,
-    valueToJsonEncodable: (fullPackage) => fullPackage.toJson(),
-    valueFromJsonEncodable: (json) => FullPackage.fromJson(json),
-  ) {
+          shouldPersist: true,
+          valueToJsonEncodable: (fullPackage) => fullPackage.toJson(),
+          valueFromJsonEncodable: (json) => FullPackage.fromJson(json),
+        ) {
     getIt.registerSingleton<FullPackageCache>(this);
   }
 }
@@ -88,7 +87,7 @@ class FullPackageRepository extends Repository<String, FullPackage> {
   Future<FullPackage> getIfNewer(String query) async {
     FullPackage oldPackage = _packageCache[query];
     assert(oldPackage != null,
-    "This function should be run AFTER get so oldPackage should not return null");
+        "This function should be run AFTER get so oldPackage should not return null");
     FullPackage newPackage = await client.get(query);
 
     if (newPackage.latestSemanticVersion > oldPackage.latestSemanticVersion) {

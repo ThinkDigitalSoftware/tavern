@@ -40,9 +40,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final SettingsBloc settingsBloc = BlocProvider.of<SettingsBloc>(context);
-    bool themeIsLight = DynamicTheme
-        .of(context)
-        .brightness == Brightness.light;
+    bool themeIsLight = DynamicTheme.of(context).brightness == Brightness.light;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -65,7 +63,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               'Set Theme to ${themeIsLight ? 'Dark' : 'Light'}',
             ),
             trailing:
-            Icon(themeIsLight ? Icons.brightness_3 : Icons.brightness_6),
+                Icon(themeIsLight ? Icons.brightness_3 : Icons.brightness_6),
             onTap: () {
               final SettingsBloc settingsBloc =
                   BlocProvider.of<SettingsBloc>(context);
