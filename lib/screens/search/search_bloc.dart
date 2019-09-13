@@ -11,27 +11,37 @@ import 'package:tavern/src/repository.dart';
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final PubHtmlParsingClient client;
 
-  SearchRepository _searchRepository;
+  final SearchRepository _searchRepository;
 
-  SearchBloc({@required this.client}) {
-    _searchRepository = SearchRepository(client: client);
-  }
+  List<String> get searchHistory => _searchRepository.searchHistory;
+
+  SearchBloc({@required this.client})
+      : _searchRepository = SearchRepository(client: client);
 
   @override
-  SearchState get initialState => InitialSearchState();
+  SearchState get initialState =>
+      InitialSearchState(searchHistory: _searchRepository.searchHistory);
 
   @override
   Stream<SearchState> mapEventToState(
     SearchEvent event,
   ) async* {
     if (event is GetSearchResultsEvent) {
+      yield SearchLoadingState(searchHistory: currentState.searchHistory);
       List<Package> packages = await _searchRepository.get(event.query);
-      yield SearchState(searchResults: packages);
+      yield SearchCompleteState(searchResults: packages);
+    } else if (event is GetSearchHistoryEvent) {
+      yield currentState.copyWith(
+          searchHistory: _searchRepository.searchHistory);
+    } else if (event is ResetSearchEvent) {
+      yield initialState;
     }
   }
 }
 
 class SearchCache extends Cache<SearchQuery, List<Package>> {
+  List<String> searchHistory;
+
   SearchCache()
       : super(
           shouldPersist: false,
@@ -42,6 +52,20 @@ class SearchCache extends Cache<SearchQuery, List<Package>> {
               [for (final packageJson in json) Package.fromJson(packageJson)],
         ) {
     getIt.registerSingleton<SearchCache>(this);
+    initialize();
+  }
+
+  @override
+  Future initialize() async {
+    await super.initialize();
+    searchHistory = box.get('searchHistory') ?? [];
+  }
+
+  @override
+  void add(SearchQuery key, List<Package> value) {
+    searchHistory.add(key.query);
+    box.put('searchHistory', searchHistory);
+    super.add(key, value);
   }
 }
 
@@ -68,6 +92,8 @@ class SearchRepository extends Repository<SearchQuery, List<Package>> {
       return search;
     }
   }
+
+  List<String> get searchHistory => _searchCache.searchHistory;
 }
 
 class SearchQuery {

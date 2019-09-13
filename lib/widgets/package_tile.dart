@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/package_details/package_details_screen.dart';
 import 'package:tavern/src/enums.dart';
@@ -20,11 +19,11 @@ class PackageTile extends StatelessWidget {
   Widget build(BuildContext context) {
     Color scoreColor;
     if (packageScore <= 50 || packageScore == null) {
-      scoreColor = Provider.of<PubColors>(context).badPackageScore;
+      scoreColor = PubColors.badPackageScore;
     } else if (packageScore >= 51 && packageScore <= 69) {
-      scoreColor = Provider.of<PubColors>(context).goodPackageScore;
+      scoreColor = PubColors.goodPackageScore;
     } else {
-      scoreColor = Provider.of<PubColors>(context).greatPackageScore;
+      scoreColor = PubColors.greatPackageScore;
     }
 
     final packageVersion = 'v${package.latest.semanticVersion.major}'

@@ -30,14 +30,9 @@ class FavoriteIconButton extends StatelessWidget {
               Scaffold.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(
-                  SnackBar(
-                    content:
-                        Text("You have unsubscribed from ${_package.name}"),
-                    action: SnackBarAction(
-                      onPressed: () => _subscriptionBloc
-                          .dispatch(AddSubscriptionFromFullPackage(_package)),
-                      label: "Undo",
-                    ),
+                  unsubscribedSnackBar(
+                    subscription: Subscription.fromFullPackage(_package),
+                    subscriptionBloc: _subscriptionBloc,
                   ),
                 );
             } else {
@@ -47,8 +42,9 @@ class FavoriteIconButton extends StatelessWidget {
                 ..removeCurrentSnackBar()
                 ..showSnackBar(
                   subscribedSnackBar(
-                      subscription: Subscription.fromFullPackage(_package),
-                      subscriptionBloc: _subscriptionBloc),
+                    subscription: Subscription.fromFullPackage(_package),
+                    subscriptionBloc: _subscriptionBloc,
+                  ),
                 );
             }
           },
@@ -69,6 +65,7 @@ SnackBar subscribedSnackBar({
           subscriptionBloc.dispatch(RemoveSubscription(subscription)),
       label: "Undo",
     ),
+    behavior: SnackBarBehavior.floating,
   );
 }
 
@@ -82,6 +79,7 @@ SnackBar unsubscribedSnackBar({
       onPressed: () => subscriptionBloc.dispatch(AddSubscription(subscription)),
       label: "Undo",
     ),
+    behavior: SnackBarBehavior.floating,
   );
 }
 
@@ -98,7 +96,7 @@ class FavoriteIcon extends StatelessWidget {
     return Icon(
       isFavorited ? Icons.favorite : Icons.favorite_border,
       color: DynamicTheme.of(context).brightness == Brightness.light
-          ? Colors.black
+          ? Theme.of(context).primaryIconTheme.color
           : Colors.white,
     );
   }

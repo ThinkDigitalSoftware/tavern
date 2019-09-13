@@ -134,6 +134,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               getIt.get<PackageCache>().clear();
               getIt.get<SearchCache>().clear();
               getIt.get<PageCache>().clear();
+              debugPrint('Caches cleared');
             },
           ),
           Expanded(child: SizedBox()),

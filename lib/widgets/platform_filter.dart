@@ -1,7 +1,6 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
-import 'package:provider/provider.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/src/pub_colors.dart';
 
@@ -32,7 +31,7 @@ class PlatformFilter extends StatelessWidget {
             unselectedColor:
                 DynamicTheme.of(context).brightness == Brightness.light
                     ? Theme.of(context).canvasColor
-                    : Provider.of<PubColors>(context).darkAccent,
+                    : PubColors.darkAccent,
             borderRadius: 5.0,
             onSegmentChosen: onSegmentChosen,
           ),

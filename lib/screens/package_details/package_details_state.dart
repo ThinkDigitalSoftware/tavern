@@ -9,10 +9,17 @@ class PackageDetailsState {
   PackageDetailsState({
     @required this.package,
   }) {
-    if (this is! InitialPackageDetailsState) {
+    if (this is! InitialPackageDetailsState &&
+        this is! PackageDetailsErrorState) {
       assert(package != null);
     }
   }
 }
 
 class InitialPackageDetailsState extends PackageDetailsState {}
+
+class PackageDetailsErrorState extends PackageDetailsState {
+  final Exception error;
+
+  PackageDetailsErrorState(this.error);
+}

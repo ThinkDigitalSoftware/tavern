@@ -182,10 +182,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         currentIndex: widget.homeState.bottomNavigationBarIndex,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              icon: Icon(GroovinMaterialIcons.package),
-              title: Text("Packages")),
+            icon: Icon(GroovinMaterialIcons.package_variant_closed),
+            activeIcon: Icon(GroovinMaterialIcons.package_variant),
+            title: Text("Packages"),
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.favorite), title: Text("Favorites")),
+              icon: Icon(Icons.favorite_border),
+              activeIcon: Icon(Icons.favorite),
+              title: Text("Favorites")),
           BottomNavigationBarItem(
               icon: Icon(Icons.settings), title: Text("Settings")),
         ],
@@ -215,7 +219,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       case FilterType.flutter:
         return 'Flutter';
       case FilterType.web:
-        return 'web';
+        return 'Web';
       case FilterType.all:
       default:
         return 'Dart';

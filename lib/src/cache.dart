@@ -1,10 +1,10 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:localstorage/localstorage.dart';
+import 'package:hive/hive.dart';
 
 abstract class Cache<KeyType, ValueType> with MapMixin<KeyType, ValueType> {
-  LocalStorage storage = LocalStorage('${ValueType.toString()}');
+  Box box;
   static int _writeToPersistentCacheCount = 0;
   static int _writeToLocalCacheCount = 0;
 
@@ -33,8 +33,10 @@ abstract class Cache<KeyType, ValueType> with MapMixin<KeyType, ValueType> {
       if (KeyType != String) {
         assert(keyToString != null);
       }
+
       assert(valueToJsonEncodable != null);
       assert(valueFromJsonEncodable != null);
+      initialize();
     } else {
       _cache = {};
     }
@@ -43,11 +45,10 @@ abstract class Cache<KeyType, ValueType> with MapMixin<KeyType, ValueType> {
   void setLastFetched(key, DateTime time) {
     _lastFetched[key] = time;
     if (shouldPersist) {
-      storage.setItem(
+      box.put(
         'lastFetched',
-        _lastFetched.map<String, int>(
-          (key, time) =>
-              MapEntry(keyToString(key), time.millisecondsSinceEpoch),
+        _lastFetched.map<String, DateTime>(
+          (key, time) => MapEntry(keyToString(key), time),
         ),
       );
     }
@@ -56,7 +57,7 @@ abstract class Cache<KeyType, ValueType> with MapMixin<KeyType, ValueType> {
   DateTime getLastFetched(KeyType key) {
     if (shouldPersist) {
       return DateTime.fromMillisecondsSinceEpoch(
-          storage.getItem(keyToString(key)));
+          (box.get('lastFetched') as Map)[keyToString(key)]);
     } else {
       return _lastFetched[key];
     }
@@ -66,7 +67,9 @@ abstract class Cache<KeyType, ValueType> with MapMixin<KeyType, ValueType> {
   operator [](Object key) {
     ValueType value;
     if (shouldPersist) {
-      value = valueFromJsonEncodable(storage.getItem(key));
+      var json = box.get(key);
+
+      value = valueFromJsonEncodable(json);
       debugPrint('Returning ${value.runtimeType} from persistant cache.');
     } else {
       value = _cache[key];
@@ -80,7 +83,8 @@ abstract class Cache<KeyType, ValueType> with MapMixin<KeyType, ValueType> {
     if (shouldPersist) {
       _writeToPersistentCacheCount++;
       var jsonEncodable = valueToJsonEncodable(value);
-      storage.setItem(keyToString(key), jsonEncodable);
+      assert(box.isOpen);
+      box.put(keyToString(key), jsonEncodable);
     } else {
       _writeToLocalCacheCount++;
       _cache[key] = value;
@@ -102,15 +106,16 @@ abstract class Cache<KeyType, ValueType> with MapMixin<KeyType, ValueType> {
   }
 
   @override
-  void clear() => storage.clear();
+  void clear() => box.clear();
 
   @override
   Iterable<KeyType> get keys => throw UnimplementedError();
 
   @override
   remove(Object key) {
-    final value = storage.getItem(keyToString(key));
-    storage.deleteItem(keyToString(key));
+    assert(box.isOpen);
+    final value = box.get(keyToString(key));
+    box.delete(keyToString(key));
     return value;
   }
 
@@ -124,9 +129,14 @@ abstract class Cache<KeyType, ValueType> with MapMixin<KeyType, ValueType> {
       throw TypeError();
     }
     if (shouldPersist) {
-      return storage.getItem(keyToString(key)) != null;
+      assert(box.isOpen);
+      return box.containsKey(key);
     } else {
       return _cache.containsKey(key);
     }
+  }
+
+  Future initialize() async {
+    box = await Hive.openBox('${ValueType.toString()}');
   }
 }

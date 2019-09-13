@@ -60,6 +60,7 @@ class FavoritesTile extends StatelessWidget {
     return ListTile(
       title: Text(subscription.name),
       subtitle: Text(subscription.url),
+      contentPadding: EdgeInsets.all(15),
       trailing: IconButton(
         tooltip: "Unsubscribe",
         icon: FavoriteIcon(

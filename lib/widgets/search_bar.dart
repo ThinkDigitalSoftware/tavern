@@ -1,6 +1,5 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tavern/src/pub_colors.dart';
 
 class SearchBar extends StatelessWidget {
@@ -17,7 +16,7 @@ class SearchBar extends StatelessWidget {
     return Material(
       color: DynamicTheme.of(context).brightness == Brightness.light
           ? Theme.of(context).canvasColor
-          : Provider.of<PubColors>(context).darkAccent,
+          : PubColors.darkAccent,
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -42,7 +41,7 @@ class SearchBar extends StatelessWidget {
               'Search Dart packages',
               style: TextStyle(
                 color: DynamicTheme.of(context).brightness == Brightness.light
-                    ? Provider.of<PubColors>(context).searchBarItemsColor
+                    ? PubColors.searchBarItemsColor
                     : Colors.white,
                 fontSize: 16,
               ),
@@ -52,7 +51,7 @@ class SearchBar extends StatelessWidget {
               child: Icon(
                 Icons.search,
                 color: DynamicTheme.of(context).brightness == Brightness.light
-                    ? Provider.of<PubColors>(context).searchBarItemsColor
+                    ? PubColors.searchBarItemsColor
                     : Colors.white,
               ),
             ),

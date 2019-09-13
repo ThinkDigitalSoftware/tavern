@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:html/dom.dart';
+import 'package:html/parser.dart';
 import 'package:html2md/html2md.dart' as html2md;
 import 'package:syntax_highlighter/syntax_highlighter.dart'
     as dartSyntaxHighlighter;
@@ -10,9 +12,15 @@ class HtmlView extends StatelessWidget {
   final String markdown;
 
   HtmlView({Key key, this.html})
-      : markdown =
-            html2md.convert(html).replaceAll(RegExp(r'\[#\]\(.*\)'), '\n'),
+      : markdown = parseHtml(html),
+        //.replaceAll(RegExp(r'\[#\]\(.*\)'), '\n'),
         super(key: key);
+
+  static String parseHtml(String html) {
+    Document document = parse(html);
+//    document.getElementsByClassName("classNames");
+    return html2md.convert(html);
+  }
 
   @override
   Widget build(BuildContext context) {

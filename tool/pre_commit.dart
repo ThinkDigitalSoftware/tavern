@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:meta/meta.dart';
@@ -18,11 +19,17 @@ main(List<String> arguments) async {
   PubSpec pubspec = await PubSpec.load(currentDirectory);
   print(
       "Before modifying your pubspec.yaml, a backup has been made at pubspec.yaml.bak in case anything goes wrong.");
+  if (hasDependencyOverrides(pubspec)) {
+    log("Your pubspec contains the above dependency overrides. Please remove them before committing.");
+    exit(1);
+  }
+
   pubspecFile.copySync("${currentDirectory.path}/pubspec.yaml.bak");
   Version currentVersion = pubspec.version;
   Version previousVersion;
   String previousVersionString =
       previousDetails[PreviousDetailKey.currentVersion];
+
   if (previousVersionString != null) {
     previousVersion = Version.parse(previousVersionString);
   } else {

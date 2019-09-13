@@ -23,23 +23,27 @@ class PackageDetailsBloc
   Stream<PackageDetailsState> mapEventToState(
     PackageDetailsEvent event,
   ) async* {
-    if (event is GetPackageDetailsEvent) {
-      FullPackage package = await _packageRepository.get(event.packageName);
+    try {
+      if (event is GetPackageDetailsEvent) {
+        FullPackage package = await _packageRepository.get(event.packageName);
 
-      yield PackageDetailsState(package: package);
-      FullPackage newerPackage =
-          await _packageRepository.getIfNewer(event.packageName);
-      if (newerPackage != null) {
-        debugPrint(
-            '${event.packageName} has been updated since your last query. Updating');
-        yield PackageDetailsState(package: newerPackage);
+        yield PackageDetailsState(package: package);
+        FullPackage newerPackage =
+            await _packageRepository.getIfNewer(event.packageName);
+        if (newerPackage != null) {
+          debugPrint(
+              '${event.packageName} has been updated since your last query. Updating');
+          yield PackageDetailsState(package: newerPackage);
+        }
+        event.onComplete.complete();
+        return;
       }
-      event.onComplete.complete();
-      return;
-    }
-    if (event is InitializePackageDetailsBloc) {
-      yield InitialPackageDetailsState();
-      return;
+      if (event is InitializePackageDetailsBloc) {
+        yield InitialPackageDetailsState();
+        return;
+      }
+    } on Exception catch (e) {
+      yield PackageDetailsErrorState(e);
     }
   }
 }
@@ -60,7 +64,8 @@ class FullPackageCache extends Cache<String, FullPackage> {
       : super(
           shouldPersist: true,
           valueToJsonEncodable: (fullPackage) => fullPackage.toJson(),
-          valueFromJsonEncodable: (json) => FullPackage.fromJson(json),
+          valueFromJsonEncodable: (json) =>
+              FullPackage.fromJson((json as Map).cast<String, dynamic>()),
         ) {
     getIt.registerSingleton<FullPackageCache>(this);
   }

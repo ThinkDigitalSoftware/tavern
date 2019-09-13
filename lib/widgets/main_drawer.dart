@@ -38,13 +38,13 @@ class _MainDrawerState extends State<MainDrawer> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
 //          Container(
-//            color: Provider.of<PubColors>(context).darkColor,
+//            color: PubColors.darkColor,
 //            height: 16,
 //          ),
 //          //Get under the status bar without losing dark color
 //
 //          Container(
-//            color: Provider.of<PubColors>(context).darkColor,
+//            color: PubColors.darkColor,
 //            child: ListTile(
 //              leading: Icon(
 //                GroovinMaterialIcons.dart_logo,

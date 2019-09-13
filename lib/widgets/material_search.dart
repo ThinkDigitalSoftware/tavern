@@ -5,7 +5,6 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide SearchDelegate;
-import 'package:flutter/scheduler.dart';
 import 'package:tavern/src/enums.dart';
 
 /// Shows a full screen search page and returns the search result selected by
@@ -195,7 +194,7 @@ abstract class SearchDelegate<T> {
   /// [Animation] triggered when the search pages fades in or out.
   Animation<double> get transitionAnimation => _proxyAnimation;
 
-  final FocusNode _focusNode = FocusNode();
+  final FocusNode _focusNode = FocusScopeNode();
 
   final TextEditingController _queryTextController = TextEditingController();
 
@@ -321,11 +320,6 @@ class _SearchPageState<T> extends State<_SearchPage<T>> {
     widget.animation.addStatusListener(_onAnimationStatusChanged);
     widget.delegate._currentBodyNotifier.addListener(_onSearchBodyChanged);
     widget.delegate._focusNode.addListener(_onFocusChanged);
-    SchedulerBinding.instance.addPostFrameCallback((duration) {
-      FocusScopeNode focusScopeNode =
-          FocusScope.of(widget.delegate._focusNode.context);
-      focusScopeNode.requestFocus(widget.delegate._focusNode);
-    });
   }
 
   @override
