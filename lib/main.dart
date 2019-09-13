@@ -20,7 +20,7 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   BlocSupervisor.delegate = await HydratedBlocDelegate.build();
 
-  final libraryDir = await getLibraryDirectory();
+  final libraryDir = await getApplicationDocumentsDirectory();
   Hive.init("${libraryDir.path}/hive");
 
   PubHtmlParsingClient _htmlParsingClient;
