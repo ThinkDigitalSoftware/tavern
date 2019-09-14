@@ -335,8 +335,8 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
             VersionsTab(
               versions: _package.versions,
             ),
-            ScoreTab(
-              package: _package,
+            AnalysisTab(
+              packageTab: _package.packageTabs['AnalysisPackageTab'],
             ),
             AboutTab(
               package: _package,

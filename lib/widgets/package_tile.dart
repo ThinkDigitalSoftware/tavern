@@ -18,12 +18,14 @@ class PackageTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color scoreColor;
-    if (packageScore <= 50 || packageScore == null) {
-      scoreColor = PubColors.badPackageScore;
-    } else if (packageScore >= 51 && packageScore <= 69) {
-      scoreColor = PubColors.goodPackageScore;
-    } else {
-      scoreColor = PubColors.greatPackageScore;
+    if (packageScore != null) {
+      if (packageScore <= 50) {
+        scoreColor = PubColors.badPackageScore;
+      } else if (packageScore >= 51 && packageScore <= 69) {
+        scoreColor = PubColors.goodPackageScore;
+      } else {
+        scoreColor = PubColors.greatPackageScore;
+      }
     }
 
     final packageVersion = 'v${package.latest.semanticVersion.major}'

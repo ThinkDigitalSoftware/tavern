@@ -3,10 +3,10 @@ import 'package:pub_client/pub_client.dart';
 
 import 'html_view.dart';
 
-class ScoreTab extends StatelessWidget {
-  final FullPackage package;
+class AnalysisTab extends StatelessWidget {
+  final AnalysisPackageTab packageTab;
 
-  const ScoreTab({Key key, this.package}) : super(key: key);
+  const AnalysisTab({Key key, this.packageTab}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class ScoreTab extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: HtmlView(
-            html: package.packageTabs[4].content,
+            html: packageTab.content,
           ),
         ),
       ],
