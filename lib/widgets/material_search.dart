@@ -403,7 +403,6 @@ class _SearchPageState<T> extends State<_SearchPage<T>> {
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            backgroundColor: theme.primaryColor,
             iconTheme: theme.primaryIconTheme,
             textTheme: theme.primaryTextTheme,
             brightness: theme.primaryColorBrightness,

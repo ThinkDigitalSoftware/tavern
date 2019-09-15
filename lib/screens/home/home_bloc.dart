@@ -152,7 +152,6 @@ class PageCache extends Cache<PageQuery, Page> {
 class PageRepository extends Repository<PageQuery, Page> {
   final PubHtmlParsingClient client;
   final PageCache _pageCache = PageCache();
-  final PackageCache _packageCache = PackageCache();
 
   PageRepository({@required this.client});
 
@@ -166,7 +165,6 @@ class PageRepository extends Repository<PageQuery, Page> {
         filterBy: query.filterType,
       );
       _pageCache.add(query, page);
-      _packageCache.addAll({for (final package in page) package.name: package});
       return page;
     }
   }

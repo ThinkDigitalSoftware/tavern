@@ -61,28 +61,6 @@ class PubSearchDelegate extends SearchDelegate {
             );
           },
         );
-
-        if (searchState is SearchLoadingState) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        if (searchState is SearchCompleteState) {
-          final List<Package> packages =
-              searchState.searchResults.take(5).toList();
-          if (packages.isEmpty) {
-            return Center(
-              child: Text("No search results"),
-            );
-          }
-          return ListView.builder(
-            itemCount: packages.length,
-            itemBuilder: (context, index) {
-              return SearchResultTile(package: packages[index]);
-            },
-          );
-        }
-        return ErrorWidget(Exception('We should not be seeing this'));
       },
     );
   }

@@ -1,17 +1,19 @@
 name: tavern
-version: 1.2.0+1
+version: 1.2.1
 description: An open-source pub.dev client for searching and subscribing to packages
+
 environment: 
   sdk: '>=2.2.2 <3.0.0'
+
 dependencies: 
   provider: ^3.1.0
   flutter_bloc: ^0.21.0
-  dynamic_overflow_menu_bar: ^0.1.0
+  dynamic_overflow_menu_bar: ^0.1.1
   package_info: ^0.4.0+6
   dynamic_theme: ^1.0.1
   get_it: ^3.0.0+1
   hive: ^1.0.0
-  url_launcher: ^5.1.2
+  url_launcher: ^5.1.3
   cupertino_icons: ^0.1.2
   groovin_material_icons: ^1.1.6
   rounded_modal: ^1.0.1
@@ -32,12 +34,17 @@ dependencies:
     sdk: flutter
   pub_client: 
     git: https://github.com/ThinkDigitalSoftware/pub_client.git
-dev_dependencies: 
-  build_runner: 1.6.9
+
+dev_dependencies:
+  build_runner: ^1.7.0
   hive_generator: 0.5.1
   hanzo: ^1.0.2
   pedantic: ^1.8.0+1
   pubspec: ^0.1.2
+
+dependency_overrides:
+  pub_client:
+    path: ../pub_client
 flutter: 
   assets: 
     - images/
@@ -48,6 +55,7 @@ flutter:
         - 
           asset: fonts/Metropolis-Regular.otf
   uses-material-design: true
+
 authors: 
   - Jonathan White <jwhite@thinkdigital.software>
   - GroovinChip <groovinchip@gmail.com>

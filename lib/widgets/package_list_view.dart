@@ -29,7 +29,7 @@ class _PackageListViewState extends State<PackageListView> {
       pageSize: 10,
       pageFuture: (index) async {
         const int offset =
-        1; // page numbering starts at 1, so we need to add 1.
+            1; // page numbering starts at 1, so we need to add 1.
         final completer = Completer<Page>();
         HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
         homeBloc.dispatch(

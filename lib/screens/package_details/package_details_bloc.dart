@@ -63,7 +63,7 @@ class FullPackageCache extends Cache<String, FullPackage> {
   FullPackageCache()
       : super(
           shouldPersist: true,
-          valueToJsonEncodable: (fullPackage) => fullPackage.toJson(),
+    valueToJsonEncodable: (fullPackage) => fullPackage?.toJson(),
           valueFromJsonEncodable: (json) =>
               FullPackage.fromJson((json as Map).cast<String, dynamic>()),
         ) {
@@ -94,6 +94,10 @@ class FullPackageRepository extends Repository<String, FullPackage> {
     assert(oldPackage != null,
         "This function should be run AFTER get so oldPackage should not return null");
     FullPackage newPackage = await client.get(query);
+
+    if (newPackage is DartLibraryPackage) {
+      return null;
+    }
 
     if (newPackage.latestSemanticVersion > oldPackage.latestSemanticVersion) {
       _packageCache.add(query, newPackage);

@@ -66,6 +66,7 @@ class PubDevClientApp extends StatelessWidget {
     return DynamicTheme(
       defaultBrightness: Brightness.light,
       data: (brightness) => ThemeData(
+        indicatorColor: PubColors.lightBlue,
         fontFamily: 'Metropolis',
         accentColor: PubColors.lightBlue,
         brightness: brightness,

@@ -1,4 +1,3 @@
-import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:dynamic_overflow_menu_bar/dynamic_overflow_menu_bar.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,8 +35,10 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
   void initState() {
     _tabController = TabController(length: 7, vsync: this);
     _scrollViewController = ScrollController();
-    BackButtonInterceptor.add(interceptBackButton);
-
+    if (_package is DartLibraryPackage) {
+      throw UnsupportedError(
+          'DartLibraryPackages are not supported in this view');
+    }
     super.initState();
   }
 
@@ -45,15 +46,9 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
   void dispose() {
     _scrollViewController.dispose();
     _tabController.dispose();
-    BackButtonInterceptor.remove(interceptBackButton);
 
     packageDetailsBloc.dispatch(InitializePackageDetailsBloc());
     super.dispose();
-  }
-
-  bool interceptBackButton(stopDefaultButtonEvent) {
-    Navigator.pop(context);
-    return true;
   }
 
   FullPackage get _package => widget.packageDetailsState.package;
@@ -82,7 +77,10 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
         ),
       );
     }
-    _getScoreColor(context);
+    if (_package is DartLibraryPackage) {
+      return Scaffold();
+    }
+    scoreColor = _getScoreColor(context);
     _tabs = [
       Tab(
         child: Text(
@@ -166,15 +164,17 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
               elevation: 0,
               pinned: true,
               floating: true,
-              title: Row(
-                children: <Widget>[
-                  SingleChildScrollView(
+              title: DynamicOverflowMenuBar(
+                title: FittedBox(
+                  child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
                           _package.name,
+                          overflow: TextOverflow.fade,
+                          softWrap: true,
                           style: Theme.of(context).primaryTextTheme.title,
                         ),
                         Text(
@@ -185,130 +185,121 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                     ),
                     physics: NeverScrollableScrollPhysics(),
                   ),
-                  Expanded(
-                    child: DynamicOverflowMenuBar(
-                      actions: <OverFlowMenuItem>[
-                        OverFlowMenuItem(
-                          label: "API Reference",
-                          child: IconButton(
-                            tooltip: "API Reference",
-                            icon: FittedBox(
-                              child: CircleAvatar(
-                                radius: 37,
-                                backgroundColor: Theme.of(context)
-                                    .primaryTextTheme
-                                    .body1
-                                    .color,
-                                child: CircleAvatar(
-                                  radius: 35,
-                                  backgroundColor: Theme.of(context).cardColor,
-                                  child: Text(
-                                    'API',
-                                    style: TextStyle(
-                                      color:
-                                          DynamicTheme.of(context).brightness ==
-                                                  Brightness.light
-                                              ? Colors.black
-                                              : Colors.white,
-                                    ),
-                                    softWrap: false,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            onPressed: () => launch(_package.apiReferenceUrl),
-                          ),
-                          onPressed: () => launch(_package.apiReferenceUrl),
-                        ),
-                        if (_package.repositoryUrl != null)
-                          OverFlowMenuItem(
-                            label: "Repo",
-                            child: IconButton(
-                              tooltip: "Repo",
-                              icon: Icon(
-                                Icons.code,
-                                color: DynamicTheme.of(context).brightness ==
-                                        Brightness.light
+                ),
+                actions: <OverFlowMenuItem>[
+                  OverFlowMenuItem(
+                    label: "API Reference",
+                    child: IconButton(
+                      tooltip: "API Reference",
+                      icon: FittedBox(
+                        child: CircleAvatar(
+                          radius: 37,
+                          backgroundColor:
+                          Theme
+                              .of(context)
+                              .primaryTextTheme
+                              .body1
+                              .color,
+                          child: CircleAvatar(
+                            radius: 35,
+                            backgroundColor: Theme
+                                .of(context)
+                                .cardColor,
+                            child: Text(
+                              'API',
+                              style: TextStyle(
+                                color: DynamicTheme
+                                    .of(context)
+                                    .brightness ==
+                                    Brightness.light
                                     ? Colors.black
                                     : Colors.white,
                               ),
-                              onPressed: () => launch(_package.repositoryUrl),
+                              softWrap: false,
                             ),
-                            onPressed: () => launch(_package.repositoryUrl),
                           ),
-                        if (_package.issuesUrl != null)
-                          OverFlowMenuItem(
-                            label: 'Issues',
-                            child: IconButton(
-                              tooltip: "Issues",
-                              icon: Icon(
-                                Icons.bug_report,
-                                color: DynamicTheme.of(context).brightness ==
-                                        Brightness.light
-                                    ? Colors.black
-                                    : Colors.white,
-                              ),
-                              onPressed: () => launch(_package.issuesUrl),
-                            ),
-                            onPressed: () => launch(_package.issuesUrl),
-                          ),
-                        OverFlowMenuItem(
-                          label: 'Favorite',
-                          child: FavoriteIconButton(package: _package),
-                          onPressed: () {
-                            if (_subscriptionBloc
-                                .hasSubscriptionFor(_package.name)) {
-                              _subscriptionBloc.dispatch(
-                                  RemoveSubscriptionForFullPackage(_package));
-                              Scaffold.of(context)
-                                ..removeCurrentSnackBar()
-                                ..showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                        "You have unsubscribed from ${_package.name}"),
-                                    action: SnackBarAction(
-                                      onPressed: () =>
-                                          _subscriptionBloc.dispatch(
-                                              AddSubscriptionFromFullPackage(
-                                                  _package)),
-                                      label: "Undo",
-                                    ),
-                                  ),
-                                );
-                            } else {
-                              _subscriptionBloc.dispatch(
-                                  AddSubscriptionFromFullPackage(_package));
-                              Scaffold.of(context)
-                                ..removeCurrentSnackBar()
-                                ..showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                        "You have subscribed to ${_package.name}"),
-                                    action: SnackBarAction(
-                                      onPressed: () =>
-                                          _subscriptionBloc.dispatch(
-                                        RemoveSubscriptionForFullPackage(
-                                          _package,
-                                        ),
-                                      ),
-                                      label: "Undo",
-                                    ),
-                                  ),
-                                );
-                            }
-                          },
                         ),
-                        OverFlowMenuItem(
-                          child: IconButton(
-                            icon: Icon(GroovinMaterialIcons.web),
-                            onPressed: () => launch(_package.url),
-                          ),
-                          onPressed: () => launch(_package.url),
-                          label: "Show in browser",
-                        ),
-                      ],
+                      ),
+                      onPressed: () => launch(_package.apiReferenceUrl),
                     ),
-                  )
+                    onPressed: () => launch(_package.apiReferenceUrl),
+                  ),
+                  if (_package.repositoryUrl != null)
+                    OverFlowMenuItem(
+                      label: "Repo",
+                      child: IconButton(
+                        tooltip: "Repo",
+                        icon: Icon(Icons.code),
+                        onPressed: () => launch(_package.repositoryUrl),
+                      ),
+                      onPressed: () => launch(_package.repositoryUrl),
+                    ),
+                  if (_package.issuesUrl != null)
+                    OverFlowMenuItem(
+                      label: 'Issues',
+                      child: IconButton(
+                        tooltip: "Issues",
+                        icon: Icon(
+                          Icons.bug_report,
+                        ),
+                        onPressed: () => launch(_package.issuesUrl),
+                      ),
+                      onPressed: () => launch(_package.issuesUrl),
+                    ),
+                  OverFlowMenuItem(
+                    label: 'Favorite',
+                    child: FavoriteIconButton(package: _package),
+                    onPressed: () {
+                      if (_subscriptionBloc.hasSubscriptionFor(_package.name)) {
+                        _subscriptionBloc.dispatch(
+                            RemoveSubscriptionForFullPackage(_package));
+                        Scaffold.of(context)
+                          ..removeCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  "You have unsubscribed from ${_package
+                                      .name}"),
+                              action: SnackBarAction(
+                                onPressed: () =>
+                                    _subscriptionBloc.dispatch(
+                                        AddSubscriptionFromFullPackage(
+                                            _package)),
+                                label: "Undo",
+                              ),
+                            ),
+                          );
+                      } else {
+                        _subscriptionBloc
+                            .dispatch(AddSubscriptionFromFullPackage(_package));
+                        Scaffold.of(context)
+                          ..removeCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  "You have subscribed to ${_package.name}"),
+                              action: SnackBarAction(
+                                onPressed: () =>
+                                    _subscriptionBloc.dispatch(
+                                      RemoveSubscriptionForFullPackage(
+                                        _package,
+                                      ),
+                                    ),
+                                label: "Undo",
+                              ),
+                            ),
+                          );
+                      }
+                    },
+                  ),
+                  OverFlowMenuItem(
+                    child: IconButton(
+                      icon: Icon(GroovinMaterialIcons.web),
+                      onPressed: () => launch(_package.url),
+                    ),
+                    onPressed: () => launch(_package.url),
+                    label: "Show in browser",
+                  ),
                 ],
               ),
               bottom: TabBar(
@@ -347,14 +338,17 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
     );
   }
 
-  void _getScoreColor(BuildContext context) {
+  Color _getScoreColor(BuildContext context) {
     int score = _package.score;
-    if (score <= 50 || score == null) {
-      scoreColor = PubColors.badPackageScore;
+    if (score == null) {
+      return null;
+    }
+    if (score <= 50) {
+      return PubColors.badPackageScore;
     } else if (score >= 51 && score <= 69) {
-      scoreColor = PubColors.goodPackageScore;
+      return PubColors.goodPackageScore;
     } else {
-      scoreColor = PubColors.greatPackageScore;
+      return PubColors.greatPackageScore;
     }
   }
 }

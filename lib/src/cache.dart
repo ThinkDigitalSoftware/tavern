@@ -42,10 +42,10 @@ abstract class Cache<KeyType, ValueType> with MapMixin<KeyType, ValueType> {
     }
   }
 
-  void setLastFetched(key, DateTime time) {
+  Future setLastFetched(key, DateTime time) async {
     _lastFetched[key] = time;
     if (shouldPersist) {
-      box.put(
+      await box.put(
         'lastFetched',
         _lastFetched.map<String, DateTime>(
           (key, time) => MapEntry(keyToString(key), time),
