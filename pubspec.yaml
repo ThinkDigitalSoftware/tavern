@@ -1,5 +1,5 @@
 name: tavern
-version: 1.2.1
+version: 1.2.2
 description: An open-source pub.dev client for searching and subscribing to packages
 
 environment: 
@@ -42,9 +42,6 @@ dev_dependencies:
   pedantic: ^1.8.0+1
   pubspec: ^0.1.2
 
-dependency_overrides:
-  pub_client:
-    path: ../pub_client
 flutter: 
   assets: 
     - images/

@@ -28,6 +28,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   ScrollController _scrollController;
   PageController _pageController;
   bool showAnimation = true;
+  VoidCallback _changePageIndexListener;
 
   @override
   void initState() {
@@ -142,7 +143,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                           _homeBloc.dispatch(
                                             GetPageOfPackagesEvent(
                                               sortBy: selection,
-                                              filterBy: widget.homeState.filterType,
+                                              filterBy: widget.homeState
+                                                  .filterType,
                                             ),
                                           ),
                                     ),
@@ -176,6 +178,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     ),
                     SubscriptionsPage(),
                   ],
+                  onPageChanged: (index) {
+                    _homeBloc.dispatch(
+                      ChangeBottomNavigationBarIndex(index),
+                    );
+                  },
                 ),
               ),
             ),
