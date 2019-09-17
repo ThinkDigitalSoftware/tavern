@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 import 'package:pub_client/pub_client.dart';
+import 'package:tavern/src/convert.dart';
 
 @immutable
 class SettingsState {
@@ -18,6 +19,13 @@ class SettingsState {
         assert(sortBy != null),
         assert(brightness != null);
 
+  factory SettingsState.fromJson(Map<String, dynamic> json) {
+    return SettingsState(
+      brightness: convertStringToBrightness(json["brightness"]),
+      filterBy: convertStringToFilterType(json["filterBy"]),
+      sortBy: convertStringToSortType(json["sortBy"]),
+    );
+  }
   SettingsState copyWith({
     Brightness brightness,
     SortType sortBy,
@@ -29,6 +37,13 @@ class SettingsState {
       sortBy: sortBy ?? this.sortBy,
     );
   }
+
+  Map<String, dynamic> toJson() =>
+      {
+        "brightness": convertBrightnessToString(brightness),
+        "filterBy": convertFilterTypeToString(filterBy),
+        "sortBy": convertSortTypeToString(sortBy),
+      };
 }
 
 class InitialSettingsState extends SettingsState {

@@ -104,12 +104,13 @@ abstract class SearchDelegate<T> {
   Widget buildResults(BuildContext context);
 
   /// The widget used as the search bar.
-  Widget buildSearchBar(
-      {BuildContext context,
-      TextEditingController controller,
-      FocusNode focusNode,
-      TextInputAction textInputAction,
-      Function(String _) onSubmitted});
+  Widget buildSearchBar({
+    BuildContext context,
+    TextEditingController controller,
+    FocusNode focusNode,
+    TextInputAction textInputAction,
+    Function(String _) onSubmitted,
+  });
 
   /// The theme used to style the [AppBar].
   ///
@@ -402,6 +403,7 @@ class _SearchPageState<T> extends State<_SearchPage<T>> {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
+            backgroundColor: Colors.transparent.withAlpha(50),
             automaticallyImplyLeading: false,
             iconTheme: theme.primaryIconTheme,
             textTheme: theme.primaryTextTheme,

@@ -28,7 +28,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   ScrollController _scrollController;
   PageController _pageController;
   bool showAnimation = true;
-  VoidCallback _changePageIndexListener;
 
   @override
   void initState() {

@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:pub_client/pub_client.dart';
+import 'package:pub_semver/pub_semver.dart' as semver;
 
 @immutable
 class SubscriptionState {
@@ -58,22 +59,34 @@ class InitialSubscriptionState extends SubscriptionState {
 class Subscription {
   final String name;
   final String url;
+  final semver.Version latestSemanticVersion;
 
-  Subscription({@required this.name, @required this.url});
+  Subscription({
+    @required this.name,
+    @required this.url,
+    @required this.latestSemanticVersion,
+  });
 
   factory Subscription.fromJson(Map<String, dynamic> json) {
     return Subscription(
       name: json["name"],
       url: json["url"],
+      latestSemanticVersion: semver.Version.parse(
+        json['latestSemanticVersion'],
+      ),
     );
   }
 
   factory Subscription.fromFullPackage(FullPackage package) =>
-      Subscription(name: package.name, url: package.url);
+      Subscription(
+          name: package.name,
+          url: package.url,
+          latestSemanticVersion: package.latestSemanticVersion);
 
   Map<String, dynamic> toJson() => {
         "name": name,
         "url": url,
+    "latestSemanticVersion": latestSemanticVersion.toString(),
       };
 
   @override
@@ -82,9 +95,11 @@ class Subscription {
       other is Subscription &&
           runtimeType == other.runtimeType &&
           name == other.name &&
-          url == other.url ||
+          url == other.url &&
+          latestSemanticVersion == other.latestSemanticVersion ||
       other is FullPackage && Subscription.fromFullPackage(other) == this;
 
   @override
-  int get hashCode => name.hashCode ^ url.hashCode;
+  int get hashCode =>
+      name.hashCode ^ url.hashCode ^ latestSemanticVersion.hashCode;
 }
