@@ -15,15 +15,13 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
   PageRepository _pageRepository;
 
   HomeBloc({@required this.client}) {
-    _loadPreferences().then((homePreferences) {
-      dispatch(
-        GetPageOfPackagesEvent(
-          pageNumber: 1,
-          sortBy: homePreferences.sortType,
-          filterBy: homePreferences.filterType,
-        ),
-      );
-    });
+    dispatch(
+      GetPageOfPackagesEvent(
+        pageNumber: 1,
+        sortBy: currentState.sortType,
+        filterBy: currentState.filterType,
+      ),
+    );
     _pageRepository = PageRepository(client: client);
   }
 

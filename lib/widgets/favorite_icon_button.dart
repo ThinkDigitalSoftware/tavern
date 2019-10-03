@@ -94,7 +94,7 @@ class FavoriteIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Icon(
-      isFavorited ? Icons.favorite : Icons.favorite_border,
+      isFavorited ? Icons.star : Icons.star_border,
       color: DynamicTheme.of(context).brightness == Brightness.light
           ? Theme.of(context).primaryIconTheme.color
           : Colors.white,

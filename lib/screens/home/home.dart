@@ -112,11 +112,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     ),
                                     PopupMenuButton<SortType>(
                                       initialValue: widget.homeState.sortType,
+                                      offset: Offset(-20, -20),
                                       icon: Icon(
                                         GroovinMaterialIcons.filter_outline,
                                         color: DynamicTheme.of(context)
-                                            .brightness ==
-                                            Brightness.light
+                                                    .brightness ==
+                                                Brightness.light
                                             ? Colors.black
                                             : Colors.white,
                                       ),
@@ -140,12 +141,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                       ],
                                       onSelected: (selection) =>
                                           _homeBloc.dispatch(
-                                            GetPageOfPackagesEvent(
-                                              sortBy: selection,
-                                              filterBy: widget.homeState
-                                                  .filterType,
-                                            ),
-                                          ),
+                                        GetPageOfPackagesEvent(
+                                          sortBy: selection,
+                                          filterBy: widget.homeState.filterType,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -194,8 +194,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             title: Text("Packages"),
           ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.favorite_border),
-              activeIcon: Icon(Icons.favorite),
+              icon: Icon(Icons.star_border),
+              activeIcon: Icon(Icons.star),
               title: Text("Favorites")),
           BottomNavigationBarItem(
               icon: Icon(Icons.settings), title: Text("Settings")),

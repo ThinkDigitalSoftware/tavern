@@ -195,23 +195,15 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                         child: CircleAvatar(
                           radius: 37,
                           backgroundColor:
-                          Theme
-                              .of(context)
-                              .primaryTextTheme
-                              .body1
-                              .color,
+                              Theme.of(context).primaryTextTheme.body1.color,
                           child: CircleAvatar(
                             radius: 35,
-                            backgroundColor: Theme
-                                .of(context)
-                                .cardColor,
+                            backgroundColor: Theme.of(context).cardColor,
                             child: Text(
                               'API',
                               style: TextStyle(
-                                color: DynamicTheme
-                                    .of(context)
-                                    .brightness ==
-                                    Brightness.light
+                                color: DynamicTheme.of(context).brightness ==
+                                        Brightness.light
                                     ? Colors.black
                                     : Colors.white,
                               ),
@@ -258,13 +250,10 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                           ..showSnackBar(
                             SnackBar(
                               content: Text(
-                                  "You have unsubscribed from ${_package
-                                      .name}"),
+                                  "You have unsubscribed from ${_package.name}"),
                               action: SnackBarAction(
-                                onPressed: () =>
-                                    _subscriptionBloc.dispatch(
-                                        AddSubscriptionFromFullPackage(
-                                            _package)),
+                                onPressed: () => _subscriptionBloc.dispatch(
+                                    AddSubscriptionFromFullPackage(_package)),
                                 label: "Undo",
                               ),
                             ),
@@ -279,12 +268,11 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                               content: Text(
                                   "You have subscribed to ${_package.name}"),
                               action: SnackBarAction(
-                                onPressed: () =>
-                                    _subscriptionBloc.dispatch(
-                                      RemoveSubscriptionForFullPackage(
-                                        _package,
-                                      ),
-                                    ),
+                                onPressed: () => _subscriptionBloc.dispatch(
+                                  RemoveSubscriptionForFullPackage(
+                                    _package,
+                                  ),
+                                ),
                                 label: "Undo",
                               ),
                             ),

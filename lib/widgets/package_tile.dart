@@ -32,9 +32,7 @@ class PackageTile extends StatelessWidget {
     final packageVersion = 'v${package.latest.semanticVersion.major}'
         '.${package.latest.semanticVersion.minor}'
         '.${package.latest.semanticVersion.patch}'
-        '${package.dateUpdated != null
-        ? ' updated ${package.dateUpdated}'
-        : ''}';
+        '${package.dateUpdated != null ? ' updated ${package.dateUpdated}' : ''}';
 
     return ListTile(
       title: Text(
@@ -46,18 +44,16 @@ class PackageTile extends StatelessWidget {
       subtitle: Text(packageVersion),
       trailing: packageScore != null
           ? CircleAvatar(
-        backgroundColor: Theme
-            .of(context)
-            .brightness == Brightness.light
-            ? scoreColor
-            : scoreColor.withAlpha(75),
-        child: Text(
-          "${package.score}",
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      )
+              backgroundColor: Theme.of(context).brightness == Brightness.light
+                  ? scoreColor
+                  : scoreColor.withAlpha(75),
+              child: Text(
+                "${package.score}",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            )
           : null,
       onTap: () {
         if (package.name.startsWith('dart:')) {

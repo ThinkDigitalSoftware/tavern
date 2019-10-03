@@ -25,3 +25,6 @@ Closes #45.
 Add support for background fetch with subscriptions for Android and iOS.
 
 Next up: Notifications
+
+## v1.3.1
+Fix Home settings not surviving app restart. Closes #53

@@ -8,6 +8,13 @@ import 'package:pubspec/pubspec.dart';
 import 'functions.dart';
 
 main(List<String> arguments) async {
+  String result = 'N';
+  result = await input('Did you update CHANGELOG.md? [y/N]: ');
+  if (!result.toLowerCase().startsWith('y')) {
+    print("Please be sure to update the changelog and then try again.");
+    exit(1);
+  }
+
   Directory currentDirectory = Directory.current;
   File pubspecFile = File("${currentDirectory.path}/pubspec.yaml");
   if (!pubspecFile.existsSync()) {
@@ -101,11 +108,7 @@ Future<Version> _getNewVersion(Version previousVersion) async {
 Future<String> _getNewVersionString() async {
   print('Enter the new version: ');
   try {
-    return await File(Platform.isWindows ? r'conIN$' : '/dev/tty')
-        .openRead()
-        .transform(utf8.decoder)
-        .transform(const LineSplitter())
-        .first;
+    return await input();
   } on Exception {
     final String input = stdin.readLineSync();
     if (input == null) {
@@ -113,6 +116,18 @@ Future<String> _getNewVersionString() async {
     }
     return input;
   }
+}
+
+Future<String> input([String prompt]) {
+  if (prompt != null) {
+    print(prompt);
+  }
+
+  return File(Platform.isWindows ? r'conIN$' : '/dev/tty')
+      .openRead()
+      .transform(utf8.decoder)
+      .transform(const LineSplitter())
+      .first;
 }
 
 Map _getPreviousDetails(Directory currentDirectory) {

@@ -13,3 +13,7 @@ bool hasDependencyOverrides(PubSpec pubspec) {
     return false;
   }
 }
+
+Directory currentDirectory = Directory.current;
+
+Future<PubSpec> getPubspec() async => PubSpec.load(currentDirectory);
