@@ -1,30 +1,27 @@
+import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 import 'package:pub_client/pub_client.dart';
-import 'package:tavern/screens/subscriptions/subscription_state.dart';
 
 @immutable
 abstract class SubscriptionEvent {}
 
-class AddSubscriptionFromFullPackage extends SubscriptionEvent {
-  final FullPackage package;
-
-  AddSubscriptionFromFullPackage(this.package);
-}
-
 class AddSubscription extends SubscriptionEvent {
-  final Subscription subscription;
+  final FullPackage subscription;
 
   AddSubscription(this.subscription);
 }
 
-class RemoveSubscriptionForFullPackage extends SubscriptionEvent {
-  final FullPackage package;
-
-  RemoveSubscriptionForFullPackage(this.package);
-}
-
 class RemoveSubscription extends SubscriptionEvent {
-  final Subscription subscription;
+  final FullPackage subscription;
 
   RemoveSubscription(this.subscription);
+}
+
+class GetGitHubStars extends SubscriptionEvent {
+  final BuildContext context;
+  final Completer completer = Completer();
+
+  GetGitHubStars({@required this.context});
 }

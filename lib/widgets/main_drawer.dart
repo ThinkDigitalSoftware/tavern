@@ -18,10 +18,9 @@ class _MainDrawerState extends State<MainDrawer> {
   Widget build(BuildContext context) {
     return Drawer(
       child: BlocBuilder<SettingsBloc, SettingsState>(
-        builder: (BuildContext context, SettingsState state) =>
-            SettingsScreen(
-              settingsState: state,
-            ),
+        builder: (BuildContext context, SettingsState state) => SettingsScreen(
+          state: state,
+        ),
       ),
     );
   }

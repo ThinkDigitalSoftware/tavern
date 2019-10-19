@@ -28,3 +28,15 @@ class ChangeStateEvent extends SettingsEvent {
 
   ChangeStateEvent({@required this.state}) : assert(state != null);
 }
+
+class AuthenticateWithGithub extends SettingsEvent {
+  final String username;
+  final String password;
+
+  AuthenticateWithGithub({
+    @required this.username,
+    @required this.password,
+  }) : assert(username != null && password != null);
+}
+
+class CheckAuth extends SettingsEvent {}

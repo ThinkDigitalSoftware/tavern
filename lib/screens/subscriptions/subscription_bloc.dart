@@ -4,6 +4,7 @@ import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
+import 'package:github/server.dart' as gitHub;
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:pub_client/pub_client.dart';
 
@@ -14,6 +15,7 @@ class SubscriptionBloc
   final PubHtmlParsingClient client;
   final FullPackageRepository _packageRepository =
       GetIt.instance.get<FullPackageRepository>();
+  gitHub.GitHub _gitHub;
 
   @override
   SubscriptionState get initialState =>
@@ -22,12 +24,12 @@ class SubscriptionBloc
   SubscriptionBloc({@required this.client}) {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
-    var initializationSettingsAndroid =
+    final initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettingsIOS = IOSInitializationSettings(
+    final initializationSettingsIOS = IOSInitializationSettings(
         onDidReceiveLocalNotification:
             onDidReceiveLocalNotification); // TODO: implement
-    var initializationSettings = InitializationSettings(
+    final initializationSettings = InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification); // TODO: implement
@@ -50,14 +52,47 @@ class SubscriptionBloc
   Stream<SubscriptionState> mapEventToState(
     SubscriptionEvent event,
   ) async* {
-    if (event is AddSubscriptionFromFullPackage) {
-      yield state.withPackage(event.package);
+    if (event is AddSubscription) {
+      yield state.withSubscription(event.subscription);
     } else if (event is AddSubscription) {
       yield state.withSubscription(event.subscription);
-    } else if (event is RemoveSubscriptionForFullPackage) {
-      yield state.withoutPackage(event.package);
     } else if (event is RemoveSubscription) {
       yield state.withoutSubscription(event.subscription);
+    } else if (event is RemoveSubscription) {
+      yield state.withoutSubscription(event.subscription);
+    } else if (event is GetGitHubStars) {
+      final settingsState = SettingsBloc.of(event.context).state;
+      if (settingsState.isAuthenticated) {
+        List<FullPackage> gitHubStarredPackages = [];
+
+        _gitHub ??= gitHub.GitHub(auth: settingsState.authentication);
+        for (final subscribedPackage in state.subscribedPackages) {
+          final repositoryUrl = subscribedPackage.repositoryUrl;
+          if (repositoryUrl?.contains('github') ?? false) {
+            List<String> urlParts = repositoryUrl.split('/');
+            final githubUrlIndex = urlParts
+                .lastIndexWhere((urlPart) => urlPart.contains('github.com'));
+            String owner;
+            String name;
+
+            if (urlParts.length < githubUrlIndex + 2) {
+              continue; // skip
+            }
+            owner = urlParts[githubUrlIndex + 1];
+            name = urlParts[githubUrlIndex + 2];
+
+            gitHub.RepositorySlug repositorySlug =
+                gitHub.RepositorySlug(owner, name);
+            bool isStarred = await _gitHub.activity.isStarred(repositorySlug);
+            if (isStarred) {
+              gitHubStarredPackages.add(subscribedPackage);
+            }
+          }
+        }
+
+        yield state.copyWith(gitHubStarredPackages: gitHubStarredPackages);
+      }
+      event.completer.complete();
     }
   }
 
@@ -74,7 +109,7 @@ class SubscriptionBloc
       -1;
 
   Future<FullPackage> getSubscriptionAsFullPackage(
-          Subscription subscription) async =>
+          FullPackage subscription) async =>
       _packageRepository.get(subscription.name);
 
   // ignore: missing_return
@@ -86,7 +121,7 @@ class SubscriptionBloc
 }
 
 Future<List<FullPackage>> checkForUpdates(
-    List<Subscription> subscribedPackages) async {
+    List<FullPackage> subscribedPackages) async {
   List<FullPackage> updatedPackages = [];
   debugPrint('[Background Fetch] Running background fetch.');
   final _client = PubHtmlParsingClient();

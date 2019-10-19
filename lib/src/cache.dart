@@ -67,7 +67,7 @@ abstract class Cache<KeyType, ValueType> with MapMixin<KeyType, ValueType> {
   operator [](Object key) {
     ValueType value;
     if (shouldPersist) {
-      var json = box.get(key);
+      final json = box.get(key);
 
       value = valueFromJsonEncodable(json);
       debugPrint('Returning ${value.runtimeType} from persistant cache.');
@@ -106,7 +106,7 @@ abstract class Cache<KeyType, ValueType> with MapMixin<KeyType, ValueType> {
   }
 
   @override
-  void clear() => box.clear();
+  void clear() => box?.clear();
 
   @override
   Iterable<KeyType> get keys => throw UnimplementedError();

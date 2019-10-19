@@ -1,16 +1,20 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_progress_button/flutter_progress_button.dart';
+import 'package:github/server.dart';
 import 'package:package_info/package_info.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/screens/settings/settings_event.dart';
+import 'package:simple_auth/simple_auth.dart';
+import 'package:simple_auth_flutter/simple_auth_flutter.dart';
+import 'package:tavern/secrets.dart';
 
 class SettingsScreen extends StatefulWidget {
-  final SettingsState settingsState;
+  final SettingsState state;
 
-  const SettingsScreen({Key key, @required this.settingsState})
-      : super(key: key);
+  const SettingsScreen({Key key, @required this.state}) : super(key: key);
 
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
@@ -24,10 +28,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
     buildNumber: 'Unknown',
   );
 
+  TextEditingController _usernameController;
+  TextEditingController _passwordController;
+
   @override
   void initState() {
+    SimpleAuthFlutter.init(context);
     _initPackageInfo();
+    _usernameController = TextEditingController();
+    _passwordController = TextEditingController();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   Future<void> _initPackageInfo() async {
@@ -97,7 +114,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onChanged: (sortType) {
                 settingsBloc.add(SetSortTypeEvent(sortType: sortType));
               },
-              value: widget.settingsState.sortBy,
+              value: state.sortBy,
               hint: Text('Default Feed Sort'),
               isExpanded: true,
             ),
@@ -121,7 +138,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onChanged: (filterType) => settingsBloc.add(SetFilterTypeEvent(
                 filterType: filterType,
               )),
-              value: widget.settingsState.filterBy,
+              value: state.filterBy,
               hint: Text('Default Feed Filter'),
               isExpanded: true,
             ),
@@ -129,12 +146,68 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ListTile(
             title: Text('Clear Caches'),
             onTap: () {
-              getIt.get<FullPackageCache>().clear();
-              getIt.get<PackageCache>().clear();
-              getIt.get<SearchCache>().clear();
-              getIt.get<PageCache>().clear();
+              getIt.get<FullPackageCache>()?.clear();
+              getIt.get<SearchCache>()?.clear();
+              getIt.get<PageCache>()?.clear();
               debugPrint('Caches cleared');
             },
+          ),
+          ExpansionTile(
+            title: Text("Sign In to GitHub"),
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: TextField(
+                  controller: _usernameController,
+                  decoration:
+                      InputDecoration(labelText: "Username", isDense: true),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: TextField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: "Password",
+                    isDense: true,
+                  ),
+                  obscureText: true,
+                ),
+              ),
+              ProgressButton(
+                animate: true,
+                type: ProgressButtonType.Flat,
+                defaultWidget:
+                    Text(state.isAuthenticated ? 'Sign Out' : 'Sign In'),
+                progressWidget: AspectRatio(
+                  aspectRatio: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                onPressed: () async {
+                  final githubApi = GithubApi(
+                    "github",
+                    gitHubClientId,
+                    gitHubClientSecret,
+                    "com.thinkdigital.software",
+                    scopes: [
+                      "repo",
+                      "public_repo",
+                    ],
+                  );
+                  login(githubApi);
+
+                  settingsBloc.add(
+                    AuthenticateWithGithub(
+                      username: _usernameController.text,
+                      password: _passwordController.text,
+                    ),
+                  );
+                },
+              )
+            ],
           ),
           Expanded(child: SizedBox()),
           Padding(
@@ -149,4 +222,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
+
+  SettingsState get state => widget.state;
+}
+
+void login(AuthenticatedApi api) async {
+  try {
+    final success = await api.authenticate();
+    print(success);
+    final github = GitHub(
+      auth: Authentication.withToken(''),
+    );
+    await for (final gist in github.gists.listCurrentUserGists()) {
+      print(gist.htmlUrl);
+    }
+  } catch (e) {}
 }

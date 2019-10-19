@@ -1,37 +1,25 @@
 import 'package:meta/meta.dart';
 import 'package:pub_client/pub_client.dart';
-import 'package:pub_semver/pub_semver.dart' as semver;
 
 @immutable
 class SubscriptionState {
-  final List<Subscription> subscribedPackages;
+  final List<FullPackage> subscribedPackages;
+  final List<FullPackage> gitHubStarredPackages;
 
-  const SubscriptionState({@required this.subscribedPackages});
+  const SubscriptionState(
+      {@required this.subscribedPackages, this.gitHubStarredPackages});
 
-  SubscriptionState withPackage(FullPackage package) => SubscriptionState(
+  SubscriptionState withSubscription(FullPackage package) => SubscriptionState(
         subscribedPackages: List.from(subscribedPackages)
           ..add(
-            Subscription.fromFullPackage(package),
+            package,
           ),
       );
 
-  SubscriptionState withSubscription(Subscription subscription) =>
-      SubscriptionState(
-        subscribedPackages: List.from(subscribedPackages)..add(subscription),
-      );
-
-  SubscriptionState withoutPackage(FullPackage package) {
+  SubscriptionState withoutSubscription(FullPackage package) {
     assert(subscribedPackages.contains(package));
     return SubscriptionState(
-        subscribedPackages: List.from(subscribedPackages)
-          ..remove(Subscription.fromFullPackage(package)));
-  }
-
-  SubscriptionState withoutSubscription(Subscription subscription) {
-    assert(subscribedPackages.contains(subscription));
-    return SubscriptionState(
-        subscribedPackages: List.from(subscribedPackages)
-          ..remove(subscription));
+        subscribedPackages: List.from(subscribedPackages)..remove(package));
   }
 
   Map<String, dynamic> toJson() {
@@ -46,60 +34,23 @@ class SubscriptionState {
   factory SubscriptionState.fromJson(Map<String, dynamic> json) {
     return SubscriptionState(
       subscribedPackages: List.of(json["subscribedPackages"])
-          .map((package) => Subscription.fromJson(package))
+          .map((package) => FullPackage.fromJson(package))
           .toList(),
+    );
+  }
+
+  SubscriptionState copyWith({
+    List<FullPackage> subscribedPackages,
+    List<FullPackage> gitHubStarredPackages,
+  }) {
+    return SubscriptionState(
+      subscribedPackages: subscribedPackages ?? this.subscribedPackages,
+      gitHubStarredPackages:
+          gitHubStarredPackages ?? this.gitHubStarredPackages,
     );
   }
 }
 
 class InitialSubscriptionState extends SubscriptionState {
   const InitialSubscriptionState() : super(subscribedPackages: const []);
-}
-
-class Subscription {
-  final String name;
-  final String url;
-  final semver.Version latestSemanticVersion;
-
-  Subscription({
-    @required this.name,
-    @required this.url,
-    @required this.latestSemanticVersion,
-  });
-
-  factory Subscription.fromJson(Map<String, dynamic> json) {
-    return Subscription(
-      name: json["name"],
-      url: json["url"],
-      latestSemanticVersion: semver.Version.parse(
-        json['latestSemanticVersion'],
-      ),
-    );
-  }
-
-  factory Subscription.fromFullPackage(FullPackage package) =>
-      Subscription(
-          name: package.name,
-          url: package.url,
-          latestSemanticVersion: package.latestSemanticVersion);
-
-  Map<String, dynamic> toJson() => {
-        "name": name,
-        "url": url,
-    "latestSemanticVersion": latestSemanticVersion.toString(),
-      };
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Subscription &&
-          runtimeType == other.runtimeType &&
-          name == other.name &&
-          url == other.url &&
-          latestSemanticVersion == other.latestSemanticVersion ||
-      other is FullPackage && Subscription.fromFullPackage(other) == this;
-
-  @override
-  int get hashCode =>
-      name.hashCode ^ url.hashCode ^ latestSemanticVersion.hashCode;
 }

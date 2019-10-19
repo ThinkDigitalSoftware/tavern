@@ -3,12 +3,25 @@ import 'dart:async';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:tavern/screens/bloc.dart';
+import 'package:github/server.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
   @override
-  SettingsState get initialState => InitialSettingsState();
+  SettingsState get initialState =>
+      super.initialState ?? InitialSettingsState();
+
+  static SettingsBloc of(BuildContext context) =>
+      BlocProvider.of<SettingsBloc>(context);
+
+  final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+
+  SettingsBloc() {
+    add(CheckAuth());
+  }
 
   @override
   Stream<SettingsState> mapEventToState(SettingsEvent event) async* {
@@ -23,6 +36,22 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
     }
     if (event is SetSortTypeEvent) {
       yield state.copyWith(sortBy: event.sortType);
+      return;
+    }
+
+    if (event is AuthenticateWithGithub) {
+      secureStorage.write(key: 'githubUsername', value: event.username);
+      secureStorage.write(key: 'githubPassword', value: event.password);
+
+      yield state.copyWith(
+        authentication: Authentication.basic(event.username, event.password),
+      );
+      return;
+    }
+    if (event is CheckAuth) {
+      String username = await secureStorage.read(key: 'githubUsername');
+      String password = await secureStorage.read(key: 'githubPassword');
+      if (username != null && password != null) {}
     }
   }
 

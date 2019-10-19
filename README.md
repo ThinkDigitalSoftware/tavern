@@ -10,6 +10,14 @@ An open-source pub.dev client for searching and subscribing to packages.
 - [ ] Organize subscriptions into projects 
 - [X] Add the ability to share a package 
 
+### Note:
+Developers. Include a file at `lib/secrets.dart` with your own
+github ClientID and Client Secret in order to get github logging in functionality:
+```dart
+String gitHubClientId = '5b8861234ClientID7';
+String gitHubClientSecret = 'a7e55678ClientSecret998b';
+
+```
 
 ## Screenshots
 ### iOS Screenshots
