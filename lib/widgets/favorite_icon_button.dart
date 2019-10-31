@@ -25,8 +25,7 @@ class FavoriteIconButton extends StatelessWidget {
           icon: FavoriteIcon(isFavorited: isFavorited),
           onPressed: () {
             if (isFavorited) {
-              _subscriptionBloc
-                  .dispatch(RemoveSubscriptionForFullPackage(_package));
+              _subscriptionBloc.add(RemoveSubscriptionForFullPackage(_package));
               Scaffold.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(
@@ -36,8 +35,7 @@ class FavoriteIconButton extends StatelessWidget {
                   ),
                 );
             } else {
-              _subscriptionBloc
-                  .dispatch(AddSubscriptionFromFullPackage(_package));
+              _subscriptionBloc.add(AddSubscriptionFromFullPackage(_package));
               Scaffold.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(
@@ -61,8 +59,7 @@ SnackBar subscribedSnackBar({
   return SnackBar(
     content: Text("You have subscribed to ${subscription.name}"),
     action: SnackBarAction(
-      onPressed: () =>
-          subscriptionBloc.dispatch(RemoveSubscription(subscription)),
+      onPressed: () => subscriptionBloc.add(RemoveSubscription(subscription)),
       label: "Undo",
     ),
     behavior: SnackBarBehavior.floating,
@@ -76,7 +73,7 @@ SnackBar unsubscribedSnackBar({
   return SnackBar(
     content: Text("You have unsubscribed from ${subscription.name}"),
     action: SnackBarAction(
-      onPressed: () => subscriptionBloc.dispatch(AddSubscription(subscription)),
+      onPressed: () => subscriptionBloc.add(AddSubscription(subscription)),
       label: "Undo",
     ),
     behavior: SnackBarBehavior.floating,

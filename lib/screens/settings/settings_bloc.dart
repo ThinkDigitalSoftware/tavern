@@ -14,15 +14,15 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
   Stream<SettingsState> mapEventToState(SettingsEvent event) async* {
     if (event is ToggleThemeEvent) {
       final newBrightness = _toggleTheme(event.context);
-      yield currentState.copyWith(brightness: newBrightness);
+      yield state.copyWith(brightness: newBrightness);
       return;
     }
     if (event is SetFilterTypeEvent) {
-      yield currentState.copyWith(filterBy: event.filterType);
+      yield state.copyWith(filterBy: event.filterType);
       return;
     }
     if (event is SetSortTypeEvent) {
-      yield currentState.copyWith(sortBy: event.sortType);
+      yield state.copyWith(sortBy: event.sortType);
     }
   }
 

@@ -45,3 +45,12 @@ class ChangeBottomNavigationBarIndex extends HomeEvent {
 
   ChangeBottomNavigationBarIndex(this.index);
 }
+
+class ShowPackageDetailsPageEvent extends HomeEvent {
+  final BuildContext context;
+  final Package package;
+
+  ShowPackageDetailsPageEvent({@required this.context, @required this.package})
+      : assert(context != null),
+        assert(package != null);
+}

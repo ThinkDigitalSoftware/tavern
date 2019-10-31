@@ -8,13 +8,6 @@ import 'package:pubspec/pubspec.dart';
 import 'functions.dart';
 
 main(List<String> arguments) async {
-  String result = 'N';
-  result = await input('Did you update CHANGELOG.md? [y/N]: ');
-  if (!result.toLowerCase().startsWith('y')) {
-    print("Please be sure to update the changelog and then try again.");
-    exit(1);
-  }
-
   Directory currentDirectory = Directory.current;
   File pubspecFile = File("${currentDirectory.path}/pubspec.yaml");
   if (!pubspecFile.existsSync()) {
@@ -54,6 +47,12 @@ main(List<String> arguments) async {
     print("Updating version.");
     pubspec = pubspec.copy(version: newVersion);
     previousDetails[PreviousDetailKey.currentVersion] = newVersion.toString();
+
+    //check changelog before committing changes.
+    if (!changelogUpdated() || !changelogHasEntryForVersion(newVersion)) {
+      stderr.write('You need to add an entry to CHANGELOG.md to continue.');
+      exit(1);
+    }
     _writeNewDetails(currentDirectory, newDetails: previousDetails);
 
     await pubspec.save(currentDirectory);

@@ -28,3 +28,9 @@ Next up: Notifications
 
 ## v1.3.1
 Fix Home settings not surviving app restart. Closes #53
+ 
+## v1.3.2
+
+Fix failure to load packages in package detail View.
+Closes #54.
+Update to bloc v1.0.0

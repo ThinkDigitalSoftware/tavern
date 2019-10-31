@@ -27,12 +27,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     SearchEvent event,
   ) async* {
     if (event is GetSearchResultsEvent) {
-      yield SearchLoadingState(searchHistory: currentState.searchHistory);
+      yield SearchLoadingState(searchHistory: state.searchHistory);
       List<Package> packages = await _searchRepository.get(event.query);
       yield SearchCompleteState(searchResults: packages);
     } else if (event is GetSearchHistoryEvent) {
-      yield currentState.copyWith(
-          searchHistory: _searchRepository.searchHistory);
+      yield state.copyWith(searchHistory: _searchRepository.searchHistory);
     } else if (event is ResetSearchEvent) {
       yield initialState;
     }

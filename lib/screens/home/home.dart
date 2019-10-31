@@ -139,8 +139,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                           value: SortType.popularity,
                                         ),
                                       ],
-                                      onSelected: (selection) =>
-                                          _homeBloc.dispatch(
+                                      onSelected: (selection) => _homeBloc.add(
                                         GetPageOfPackagesEvent(
                                           sortBy: selection,
                                           filterBy: widget.homeState.filterType,
@@ -152,7 +151,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                 PlatformFilter(
                                   value: widget.homeState.filterType,
                                   onSegmentChosen: (filterType) {
-                                    _homeBloc.dispatch(
+                                    _homeBloc.add(
                                       ChangeFilterTypeEvent(
                                         filterType: filterType,
                                       ),
@@ -178,7 +177,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     SubscriptionsPage(),
                   ],
                   onPageChanged: (index) {
-                    _homeBloc.dispatch(
+                    _homeBloc.add(
                       ChangeBottomNavigationBarIndex(index),
                     );
                   },
@@ -206,7 +205,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             case 1:
               {
                 _pageController.jumpToPage(index);
-                _homeBloc.dispatch(ChangeBottomNavigationBarIndex(index));
+                _homeBloc.add(ChangeBottomNavigationBarIndex(index));
                 break;
               }
             case 2:

@@ -21,12 +21,12 @@ class SubscriptionBloc
 
   SubscriptionBloc({@required this.client}) {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+        FlutterLocalNotificationsPlugin();
     var initializationSettingsAndroid =
-    AndroidInitializationSettings('app_icon');
+        AndroidInitializationSettings('app_icon');
     var initializationSettingsIOS = IOSInitializationSettings(
         onDidReceiveLocalNotification:
-        onDidReceiveLocalNotification); // TODO: implement
+            onDidReceiveLocalNotification); // TODO: implement
     var initializationSettings = InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
@@ -39,7 +39,7 @@ class SubscriptionBloc
           startOnBoot: true,
           enableHeadless: true,
         ), () {
-      checkForUpdates(currentState.subscribedPackages).then((updatedPackages) {
+      checkForUpdates(state.subscribedPackages).then((updatedPackages) {
         debugPrint(
             'Notifying user of updates to ${updatedPackages.length} packages.');
       });
@@ -51,13 +51,13 @@ class SubscriptionBloc
     SubscriptionEvent event,
   ) async* {
     if (event is AddSubscriptionFromFullPackage) {
-      yield currentState.withPackage(event.package);
+      yield state.withPackage(event.package);
     } else if (event is AddSubscription) {
-      yield currentState.withSubscription(event.subscription);
+      yield state.withSubscription(event.subscription);
     } else if (event is RemoveSubscriptionForFullPackage) {
-      yield currentState.withoutPackage(event.package);
+      yield state.withoutPackage(event.package);
     } else if (event is RemoveSubscription) {
-      yield currentState.withoutSubscription(event.subscription);
+      yield state.withoutSubscription(event.subscription);
     }
   }
 
@@ -69,7 +69,7 @@ class SubscriptionBloc
   Map<String, dynamic> toJson(SubscriptionState state) => state.toJson();
 
   bool hasSubscriptionFor(String packageName) =>
-      currentState.subscribedPackages
+      state.subscribedPackages
           .indexWhere((package) => package.name == packageName) !=
       -1;
 
@@ -77,8 +77,8 @@ class SubscriptionBloc
           Subscription subscription) async =>
       _packageRepository.get(subscription.name);
 
-  Future onDidReceiveLocalNotification(int id, String title, String body,
-      String payload) {}
+  Future onDidReceiveLocalNotification(
+      int id, String title, String body, String payload) {}
 
   Future onSelectNotification(String payload) {}
 }
@@ -93,8 +93,7 @@ Future<List<FullPackage>> checkForUpdates(
     if (package.latestSemanticVersion >
         subscribedPackage.latestSemanticVersion) {
       debugPrint(
-          '[Background Fetch] Updated package found for "${subscribedPackage
-              .name}"');
+          '[Background Fetch] Updated package found for "${subscribedPackage.name}"');
       updatedPackages.add(package);
     } else {
       debugPrint(

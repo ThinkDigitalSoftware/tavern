@@ -1,25 +1,28 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:pub_client/pub_client.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tavern/screens/bloc.dart';
+import 'package:tavern/screens/package_details/package_details_screen.dart';
 import 'package:tavern/src/cache.dart';
+import 'package:tavern/src/enums.dart';
 import 'package:tavern/src/repository.dart';
 
 class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
   final PubHtmlParsingClient client;
+
   @override
   HomeState get initialState => super.initialState ?? InitialHomeState();
   PageRepository _pageRepository;
 
   HomeBloc({@required this.client}) {
-    dispatch(
+    add(
       GetPageOfPackagesEvent(
         pageNumber: 1,
-        sortBy: currentState.sortType,
-        filterBy: currentState.filterType,
+        sortBy: state.sortType,
+        filterBy: state.filterType,
       ),
     );
     _pageRepository = PageRepository(client: client);
@@ -35,7 +38,7 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
         pageNumber: event.pageNumber,
       );
       page = await _pageRepository.get(pageQuery);
-      yield currentState.copyWith(
+      yield state.copyWith(
         page: page,
         filterType: event.filterBy,
         sortType: event.sortBy,
@@ -47,41 +50,29 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
       return;
     }
     if (event is ChangeFilterTypeEvent) {
-      dispatch(
+      add(
         GetPageOfPackagesEvent(
-          pageNumber: currentState.page.pageNumber,
-          sortBy: currentState.sortType,
+          pageNumber: state.page.pageNumber,
+          sortBy: state.sortType,
           filterBy: event.filterType,
         ),
       );
       return;
     }
     if (event is ChangeBottomNavigationBarIndex) {
-      yield currentState.copyWith(bottomNavigationBarIndex: event.index);
+      yield state.copyWith(bottomNavigationBarIndex: event.index);
       return;
     }
-  }
-
-  Future<HomePreferences> _loadPreferences() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    SortType sortType = SortType.overAllScore;
-    FilterType filterType;
-
-    String filter = prefs.get('feedFilterSelection');
-    switch (filter) {
-      case 'All':
-        filterType = FilterType.all;
-        break;
-      case 'Flutter':
-        filterType = FilterType.flutter;
-        break;
-      case 'Web':
-        filterType = FilterType.web;
-        break;
-      default:
-        filterType = FilterType.all;
+    if (event is ShowPackageDetailsPageEvent) {
+      Navigator.pushNamed(
+        event.context,
+        Routes.packageDetailsScreen,
+        arguments: PackageDetailsArguments(
+          event.package.name,
+          event.package.score.toString(),
+        ),
+      );
     }
-    return HomePreferences(sortType: sortType, filterType: filterType);
   }
 
   @override
@@ -101,6 +92,9 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
       return null;
     }
   }
+
+  static HomeBloc of(BuildContext context) =>
+      BlocProvider.of<HomeBloc>(context);
 }
 
 class HomePreferences {

@@ -31,7 +31,6 @@ Future main() async {
     ..registerSingleton<FullPackageRepository>(
       FullPackageRepository(client: _htmlParsingClient),
     );
-
   runApp(
     MultiBlocProvider(
       providers: [
@@ -41,10 +40,6 @@ Future main() async {
         ),
         BlocProvider<SettingsBloc>(
           builder: (BuildContext context) => SettingsBloc(),
-        ),
-        BlocProvider<PackageDetailsBloc>(
-          builder: (BuildContext context) =>
-              PackageDetailsBloc()..dispatch(InitializePackageDetailsBloc()),
         ),
         BlocProvider<SearchBloc>(
           builder: (BuildContext context) =>
@@ -116,21 +111,22 @@ class PubDevClientApp extends StatelessWidget {
                   final packageDetailsArguments =
                       routeSettings.arguments as PackageDetailsArguments;
                   assert(packageDetailsArguments is PackageDetailsArguments);
-                  BlocProvider.of<PackageDetailsBloc>(context).dispatch(
-                    GetPackageDetailsEvent(
-                      packageName: packageDetailsArguments.packageName,
-                      packageScore:
-                          int.tryParse(packageDetailsArguments.packageScore),
-                    ),
-                  );
+                  final packageDetailsBloc = PackageDetailsBloc()
+                    ..add(
+                      GetPackageDetailsEvent(
+                        packageName: packageDetailsArguments.packageName,
+                        packageScore:
+                            int.tryParse(packageDetailsArguments.packageScore),
+                      ),
+                    );
                   return MaterialPageRoute(
                     builder: (BuildContext context) =>
                         BlocBuilder<PackageDetailsBloc, PackageDetailsState>(
+                      bloc: packageDetailsBloc,
                       builder:
                           (BuildContext context, PackageDetailsState state) =>
                               PackageDetailsScreen(
-                        packageDetailsState: state,
-                      ),
+                                  packageDetailsBloc: packageDetailsBloc),
                     ),
                   );
                 }

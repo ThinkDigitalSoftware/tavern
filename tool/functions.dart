@@ -17,3 +17,20 @@ bool hasDependencyOverrides(PubSpec pubspec) {
 Directory currentDirectory = Directory.current;
 
 Future<PubSpec> getPubspec() async => PubSpec.load(currentDirectory);
+
+bool changelogUpdated() {
+  ProcessResult results =
+      Process.runSync('git', parseCommand('git diff-index --name-status HEAD'));
+  final List<String> modifiedFiles = results.stdout.toString().split('\n');
+  return modifiedFiles.contains('M	CHANGELOG.md');
+}
+
+bool changelogHasEntryForVersion(dynamic version) {
+  String changelog = File('CHANGELOG.MD').readAsStringSync();
+  return changelog.contains(version.toString());
+}
+
+List<String> parseCommand(String input) {
+  var result = input.split(' ');
+  return result.sublist(1);
+}

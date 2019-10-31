@@ -14,7 +14,9 @@ class PackageDetailsBloc
   final FullPackageRepository _packageRepository;
 
   PackageDetailsBloc()
-      : _packageRepository = GetIt.I.get<FullPackageRepository>();
+      : _packageRepository = GetIt.I.get<FullPackageRepository>() {
+    add(InitializePackageDetailsBloc());
+  }
 
   @override
   PackageDetailsState get initialState => InitialPackageDetailsState();
@@ -39,7 +41,7 @@ class PackageDetailsBloc
         return;
       }
       if (event is InitializePackageDetailsBloc) {
-        yield InitialPackageDetailsState();
+        // yield InitialPackageDetailsState();
         return;
       }
     } on Exception catch (e) {
@@ -63,7 +65,7 @@ class FullPackageCache extends Cache<String, FullPackage> {
   FullPackageCache()
       : super(
           shouldPersist: true,
-    valueToJsonEncodable: (fullPackage) => fullPackage?.toJson(),
+          valueToJsonEncodable: (fullPackage) => fullPackage?.toJson(),
           valueFromJsonEncodable: (json) =>
               FullPackage.fromJson((json as Map).cast<String, dynamic>()),
         ) {

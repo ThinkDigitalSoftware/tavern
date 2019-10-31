@@ -36,7 +36,7 @@ class SubscriptionsPage extends StatelessWidget {
                       subscriptionBloc: subscriptionBloc,
                     ),
                   );
-                  subscriptionBloc.dispatch(RemoveSubscription(subscription));
+                  subscriptionBloc.add(RemoveSubscription(subscription));
                 },
               );
             },
@@ -74,7 +74,7 @@ class FavoritesTile extends StatelessWidget {
           packageScore: 0,
         );
         BlocProvider.of<PackageDetailsBloc>(context)
-            .dispatch(getPackageDetailsEvent);
+            .add(getPackageDetailsEvent);
         return Navigator.pushNamed(
           context,
           Routes.packageDetailsScreen,

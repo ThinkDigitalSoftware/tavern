@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pub_client/pub_client.dart';
-import 'package:tavern/screens/package_details/package_details_screen.dart';
-import 'package:tavern/src/enums.dart';
+import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/src/pub_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -16,6 +15,7 @@ class PackageTile extends StatelessWidget {
   int get packageScore => package.score;
 
   String get packageName => package.name;
+
   @override
   Widget build(BuildContext context) {
     Color scoreColor;
@@ -59,13 +59,8 @@ class PackageTile extends StatelessWidget {
         if (package.name.startsWith('dart:')) {
           launch(package.packageUrl, forceSafariVC: true, forceWebView: true);
         } else {
-          Navigator.pushNamed(
-            context,
-            Routes.packageDetailsScreen,
-            arguments: PackageDetailsArguments(
-              packageName,
-              packageScore.toString(),
-            ),
+          HomeBloc.of(context).add(
+            ShowPackageDetailsPageEvent(context: context, package: package),
           );
         }
       },

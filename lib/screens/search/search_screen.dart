@@ -17,7 +17,7 @@ class PubSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    searchBloc.dispatch(
+    searchBloc.add(
       GetSearchResultsEvent(
         query: SearchQuery(query),
       ),

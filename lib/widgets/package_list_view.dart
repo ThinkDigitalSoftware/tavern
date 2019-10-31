@@ -32,12 +32,12 @@ class _PackageListViewState extends State<PackageListView> {
             1; // page numbering starts at 1, so we need to add 1.
         final completer = Completer<Page>();
         HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
-        homeBloc.dispatch(
+        homeBloc.add(
           GetPageOfPackagesEvent(
             pageNumber: index + offset,
             completer: completer,
-            filterBy: homeBloc.currentState.filterType,
-            sortBy: homeBloc.currentState.sortType,
+            filterBy: homeBloc.state.filterType,
+            sortBy: homeBloc.state.sortType,
           ),
         );
         return completer.future;

@@ -67,7 +67,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: () {
               final SettingsBloc settingsBloc =
                   BlocProvider.of<SettingsBloc>(context);
-              settingsBloc.dispatch(ToggleThemeEvent(context: context));
+              settingsBloc.add(ToggleThemeEvent(context: context));
             },
           ),
           ListTile(
@@ -95,7 +95,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ],
               onChanged: (sortType) {
-                settingsBloc.dispatch(SetSortTypeEvent(sortType: sortType));
+                settingsBloc.add(SetSortTypeEvent(sortType: sortType));
               },
               value: widget.settingsState.sortBy,
               hint: Text('Default Feed Sort'),
@@ -118,8 +118,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   value: FilterType.web,
                 ),
               ],
-              onChanged: (filterType) =>
-                  settingsBloc.dispatch(SetFilterTypeEvent(
+              onChanged: (filterType) => settingsBloc.add(SetFilterTypeEvent(
                 filterType: filterType,
               )),
               value: widget.settingsState.filterBy,

@@ -22,8 +22,8 @@ abstract class Cache<KeyType, ValueType> with MapMixin<KeyType, ValueType> {
 
   Cache({
     this.keyToString,
-    @required this.valueToJsonEncodable,
-    @required this.valueFromJsonEncodable,
+    this.valueToJsonEncodable,
+    this.valueFromJsonEncodable,
     this.shouldPersist = false,
   }) {
     if (KeyType == String) {
@@ -32,10 +32,10 @@ abstract class Cache<KeyType, ValueType> with MapMixin<KeyType, ValueType> {
     if (shouldPersist) {
       if (KeyType != String) {
         assert(keyToString != null);
+        assert(valueToJsonEncodable != null);
+        assert(valueFromJsonEncodable != null);
       }
 
-      assert(valueToJsonEncodable != null);
-      assert(valueFromJsonEncodable != null);
       initialize();
     } else {
       _cache = {};
