@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:pub_client/pub_client.dart';
+import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/src/convert.dart';
 
 @immutable
@@ -17,6 +18,12 @@ class HomeState {
     @required this.sortType,
     @required this.bottomNavigationBarIndex,
   });
+
+  PageQuery get pageQuery => PageQuery(
+        filterType: filterType,
+        sortType: sortType,
+        pageNumber: page.pageNumber,
+      );
 
   HomeState copyWith({
     Page page,

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+part of 'widgets.dart';
 
 class TavernAnimatedLogo extends StatefulWidget {
   const TavernAnimatedLogo({

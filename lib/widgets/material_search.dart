@@ -1,11 +1,8 @@
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' hide SearchDelegate;
-import 'package:tavern/src/enums.dart';
+part of 'widgets.dart';
 
 /// Shows a full screen search page and returns the search result selected by
 /// the user when the page is closed.

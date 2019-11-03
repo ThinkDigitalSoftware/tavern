@@ -1,8 +1,4 @@
-import 'package:dynamic_theme/dynamic_theme.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pub_client/pub_client.dart';
-import 'package:tavern/screens/bloc.dart';
+part of 'widgets.dart';
 
 class FavoriteIconButton extends StatelessWidget {
   const FavoriteIconButton({

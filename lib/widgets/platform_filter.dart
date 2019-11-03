@@ -1,8 +1,4 @@
-import 'package:dynamic_theme/dynamic_theme.dart';
-import 'package:flutter/material.dart';
-import 'package:material_segmented_control/material_segmented_control.dart';
-import 'package:pub_client/pub_client.dart';
-import 'package:tavern/src/pub_colors.dart';
+part of 'widgets.dart';
 
 class PlatformFilter extends StatelessWidget {
   final ValueChanged<FilterType> onSegmentChosen;

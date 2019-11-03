@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/screens/package_details/package_details_screen.dart';
 import 'package:tavern/src/enums.dart';
-import 'package:tavern/widgets/favorite_icon_button.dart';
+import 'package:tavern/widgets/widgets.dart';
 
 class SubscriptionsPage extends StatelessWidget {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -16,6 +16,7 @@ class SubscriptionsPage extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        elevation: 2,
         automaticallyImplyLeading: false,
         backgroundColor: Theme.of(context).canvasColor,
         title: Text("Favorites"),
@@ -51,39 +52,43 @@ class FavoritesTile extends StatelessWidget {
   final Subscription subscription;
   final VoidCallback onPressed;
 
-  const FavoritesTile(
-      {Key key, @required this.subscription, @required this.onPressed})
-      : super(key: key);
+  const FavoritesTile({
+    Key key,
+    @required this.subscription,
+    @required this.onPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(subscription.name),
-      subtitle: Text(subscription.url),
-      contentPadding: EdgeInsets.all(15),
-      trailing: IconButton(
-        tooltip: "Unsubscribe",
-        icon: FavoriteIcon(
-          isFavorited: true,
-        ),
-        onPressed: onPressed,
-      ),
-      onTap: () async {
-        final getPackageDetailsEvent = GetPackageDetailsEvent(
-          packageName: subscription.name,
-          packageScore: 0,
-        );
-        BlocProvider.of<PackageDetailsBloc>(context)
-            .add(getPackageDetailsEvent);
-        return Navigator.pushNamed(
-          context,
-          Routes.packageDetailsScreen,
-          arguments: PackageDetailsArguments(
-            subscription.name,
-            "0",
+    return Card(
+      child: ListTile(
+        title: Text(subscription.name),
+        subtitle: Text(subscription.url),
+        contentPadding: EdgeInsets.all(15),
+        trailing: IconButton(
+          tooltip: "Unsubscribe",
+          icon: FavoriteIcon(
+            isFavorited: true,
           ),
-        );
-      },
+          onPressed: onPressed,
+        ),
+        onTap: () async {
+          final getPackageDetailsEvent = GetPackageDetailsEvent(
+            packageName: subscription.name,
+            packageScore: 0,
+          );
+          BlocProvider.of<PackageDetailsBloc>(context)
+              .add(getPackageDetailsEvent);
+          return Navigator.pushNamed(
+            context,
+            Routes.packageDetailsScreen,
+            arguments: PackageDetailsArguments(
+              subscription.name,
+              "0",
+            ),
+          );
+        },
+      ),
     );
   }
 }

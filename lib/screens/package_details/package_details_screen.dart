@@ -1,16 +1,12 @@
 import 'package:dynamic_overflow_menu_bar/dynamic_overflow_menu_bar.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/src/pub_colors.dart';
-import 'package:tavern/widgets/favorite_icon_button.dart';
-import 'package:tavern/widgets/html_view.dart';
-import 'package:tavern/widgets/score_tab.dart';
+import 'package:tavern/widgets/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PackageDetailsScreen extends StatefulWidget {

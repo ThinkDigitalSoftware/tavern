@@ -39,6 +39,7 @@ dev_dependencies:
   pedantic: ^1.8.0+1
   pubspec: ^0.1.2
   github: ^5.5.0
+  auto_size_text: ^2.1.0
 
 flutter:
   assets: 

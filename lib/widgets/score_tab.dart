@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:pub_client/pub_client.dart';
-
-import 'html_view.dart';
+part of 'widgets.dart';
 
 class AnalysisTab extends StatelessWidget {
   final AnalysisPackageTab packageTab;

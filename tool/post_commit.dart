@@ -19,7 +19,7 @@ Future main() async {
       await github.repositories.getRepository(tavernRepositorySlug);
   final repositoriesService = RepositoriesService(github);
   final pubspec = await getPubspec();
-  final tag = pubspec.version.toString();
+  final tag = "v${pubspec.version.toString()}";
   final lastCommitMessage =
       Process.runSync('git', ['log', '-1', '--pretty=%B']).stdout;
   final createRelease = CreateRelease.from(
