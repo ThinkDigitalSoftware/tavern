@@ -1,17 +1,14 @@
-import 'dart:async';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pagewise/flutter_pagewise.dart';
-import 'package:pub_client/pub_client.dart';
-import 'package:tavern/screens/bloc.dart';
-import 'package:tavern/widgets/package_tile.dart';
+part of 'widgets.dart';
 
 class PackageListView extends StatefulWidget {
   final PageQuery pageQuery;
+  final Orientation orientation;
 
-  const PackageListView({Key key, @required this.pageQuery})
-      : assert(pageQuery != null),
+  const PackageListView({
+    Key key,
+    @required this.pageQuery,
+    @required this.orientation,
+  })  : assert(pageQuery != null),
         super(key: key);
 
   @override
@@ -20,34 +17,36 @@ class PackageListView extends StatefulWidget {
 
 class _PackageListViewState extends State<PackageListView> {
   // used to reset the list when we change filter or sort types.
-  Key pageWiseSliverListKey = GlobalKey();
+  Key pageWiseSliverKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    return PagewiseSliverList<Package>(
-      key: pageWiseSliverListKey,
-      pageSize: 10,
-      pageFuture: (index) async {
-        const int offset =
-            1; // page numbering starts at 1, so we need to add 1.
-        final completer = Completer<Page>();
-        HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
-        homeBloc.add(
-          GetPageOfPackagesEvent(
-            pageNumber: index + offset,
-            completer: completer,
-            filterBy: homeBloc.state.filterType,
-            sortBy: homeBloc.state.sortType,
-          ),
-        );
-        return completer.future;
-      },
-      itemBuilder: (BuildContext context, entry, int index) {
-        return PackageTile(
-          package: entry,
-        );
-      },
-    );
+    if (widget.orientation == Orientation.portrait) {
+      return PagewiseSliverList<Package>(
+        key: pageWiseSliverKey,
+        pageSize: 10,
+        pageFuture: _pageFuture,
+        itemBuilder: (BuildContext context, entry, int index) {
+          return PackageTile(
+            package: entry,
+          );
+        },
+      );
+    } else {
+      final size = MediaQuery.of(context).size;
+      return PagewiseSliverGrid.count(
+        key: pageWiseSliverKey,
+        crossAxisCount: 2,
+        pageSize: 10,
+        childAspectRatio: 5,
+        pageFuture: _pageFuture,
+        itemBuilder: (BuildContext context, entry, int index) {
+          return PackageTile(
+            package: entry,
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -55,7 +54,23 @@ class _PackageListViewState extends State<PackageListView> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.pageQuery.filterType != widget.pageQuery.filterType ||
         oldWidget.pageQuery.sortType != widget.pageQuery.sortType) {
-      pageWiseSliverListKey = GlobalKey();
+      pageWiseSliverKey = GlobalKey();
     }
+  }
+
+  Future<List<Package>> _pageFuture(index) async {
+    const int offset = 1;
+    // page numbering starts at 1, so we need to add 1.
+    final completer = Completer<Page>();
+    HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
+    homeBloc.add(
+      GetPageOfPackagesEvent(
+        pageNumber: index + offset,
+        completer: completer,
+        filterBy: homeBloc.state.filterType,
+        sortBy: homeBloc.state.sortType,
+      ),
+    );
+    return completer.future;
   }
 }

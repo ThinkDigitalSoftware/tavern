@@ -1,14 +1,12 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide SearchDelegate;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/screens/package_details/package_details_screen.dart';
 import 'package:tavern/src/enums.dart';
-import 'package:tavern/widgets/material_search.dart';
-import 'package:tavern/widgets/package_tile.dart';
+import 'package:tavern/widgets/widgets.dart';
 
 class PubSearchDelegate extends SearchDelegate {
   final SearchBloc searchBloc;
@@ -87,7 +85,6 @@ class PubSearchDelegate extends SearchDelegate {
               Expanded(
                 child: TextField(
                   controller: controller,
-//                    focusNode: focusNode,
                   autofocus: true,
                   textInputAction: textInputAction,
                   onSubmitted: onSubmitted,

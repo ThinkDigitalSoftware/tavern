@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tavern/screens/bloc.dart';
-import 'package:tavern/screens/settings/settings_screen.dart';
+part of 'widgets.dart';
 
 class MainDrawer extends StatefulWidget {
   @override
@@ -18,10 +15,9 @@ class _MainDrawerState extends State<MainDrawer> {
   Widget build(BuildContext context) {
     return Drawer(
       child: BlocBuilder<SettingsBloc, SettingsState>(
-        builder: (BuildContext context, SettingsState state) =>
-            SettingsScreen(
-              settingsState: state,
-            ),
+        builder: (BuildContext context, SettingsState state) => SettingsScreen(
+          settingsState: state,
+        ),
       ),
     );
   }

@@ -1,6 +1,4 @@
-import 'package:dynamic_theme/dynamic_theme.dart';
-import 'package:flutter/material.dart';
-import 'package:tavern/src/pub_colors.dart';
+part of 'widgets.dart';
 
 class SearchBar extends StatelessWidget {
   const SearchBar({
