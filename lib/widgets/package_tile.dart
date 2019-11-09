@@ -29,10 +29,15 @@ class PackageTile extends StatelessWidget {
       }
     }
 
-    final packageVersion = 'v${package.latest.semanticVersion.major}'
-        '.${package.latest.semanticVersion.minor}'
-        '.${package.latest.semanticVersion.patch}'
-        '${package.dateUpdated != null ? ' updated ${package.dateUpdated}' : ''}';
+    String packageVersionString;
+    if (package.latest != null) {
+      packageVersionString = 'v${package.latest.semanticVersion.major}'
+          '.${package.latest.semanticVersion.minor}'
+          '.${package.latest.semanticVersion.patch}'
+          '${package.dateUpdated != null ? ' updated ${package.dateUpdated}' : ''}';
+    } else {
+      packageVersionString = "";
+    }
 
     return ListTile(
       title: Text(
@@ -41,7 +46,7 @@ class PackageTile extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
-      subtitle: Text(packageVersion),
+      subtitle: Text(packageVersionString),
       trailing: packageScore != null
           ? CircleAvatar(
               backgroundColor: Theme.of(context).brightness == Brightness.light

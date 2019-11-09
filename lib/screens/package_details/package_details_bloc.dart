@@ -97,7 +97,7 @@ class FullPackageRepository extends Repository<String, FullPackage> {
         "This function should be run AFTER get so oldPackage should not return null");
     FullPackage newPackage = await client.get(query);
 
-    if (newPackage is DartLibraryPackage) {
+    if (newPackage is DartLibraryFullPackage) {
       return null;
     }
 

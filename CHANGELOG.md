@@ -34,3 +34,7 @@ Fix Home settings not surviving app restart. Closes #53
 Fix failure to load packages in package detail View.
 Closes #54.
 Update to bloc v1.0.0
+
+## v1.3.3
+fix semanticVersion was called on null error. Closes #56.
+fix iterator called on null. Closes #55.

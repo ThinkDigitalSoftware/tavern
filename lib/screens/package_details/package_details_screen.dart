@@ -50,7 +50,7 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
         bloc: widget.packageDetailsBloc,
         builder: (context, packageDetailsState) {
           FullPackage _package = packageDetailsState.package;
-          if (_package is DartLibraryPackage) {
+          if (_package is DartLibraryFullPackage) {
             throw UnsupportedError(
                 'DartLibraryPackages are not supported in this view');
           }
@@ -73,7 +73,7 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
               ),
             );
           }
-          if (_package is DartLibraryPackage) {
+          if (_package is DartLibraryFullPackage) {
             return Scaffold();
           }
           scoreColor = _getScoreColor(context, _package.score);
@@ -482,9 +482,9 @@ class AboutTab extends StatelessWidget {
       child: ListView(
         children: <Widget>[
           Text(package.description),
-          Text('Author: ${package.author}'),
-          Text('Uploaders:'),
-          for (String uploader in package.uploaders)
+          Text('Author: ${package.author ?? "No author listed"}'),
+          if (package.uploaders?.isNotEmpty ?? false) Text('Uploaders:'),
+          for (String uploader in package?.uploaders ?? [])
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
