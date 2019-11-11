@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dynamic_overflow_menu_bar/dynamic_overflow_menu_bar.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +14,7 @@ import 'package:tavern/widgets/favorite_icon_button.dart';
 import 'package:tavern/widgets/html_view.dart';
 import 'package:tavern/widgets/score_tab.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:share/share.dart';
 
 class PackageDetailsScreen extends StatefulWidget {
   final PackageDetailsBloc packageDetailsBloc;
@@ -290,6 +293,16 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                           onPressed: () => launch(_package.url),
                           label: "Show in browser",
                         ),
+                        OverFlowMenuItem(
+                          label: 'Share',
+                          child: IconButton(
+                            icon: Icon(_buildShareIcon()),
+                            onPressed: () => Share.share(_package.url,
+                                subject: "Check out this package on pub.dev!"),
+                          ),
+                          onPressed: () => Share.share(_package.url,
+                              subject: "Check out this package on pub.dev!"),
+                        )
                       ],
                     ),
                     bottom: TabBar(
@@ -328,6 +341,13 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
             ),
           );
         });
+  }
+
+  IconData _buildShareIcon() {
+    if (Platform.isIOS || Platform.isMacOS) {
+      return CupertinoIcons.share;
+    }
+    return Icons.share;
   }
 
   Color _getScoreColor(BuildContext context, int score) {

@@ -36,5 +36,9 @@ Closes #54.
 Update to bloc v1.0.0
 
 ## v1.3.3
-fix semanticVersion was called on null error. Closes #56.
-fix iterator called on null. Closes #55.
+Fix the "semanticVersion was called on null" error. Closes #56.
+Fix the "iterator called on null" error. Closes #55.
+
+## v1.3.4
+Add a share option to package pages.
+Update to bloc 2.0

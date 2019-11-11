@@ -8,6 +8,8 @@ PODS:
     - Flutter
   - path_provider (0.0.1):
     - Flutter
+  - share (0.5.2):
+    - Flutter
   - shared_preferences (0.0.1):
     - Flutter
   - url_launcher (0.0.1):
@@ -19,6 +21,7 @@ DEPENDENCIES:
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - share (from `.symlinks/plugins/share/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
 
@@ -33,6 +36,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
+  share:
+    :path: ".symlinks/plugins/share/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
   url_launcher:
@@ -44,9 +49,10 @@ SPEC CHECKSUMS:
   flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
   package_info: 48b108e75b8802c2d5e126f208ef540561c98aef
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
+  share: bae0a282aab4483288913fc4dc0b935d4b491f2e
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   url_launcher: a1c0cc845906122c4784c542523d8cacbded5626
 
 PODFILE CHECKSUM: 1b66dae606f75376c5f2135a8290850eeb09ae83
 
-COCOAPODS: 1.8.1
+COCOAPODS: 1.8.4

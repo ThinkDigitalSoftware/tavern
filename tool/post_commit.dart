@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:github/server.dart';
+import 'package:github/github.dart';
 
 import 'functions.dart';
 
@@ -12,8 +12,7 @@ Future main() async {
     exit(0);
   }
 
-  final github =
-      createGitHubClient(auth: Authentication.withToken(githubToken));
+  final github = GitHub(auth: Authentication.withToken(githubToken));
   final tavernRepositorySlug = RepositorySlug('thinkdigitalsoftware', 'tavern');
   final tavernRepo =
       await github.repositories.getRepository(tavernRepositorySlug);
