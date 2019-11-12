@@ -1,3 +1,4 @@
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,7 +13,6 @@ class HtmlView extends StatelessWidget {
 
   HtmlView({Key key, this.html})
       : markdown = parseHtml(html),
-        //.replaceAll(RegExp(r'\[#\]\(.*\)'), '\n'),
         super(key: key);
 
   static String parseHtml(String html) {
@@ -21,8 +21,24 @@ class HtmlView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final MarkdownStyleSheet defaultStyleSheet =
+        MarkdownStyleSheet.fromTheme(Theme.of(context));
+    final Color codeBackgroundColor =
+        DynamicTheme.of(context).brightness == Brightness.light
+            ? Colors.grey.shade300
+            : Colors.grey.shade800;
+
     return Markdown(
       data: markdown,
+      styleSheet: defaultStyleSheet.copyWith(
+        code: defaultStyleSheet.code.copyWith(
+          backgroundColor: codeBackgroundColor,
+        ),
+        codeblockDecoration: BoxDecoration(
+          color: codeBackgroundColor,
+          borderRadius: BorderRadius.circular(2.0),
+        ),
+      ),
       onTapLink: (String link) {
         final prefix = 'https://pub.dev/packages/';
         if (link.startsWith(prefix)) {

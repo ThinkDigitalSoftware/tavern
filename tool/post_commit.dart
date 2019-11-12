@@ -3,8 +3,18 @@ import 'dart:io';
 import 'package:github/github.dart';
 
 import 'functions.dart';
+import 'package:args/args.dart';
 
-Future main() async {
+Future main(List<String> args) async {
+  final argsParser = ArgParser();
+  argsParser.addFlag('no-build',
+      abbr: 'n',
+      help:
+          "Skips the compilation step. Useful if you're reuploading manuallly.",
+      defaultsTo: false);
+
+  final ArgResults argResults = argsParser.parse(args);
+
   Map<String, String> envVars = Platform.environment;
   final githubToken = envVars['GITHUB_TOKEN'];
   if (githubToken == null) {
@@ -14,8 +24,7 @@ Future main() async {
 
   final github = GitHub(auth: Authentication.withToken(githubToken));
   final tavernRepositorySlug = RepositorySlug('thinkdigitalsoftware', 'tavern');
-  final tavernRepo =
-      await github.repositories.getRepository(tavernRepositorySlug);
+
   final repositoriesService = RepositoriesService(github);
   final pubspec = await getPubspec();
   final tag = pubspec.version.toString();
@@ -30,12 +39,9 @@ Future main() async {
     body: lastCommitMessage.toString(),
   );
 
-  print('Building release assets. This may take a while, but it is running.');
-  final result = Process.runSync(
-    'flutter',
-    ['build', 'apk', '--split-per-abi'],
-  );
-  print(result.stdout);
+  if (!argResults['no-build']) {
+    _buildReleaseAssets();
+  }
 
   Release release = await getRelease(
       repositoriesService, tavernRepositorySlug, createRelease);
@@ -43,6 +49,23 @@ Future main() async {
     stderr.writeln('Failed to create new release.');
     exit(1);
   }
+  await uploadExistingApks(repositoriesService, release);
+
+  exit(0);
+}
+
+void _buildReleaseAssets() {
+  print('Building release assets. This may take a while, but it is running.');
+  ProcessResult result;
+  result = Process.runSync(
+    'flutter',
+    ['build', 'apk', '--split-per-abi'],
+  );
+  print(result.stdout);
+}
+
+Future uploadExistingApks(
+    RepositoriesService repositoriesService, Release release) async {
   String buildDirectoryPath =
       "${Directory.current.path}/build/app/outputs/apk/release/";
   final buildDirectory = Directory(buildDirectoryPath);
@@ -64,8 +87,8 @@ Future main() async {
   });
   final List<ReleaseAsset> releaseAssets = await repositoriesService
       .uploadReleaseAssets(release, createReleaseAssets);
-
-  exit(0);
+  stdout.write('Upload Complete for ${release.tagName}\n'
+      'Url: ${release.url}\n');
 }
 
 Future<Release> getRelease(RepositoriesService repositoriesService,
