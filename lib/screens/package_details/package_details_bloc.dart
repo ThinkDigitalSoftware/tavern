@@ -11,15 +11,19 @@ import 'package:tavern/src/repository.dart';
 
 class PackageDetailsBloc
     extends Bloc<PackageDetailsEvent, PackageDetailsState> {
+  String packageName;
   final FullPackageRepository _packageRepository;
 
-  PackageDetailsBloc()
+  PackageDetailsBloc({@required this.packageName})
       : _packageRepository = GetIt.I.get<FullPackageRepository>() {
-    add(InitializePackageDetailsBloc());
+    add(
+      GetPackageDetailsEvent(packageName: packageName),
+    );
   }
 
   @override
-  PackageDetailsState get initialState => InitialPackageDetailsState();
+  PackageDetailsState get initialState =>
+      InitialPackageDetailsState(packageName);
 
   @override
   Stream<PackageDetailsState> mapEventToState(
@@ -45,7 +49,14 @@ class PackageDetailsBloc
         return;
       }
     } on Exception catch (e) {
-      yield PackageDetailsErrorState(e);
+      yield PackageDetailsErrorState(
+        e,
+        package: FullPackage(
+          name: packageName,
+          url: null,
+          author: null,
+        ),
+      );
     }
   }
 }

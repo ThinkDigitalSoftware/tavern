@@ -7,12 +7,10 @@ abstract class PackageDetailsEvent {}
 
 class GetPackageDetailsEvent extends PackageDetailsEvent {
   final String packageName;
-  final int packageScore;
   final Completer onComplete = Completer();
 
   GetPackageDetailsEvent({
     @required this.packageName,
-    @required this.packageScore,
   }) : assert(packageName != null);
 }
 

@@ -137,7 +137,6 @@ class SearchResultTile extends StatelessWidget {
           Routes.packageDetailsScreen,
           arguments: PackageDetailsArguments(
             package.name,
-            package.score.toString(),
           ),
         ),
       ),

@@ -42,3 +42,7 @@ Fix the "iterator called on null" error. Closes #55.
 ## v1.3.4
 Add a share option to package pages.
 Update to bloc 2.0
+
+## 1.3.5
+Add back arrow while loading package in the PackageDetailsView page.
+fix code background color not displaying well in a dark theme

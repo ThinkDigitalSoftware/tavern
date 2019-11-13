@@ -71,7 +71,6 @@ class FavoritesTile extends StatelessWidget {
       onTap: () async {
         final getPackageDetailsEvent = GetPackageDetailsEvent(
           packageName: subscription.name,
-          packageScore: 0,
         );
         BlocProvider.of<PackageDetailsBloc>(context)
             .add(getPackageDetailsEvent);
@@ -80,7 +79,6 @@ class FavoritesTile extends StatelessWidget {
           Routes.packageDetailsScreen,
           arguments: PackageDetailsArguments(
             subscription.name,
-            "0",
           ),
         );
       },

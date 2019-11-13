@@ -61,14 +61,15 @@ class PubDevClientApp extends StatelessWidget {
     return DynamicTheme(
       defaultBrightness: Brightness.light,
       data: (brightness) => ThemeData(
-        indicatorColor: PubColors.lightBlue,
-        fontFamily: 'Metropolis',
-        accentColor: PubColors.lightBlue,
-        brightness: brightness,
-        primarySwatch: PubColors.lightBlue,
-        primaryColorBrightness: brightness,
-        appBarTheme: AppBarTheme(color: Theme.of(context).cardColor),
-      ),
+          indicatorColor: PubColors.lightBlue,
+          fontFamily: 'Metropolis',
+          accentColor: PubColors.lightBlue,
+          brightness: brightness,
+          primarySwatch: PubColors.lightBlue,
+          primaryColorBrightness: brightness,
+          appBarTheme: Theme.of(context)
+              .appBarTheme
+              .copyWith(brightness: Brightness.dark)),
       themedWidgetBuilder: (context, theme) {
         return MaterialApp(
           theme: theme,
@@ -111,22 +112,13 @@ class PubDevClientApp extends StatelessWidget {
                   final packageDetailsArguments =
                       routeSettings.arguments as PackageDetailsArguments;
                   assert(packageDetailsArguments is PackageDetailsArguments);
-                  final packageDetailsBloc = PackageDetailsBloc()
-                    ..add(
-                      GetPackageDetailsEvent(
-                        packageName: packageDetailsArguments.packageName,
-                        packageScore:
-                            int.tryParse(packageDetailsArguments.packageScore),
-                      ),
-                    );
                   return MaterialPageRoute(
                     builder: (BuildContext context) =>
-                        BlocBuilder<PackageDetailsBloc, PackageDetailsState>(
-                      bloc: packageDetailsBloc,
-                      builder:
-                          (BuildContext context, PackageDetailsState state) =>
-                              PackageDetailsScreen(
-                                  packageDetailsBloc: packageDetailsBloc),
+                        BlocProvider<PackageDetailsBloc>(
+                      builder: (context) => PackageDetailsBloc(
+                        packageName: packageDetailsArguments.packageName,
+                      ),
+                      child: PackageDetailsScreen(),
                     ),
                   );
                 }

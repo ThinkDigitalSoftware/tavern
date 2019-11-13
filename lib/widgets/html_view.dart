@@ -21,6 +21,7 @@ class HtmlView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // path to MarkdownStyleSheet.fromTheme: flutter_markdown/lib/src/style_sheet.dart
     final MarkdownStyleSheet defaultStyleSheet =
         MarkdownStyleSheet.fromTheme(Theme.of(context));
     final Color codeBackgroundColor =
@@ -38,6 +39,15 @@ class HtmlView extends StatelessWidget {
           color: codeBackgroundColor,
           borderRadius: BorderRadius.circular(2.0),
         ),
+        blockquote:
+            Theme.of(context).textTheme.title.copyWith(color: Colors.grey),
+        blockquoteDecoration: BoxDecoration(
+          color: DynamicTheme.of(context).data.scaffoldBackgroundColor,
+          border: Border(
+            left: BorderSide(width: 3.0, color: Colors.grey),
+          ),
+        ),
+        blockquotePadding: EdgeInsets.fromLTRB(16, 8, 8, 8),
       ),
       onTapLink: (String link) {
         final prefix = 'https://pub.dev/packages/';
@@ -65,11 +75,3 @@ class HtmlView extends StatelessWidget {
     );
   }
 }
-
-////! Doesn't currently work without throwing errors.
-//class DartSyntaxHighlighter extends SyntaxHighlighter {
-//  final _dartSyntaxHighlighter = dartSyntaxHighlighter.DartSyntaxHighlighter();
-//
-//  @override
-//  TextSpan format(String source) => _dartSyntaxHighlighter.format(source);
-//}

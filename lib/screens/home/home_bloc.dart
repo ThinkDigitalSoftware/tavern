@@ -69,7 +69,6 @@ class HomeBloc extends HydratedBloc<HomeEvent, HomeState> {
         Routes.packageDetailsScreen,
         arguments: PackageDetailsArguments(
           event.package.name,
-          event.package.score.toString(),
         ),
       );
     }

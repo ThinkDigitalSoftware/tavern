@@ -9,17 +9,18 @@ class PackageDetailsState {
   PackageDetailsState({
     @required this.package,
   }) {
-    if (this is! InitialPackageDetailsState &&
-        this is! PackageDetailsErrorState) {
-      assert(package != null);
-    }
+    assert(package != null);
   }
 }
 
-class InitialPackageDetailsState extends PackageDetailsState {}
+class InitialPackageDetailsState extends PackageDetailsState {
+  InitialPackageDetailsState(String packageName)
+      : super(package: FullPackage(name: packageName, url: null, author: null));
+}
 
 class PackageDetailsErrorState extends PackageDetailsState {
   final Exception error;
 
-  PackageDetailsErrorState(this.error);
+  PackageDetailsErrorState(this.error, {@required FullPackage package})
+      : super(package: package);
 }
