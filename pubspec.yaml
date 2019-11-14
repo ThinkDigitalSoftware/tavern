@@ -6,8 +6,8 @@ environment:
 
 dependencies: 
   provider: ^3.1.0+1
-  flutter_bloc: ^1.0.0
-  dynamic_overflow_menu_bar: ^0.1.1+1
+  flutter_bloc: ^2.0.0
+  dynamic_overflow_menu_bar: ^0.1.2
   package_info: ^0.4.0+10
   dynamic_theme: ^1.0.1
   get_it: ^3.0.3
@@ -16,17 +16,17 @@ dependencies:
   cupertino_icons: ^0.1.2
   groovin_material_icons: ^1.1.6
   rounded_modal: ^1.0.1
-  html2md: ^0.5.0
-  material_segmented_control: ^2.0.4
+  html2md: ^0.5.1
+  material_segmented_control: ^2.0.7
   groovin_widgets: ^1.4.2
-  bloc: ^1.0.0
+  bloc: ^2.0.0
   flutter_pagewise: any
-  hydrated_bloc: ^1.1.0
+  hydrated_bloc: ^2.0.0
   webfeed: ^0.4.2
   background_fetch: ^0.3.2
   flutter_local_notifications: ^0.8.4
   flutter_markdown: ^0.3.0
-  flutter_svg: ^0.14.3
+  flutter_svg: ^0.14.4
 
   flutter: 
     sdk: flutter
@@ -38,7 +38,7 @@ dev_dependencies:
   hanzo: ^1.0.2
   pedantic: ^1.8.0+1
   pubspec: ^0.1.2
-  github: ^5.5.0
+  github: ^6.0.2
   auto_size_text: ^2.1.0
 
 flutter:
