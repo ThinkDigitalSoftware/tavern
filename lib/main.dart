@@ -61,15 +61,18 @@ class PubDevClientApp extends StatelessWidget {
     return DynamicTheme(
       defaultBrightness: Brightness.light,
       data: (brightness) => ThemeData(
-          indicatorColor: PubColors.lightBlue,
-          fontFamily: 'Metropolis',
-          accentColor: PubColors.lightBlue,
-          brightness: brightness,
-          primarySwatch: PubColors.lightBlue,
-          primaryColorBrightness: brightness,
-          appBarTheme: Theme.of(context)
-              .appBarTheme
-              .copyWith(brightness: Brightness.dark)),
+        indicatorColor: PubColors.lightBlue,
+        fontFamily: 'Metropolis',
+        accentColor: PubColors.lightBlue,
+        brightness: brightness,
+        primarySwatch: PubColors.lightBlue,
+        primaryColorBrightness: brightness,
+        appBarTheme: Theme.of(context).appBarTheme.copyWith(
+            brightness: brightness,
+            color: brightness == Brightness.light
+                ? Colors.white
+                : PubColors.darkColor),
+      ),
       themedWidgetBuilder: (context, theme) {
         return MaterialApp(
           theme: theme,

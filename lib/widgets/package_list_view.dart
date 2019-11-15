@@ -47,6 +47,12 @@ class _PackageListViewState extends State<PackageListView> {
           package: entry,
         );
       },
+      loadingBuilder: (context) => Opacity(
+        opacity: .5,
+        child: ListTile(
+          title: Text("Loading"),
+        ),
+      ),
     );
   }
 

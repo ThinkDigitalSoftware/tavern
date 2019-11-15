@@ -45,4 +45,8 @@ Update to bloc 2.0
 
 ## 1.3.5
 Add back arrow while loading package in the PackageDetailsView page.
-fix code background color not displaying well in a dark theme
+Fix code background color not displaying well in a dark theme
+
+## 1.3.6
+
+Add syntax highlighting ✍️

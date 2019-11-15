@@ -32,11 +32,9 @@ main(List<String> arguments) async {
 
   if (previousVersionString != null) {
     previousVersion = Version.parse(previousVersionString);
-  } else {
-    previousVersion = currentVersion;
   }
 
-  if (currentVersion <= previousVersion) {
+  if (previousVersion != null && currentVersion <= previousVersion) {
     print("Your current version is set as $currentVersion in your pubspec \n"
         "which is not greater that the previous version: $previousVersion.");
 
