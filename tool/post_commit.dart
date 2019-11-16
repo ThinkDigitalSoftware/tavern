@@ -15,6 +15,10 @@ Future main(List<String> args) async {
 
   final ArgResults argResults = argsParser.parse(args);
 
+  if (currentBranchName != "master") {
+    exit(0);
+  }
+
   Map<String, String> envVars = Platform.environment;
   final githubToken = envVars['GITHUB_TOKEN'];
   if (githubToken == null) {
@@ -52,6 +56,15 @@ Future main(List<String> args) async {
   await uploadExistingApks(repositoriesService, release);
 
   exit(0);
+}
+
+String get currentBranchName {
+  String results = Process.runSync('git', ['branch']).stdout;
+  final branchNames = results.split('\n');
+  final currentBranch = branchNames
+      .firstWhere((branchName) => branchName.startsWith('*'))
+      .replaceAll('* ', '');
+  return currentBranch;
 }
 
 void _buildReleaseAssets() {

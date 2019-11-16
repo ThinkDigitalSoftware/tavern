@@ -22,22 +22,22 @@ class FavoriteIconButton extends StatelessWidget {
           icon: FavoriteIcon(isFavorited: isFavorited),
           onPressed: () {
             if (isFavorited) {
-              _subscriptionBloc.add(RemoveSubscriptionForFullPackage(package));
+              _subscriptionBloc.add(RemoveSubscription(package));
               Scaffold.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(
                   unsubscribedSnackBar(
-                    subscription: Subscription.fromFullPackage(package),
+                    subscription: _package,
                     subscriptionBloc: _subscriptionBloc,
                   ),
                 );
             } else {
-              _subscriptionBloc.add(AddSubscriptionFromFullPackage(package));
+              _subscriptionBloc.add(AddSubscription(_package));
               Scaffold.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(
                   subscribedSnackBar(
-                    subscription: Subscription.fromFullPackage(package),
+                    subscription: _package,
                     subscriptionBloc: _subscriptionBloc,
                   ),
                 );
@@ -50,7 +50,7 @@ class FavoriteIconButton extends StatelessWidget {
 }
 
 SnackBar subscribedSnackBar({
-  @required Subscription subscription,
+  @required FullPackage subscription,
   @required SubscriptionBloc subscriptionBloc,
 }) {
   return SnackBar(
@@ -64,7 +64,7 @@ SnackBar subscribedSnackBar({
 }
 
 SnackBar unsubscribedSnackBar({
-  @required Subscription subscription,
+  @required FullPackage subscription,
   @required SubscriptionBloc subscriptionBloc,
 }) {
   return SnackBar(
@@ -91,7 +91,10 @@ class FavoriteIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Icon(
       isFavorited ? Icons.star : Icons.star_border,
-      color: color,
+      color: color ??
+          (DynamicTheme.of(context).brightness == Brightness.light
+              ? Theme.of(context).primaryIconTheme.color
+              : Colors.white),
     );
   }
 }

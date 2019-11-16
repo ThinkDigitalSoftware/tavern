@@ -4,7 +4,7 @@ import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
-import 'package:github/server.dart' as gitHub;
+import 'package:github/github.dart' as gitHub;
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:pub_client/pub_client.dart';
 

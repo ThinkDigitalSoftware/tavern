@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
-import 'package:github/server.dart';
+import 'package:github/github.dart';
 import 'package:meta/meta.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/src/convert.dart';

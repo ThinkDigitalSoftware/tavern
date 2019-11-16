@@ -97,7 +97,6 @@ class FavoritesTile extends StatelessWidget {
               tooltip: "Starred on GitHub",
               icon: FavoriteIcon(
                 isFavorited: true,
-                color: Colors.yellow,
               ),
               onPressed: onPressed,
             ),

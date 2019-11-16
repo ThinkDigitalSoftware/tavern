@@ -2,7 +2,7 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_progress_button/flutter_progress_button.dart';
-import 'package:github/server.dart';
+import 'package:github/github.dart';
 import 'package:package_info/package_info.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/bloc.dart';

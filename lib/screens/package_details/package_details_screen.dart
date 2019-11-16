@@ -212,8 +212,7 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                       onPressed: () {
                         if (_subscriptionBloc
                             .hasSubscriptionFor(_package.name)) {
-                          _subscriptionBloc
-                              .add(RemoveSubscriptionForFullPackage(_package));
+                          _subscriptionBloc.add(RemoveSubscription(_package));
                           Scaffold.of(context)
                             ..removeCurrentSnackBar()
                             ..showSnackBar(
@@ -221,15 +220,14 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                                 content: Text(
                                     "You have unsubscribed from ${_package.name}"),
                                 action: SnackBarAction(
-                                  onPressed: () => _subscriptionBloc.add(
-                                      AddSubscriptionFromFullPackage(_package)),
+                                  onPressed: () => _subscriptionBloc
+                                      .add(AddSubscription(_package)),
                                   label: "Undo",
                                 ),
                               ),
                             );
                         } else {
-                          _subscriptionBloc
-                              .add(AddSubscriptionFromFullPackage(_package));
+                          _subscriptionBloc.add(AddSubscription(_package));
                           Scaffold.of(context)
                             ..removeCurrentSnackBar()
                             ..showSnackBar(
@@ -238,7 +236,7 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                                     "You have subscribed to ${_package.name}"),
                                 action: SnackBarAction(
                                   onPressed: () => _subscriptionBloc.add(
-                                    RemoveSubscriptionForFullPackage(
+                                    RemoveSubscription(
                                       _package,
                                     ),
                                   ),
