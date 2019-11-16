@@ -12,7 +12,6 @@ import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/screens/package_details/tabs.dart';
 import 'package:tavern/src/pub_colors.dart';
 import 'package:tavern/widgets/favorite_icon_button.dart';
-import 'package:tavern/widgets/score_tab.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
 

@@ -68,7 +68,7 @@ class HtmlView extends StatelessWidget {
           }
         },
         imageBuilder: (uri) {
-          if (uri.toString().contains('.svg')) {
+          if (isSvg(uri)) {
             return SvgPicture.network(
               uri.toString(),
             );
@@ -81,6 +81,9 @@ class HtmlView extends StatelessWidget {
       ),
     );
   }
+
+  bool isSvg(Uri uri) =>
+      uri.toString().contains('.svg') || uri.host == 'img.shields.io';
 }
 
 class DartSyntaxHighlighter extends SyntaxHighlighter {

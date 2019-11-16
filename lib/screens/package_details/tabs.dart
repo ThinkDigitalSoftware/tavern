@@ -1,3 +1,4 @@
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:pub_client/pub_client.dart';
@@ -17,6 +18,7 @@ class VersionsTab extends StatelessWidget {
       );
     }
     return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
       padding: EdgeInsets.all(10),
       itemCount: versions.length,
       itemBuilder: (context, index) {
@@ -170,6 +172,115 @@ class ErrorReport extends StatelessWidget {
           onPressed: () {
             //TODO: launch new issue page for our repo, pass in error if possible
           },
+        ),
+      ],
+    );
+  }
+}
+
+class AnalysisTab extends StatelessWidget {
+  final AnalysisPackageTab packageTab;
+
+  const AnalysisTab({Key key, this.packageTab}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: EdgeInsets.all(15),
+      children: <Widget>[
+        ScoreSlider(
+          name: 'Popularity:',
+          score: packageTab.popularity,
+        ),
+        ScoreSlider(
+          name: 'Health:',
+          score: packageTab.health,
+        ),
+        ScoreSlider(
+          name: 'Maintenance:',
+          score: packageTab.maintenance,
+        ),
+        ScoreSlider(
+          name: 'Overall:',
+          score: packageTab.overall,
+        ),
+        DependenciesSection(dependencies: packageTab.dependencies),
+      ],
+    );
+  }
+}
+
+class ScoreSlider extends StatelessWidget {
+  const ScoreSlider({
+    @required this.name,
+    @required this.score,
+  })  : assert(name != null),
+        assert(score != null);
+
+  final String name;
+  final int score;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Text(name),
+        Expanded(
+          child: Slider(
+            value: score.toDouble(),
+            onChanged: null,
+            min: 0,
+            max: 100,
+          ),
+        ),
+        Text(score.toString())
+      ],
+    );
+  }
+}
+
+class DependenciesSection extends StatelessWidget {
+  const DependenciesSection({
+    Key key,
+    @required this.dependencies,
+  }) : super(key: key);
+
+  final List<BasicDependency> dependencies;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            "Dependencies",
+            style: Theme.of(context).textTheme.headline,
+          ),
+        ),
+        Card(
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            height: MediaQuery.of(context).size.height / 3.5,
+            child: ListView.builder(
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              itemCount: dependencies.length,
+              itemBuilder: (BuildContext context, int index) {
+                final dependency = dependencies[index];
+                return ListTile(
+                  title: Text(dependency.name),
+                  trailing: Text(
+                    dependency.constraint?.toString() ??
+                        dependency.resolved?.toString() ??
+                        '',
+                    style: Theme.of(context).primaryTextTheme.caption,
+                  ),
+                  onTap: () {},
+                );
+              },
+            ),
+          ),
         ),
       ],
     );

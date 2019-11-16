@@ -68,20 +68,13 @@ class FavoritesTile extends StatelessWidget {
         ),
         onPressed: onPressed,
       ),
-      onTap: () async {
-        final getPackageDetailsEvent = GetPackageDetailsEvent(
-          packageName: subscription.name,
-        );
-        BlocProvider.of<PackageDetailsBloc>(context)
-            .add(getPackageDetailsEvent);
-        return Navigator.pushNamed(
-          context,
-          Routes.packageDetailsScreen,
-          arguments: PackageDetailsArguments(
-            subscription.name,
-          ),
-        );
-      },
+      onTap: () async => Navigator.pushNamed(
+        context,
+        Routes.packageDetailsScreen,
+        arguments: PackageDetailsArguments(
+          subscription.name,
+        ),
+      ),
     );
   }
 }

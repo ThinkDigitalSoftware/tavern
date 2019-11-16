@@ -50,3 +50,6 @@ Fix code background color not displaying well in a dark theme
 ## 1.3.6
 
 Add syntax highlighting ✍️
+
+## 1.4.0
+Fix UI 
