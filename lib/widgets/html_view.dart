@@ -78,6 +78,7 @@ class HtmlView extends StatelessWidget {
         },
         syntaxHighlighter:
             DartSyntaxHighlighter(DynamicTheme.of(context).brightness),
+        selectable: true,
       ),
     );
   }

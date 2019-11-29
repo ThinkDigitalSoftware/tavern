@@ -25,9 +25,9 @@ dependencies:
   webfeed: ^0.4.2
   background_fetch: ^0.3.2
   flutter_local_notifications: ^0.8.4
-  flutter_markdown: ^0.3.0
-  flutter_svg: ^0.14.4
-  share: ^0.6.3+1
+  flutter_markdown: ^0.3.2
+  flutter_svg: ^0.15.0
+  share: ^0.6.3+3
   syntax_highlighter:
     git: https://github.com/ThinkDigitalSoftware/syntax_highlighter.git
 
@@ -56,6 +56,10 @@ flutter:
         - 
           asset: fonts/Metropolis-Regular.otf
   uses-material-design: true
+
+dependency_overrides:
+  pub_semver:
+    git: https://github.com/dart-lang/pub_semver.git
 authors: 
   - Jonathan White <jwhite@thinkdigital.software>
   - GroovinChip <groovinchip@gmail.com>
