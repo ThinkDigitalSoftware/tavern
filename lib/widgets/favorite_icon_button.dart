@@ -1,17 +1,13 @@
-import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/bloc.dart';
 
 class FavoriteIconButton extends StatelessWidget {
-  const FavoriteIconButton({
-    Key key,
-    @required FullPackage package,
-  })  : _package = package,
-        super(key: key);
+  const FavoriteIconButton({this.package, this.color});
 
-  final FullPackage _package;
+  final FullPackage package;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -19,28 +15,29 @@ class FavoriteIconButton extends StatelessWidget {
         BlocProvider.of<SubscriptionBloc>(context);
     return BlocBuilder<SubscriptionBloc, SubscriptionState>(
       builder: (context, state) {
-        bool isFavorited = _subscriptionBloc.hasSubscriptionFor(_package.name);
+        bool isFavorited = _subscriptionBloc.hasSubscriptionFor(package.name);
         return IconButton(
+          color: color,
           tooltip: "Favorite",
           icon: FavoriteIcon(isFavorited: isFavorited),
           onPressed: () {
             if (isFavorited) {
-              _subscriptionBloc.add(RemoveSubscriptionForFullPackage(_package));
+              _subscriptionBloc.add(RemoveSubscriptionForFullPackage(package));
               Scaffold.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(
                   unsubscribedSnackBar(
-                    subscription: Subscription.fromFullPackage(_package),
+                    subscription: Subscription.fromFullPackage(package),
                     subscriptionBloc: _subscriptionBloc,
                   ),
                 );
             } else {
-              _subscriptionBloc.add(AddSubscriptionFromFullPackage(_package));
+              _subscriptionBloc.add(AddSubscriptionFromFullPackage(package));
               Scaffold.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(
                   subscribedSnackBar(
-                    subscription: Subscription.fromFullPackage(_package),
+                    subscription: Subscription.fromFullPackage(package),
                     subscriptionBloc: _subscriptionBloc,
                   ),
                 );
@@ -84,17 +81,17 @@ class FavoriteIcon extends StatelessWidget {
   const FavoriteIcon({
     Key key,
     @required this.isFavorited,
+    this.color,
   }) : super(key: key);
 
   final bool isFavorited;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return Icon(
       isFavorited ? Icons.star : Icons.star_border,
-      color: DynamicTheme.of(context).brightness == Brightness.light
-          ? Theme.of(context).primaryIconTheme.color
-          : Colors.white,
+      color: color,
     );
   }
 }

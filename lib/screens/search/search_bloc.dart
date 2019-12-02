@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/screens/search/search_event.dart';
+import 'package:tavern/screens/search/search_qualifiers.dart';
 import 'package:tavern/src/cache.dart';
 import 'package:tavern/src/repository.dart';
 
@@ -22,6 +24,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchState get initialState =>
       InitialSearchState(searchHistory: _searchRepository.searchHistory);
 
+  static SearchBloc of(BuildContext context) =>
+      BlocProvider.of<SearchBloc>(context);
+
   @override
   Stream<SearchState> mapEventToState(
     SearchEvent event,
@@ -34,6 +39,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       yield state.copyWith(searchHistory: _searchRepository.searchHistory);
     } else if (event is ResetSearchEvent) {
       yield initialState;
+    } else if (event is SetSearchQualifierEvent) {
+      yield state.copyWith(searchQualifier: event.searchQualifier);
     }
   }
 }
@@ -82,10 +89,10 @@ class SearchRepository extends Repository<SearchQuery, List<Package>> {
         query.query,
         sortBy: query.sortBy,
         filterBy: query.filterBy,
-        isExactPhrase: query.isExactPhrase,
-        isPrefix: query.isPrefix,
-        isDependency: query.isDependency,
-        isEmail: query.isEmail,
+        isExactPhrase: query.searchQualifier == SearchQualifier.exactPhrase,
+        isPrefix: query.searchQualifier == SearchQualifier.prefix,
+        isDependency: query.searchQualifier == SearchQualifier.dependency,
+        isEmail: query.searchQualifier == SearchQualifier.email,
       );
       _searchCache.add(query, search);
       return search;
@@ -99,27 +106,13 @@ class SearchQuery {
   final String query;
   final SortType sortBy;
   final FilterType filterBy;
-
-  @override
-  String toString() {
-    return 'SearchQuery{query: $query, sortBy: $sortBy, filterBy: $filterBy, '
-        'isExactPhrase: $isExactPhrase, isPrefix: $isPrefix, '
-        'isDependency: $isDependency, isEmail: $isEmail}';
-  }
-
-  final bool isExactPhrase;
-  final bool isPrefix;
-  final bool isDependency;
-  final bool isEmail;
+  final SearchQualifier searchQualifier;
 
   SearchQuery(
     this.query, {
     this.sortBy = SortType.searchRelevance,
     this.filterBy = FilterType.all,
-    this.isExactPhrase = false,
-    this.isPrefix = false,
-    this.isDependency = false,
-    this.isEmail = false,
+    this.searchQualifier = SearchQualifier.none,
   });
 
   @override
@@ -130,18 +123,12 @@ class SearchQuery {
           query == other.query &&
           sortBy == other.sortBy &&
           filterBy == other.filterBy &&
-          isExactPhrase == other.isExactPhrase &&
-          isPrefix == other.isPrefix &&
-          isDependency == other.isDependency &&
-          isEmail == other.isEmail;
+          searchQualifier == other.searchQualifier;
 
   @override
   int get hashCode =>
       query.hashCode ^
       sortBy.hashCode ^
       filterBy.hashCode ^
-      isExactPhrase.hashCode ^
-      isPrefix.hashCode ^
-      isDependency.hashCode ^
-      isEmail.hashCode;
+      searchQualifier.hashCode;
 }

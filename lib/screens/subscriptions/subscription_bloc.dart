@@ -23,7 +23,7 @@ class SubscriptionBloc
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
     var initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettingsIOS = IOSInitializationSettings(
         onDidReceiveLocalNotification:
             onDidReceiveLocalNotification); // TODO: implement
@@ -77,9 +77,11 @@ class SubscriptionBloc
           Subscription subscription) async =>
       _packageRepository.get(subscription.name);
 
+  // ignore: missing_return
   Future onDidReceiveLocalNotification(
       int id, String title, String body, String payload) {}
 
+  // ignore: missing_return
   Future onSelectNotification(String payload) {}
 }
 

@@ -140,21 +140,31 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                     OverFlowMenuItem(
                       label: "API Reference",
                       child: IconButton(
+                        color: DynamicTheme.of(context).data.iconTheme.color,
                         tooltip: "API Reference",
                         icon: FittedBox(
                           child: CircleAvatar(
                             radius: 37,
-                            backgroundColor:
-                                Theme.of(context).primaryTextTheme.body1.color,
+                            backgroundColor: DynamicTheme.of(context)
+                                .data
+                                .iconTheme
+                                .color, // outline color
                             child: CircleAvatar(
                               radius: 35,
-                              backgroundColor: Theme.of(context).cardColor,
+                              backgroundColor: DynamicTheme.of(context)
+                                  .data
+                                  .cardColor, // inner color
+                              foregroundColor: DynamicTheme.of(context)
+                                  .data
+                                  .iconTheme
+                                  .color, // text color
                               child: Text(
                                 'API',
                                 style: TextStyle(
-                                  color: isLightTheme(context)
-                                      ? Colors.black
-                                      : Colors.white,
+                                  color: DynamicTheme.of(context)
+                                      .data
+                                      .iconTheme
+                                      .color,
                                 ),
                                 softWrap: false,
                               ),
@@ -170,7 +180,11 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                         label: "Repo",
                         child: IconButton(
                           tooltip: "Repo",
-                          icon: Icon(Icons.code),
+                          icon: Icon(
+                            Icons.code,
+                            color:
+                                DynamicTheme.of(context).data.iconTheme.color,
+                          ),
                           onPressed: () => launch(_package.repositoryUrl),
                         ),
                         onPressed: () => launch(_package.repositoryUrl),
@@ -182,6 +196,8 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                           tooltip: "Issues",
                           icon: Icon(
                             Icons.bug_report,
+                            color:
+                                DynamicTheme.of(context).data.iconTheme.color,
                           ),
                           onPressed: () => launch(_package.issuesUrl),
                         ),
@@ -189,7 +205,10 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                       ),
                     OverFlowMenuItem(
                       label: 'Favorite',
-                      child: FavoriteIconButton(package: _package),
+                      child: FavoriteIconButton(
+                        package: _package,
+//                        color: DynamicTheme.of(context).data.iconTheme.color,
+                      ),
                       onPressed: () {
                         if (_subscriptionBloc
                             .hasSubscriptionFor(_package.name)) {
@@ -232,7 +251,10 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                     ),
                     OverFlowMenuItem(
                       child: IconButton(
-                        icon: Icon(GroovinMaterialIcons.web),
+                        icon: Icon(
+                          GroovinMaterialIcons.web,
+                          color: DynamicTheme.of(context).data.iconTheme.color,
+                        ),
                         onPressed: () => launch(_package.url),
                       ),
                       onPressed: () => launch(_package.url),
@@ -241,7 +263,10 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                     OverFlowMenuItem(
                       label: 'Share',
                       child: IconButton(
-                        icon: Icon(_buildShareIcon()),
+                        icon: Icon(
+                          _buildShareIcon(),
+                          color: DynamicTheme.of(context).data.iconTheme.color,
+                        ),
                         onPressed: () => Share.share(_package.url,
                             subject: "Check out this package on pub.dev!"),
                       ),
@@ -297,9 +322,6 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
       );
     });
   }
-
-  bool isLightTheme(BuildContext context) =>
-      DynamicTheme.of(context).brightness == Brightness.light;
 
   IconData _buildShareIcon() {
     if (Platform.isIOS || Platform.isMacOS) {

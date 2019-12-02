@@ -35,18 +35,18 @@ Future main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider<HomeBloc>(
-          builder: (BuildContext context) =>
+          create: (BuildContext context) =>
               HomeBloc(client: _htmlParsingClient),
         ),
         BlocProvider<SettingsBloc>(
-          builder: (BuildContext context) => SettingsBloc(),
+          create: (BuildContext context) => SettingsBloc(),
         ),
         BlocProvider<SearchBloc>(
-          builder: (BuildContext context) =>
+          create: (BuildContext context) =>
               SearchBloc(client: _htmlParsingClient),
         ),
         BlocProvider<SubscriptionBloc>(
-          builder: (BuildContext context) =>
+          create: (BuildContext context) =>
               SubscriptionBloc(client: _htmlParsingClient),
         )
       ],
@@ -60,19 +60,35 @@ class PubDevClientApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return DynamicTheme(
       defaultBrightness: Brightness.light,
-      data: (brightness) => ThemeData(
-        indicatorColor: PubColors.lightBlue,
-        fontFamily: 'Metropolis',
-        accentColor: PubColors.lightBlue,
-        brightness: brightness,
-        primarySwatch: PubColors.lightBlue,
-        primaryColorBrightness: brightness,
-        appBarTheme: Theme.of(context).appBarTheme.copyWith(
-            brightness: brightness,
-            color: brightness == Brightness.light
-                ? Colors.white
-                : PubColors.darkColor),
-      ),
+      data: (brightness) {
+        bool isLightTheme = brightness == Brightness.light;
+        return ThemeData(
+          indicatorColor: PubColors.turquoiseSurf,
+          iconTheme: IconThemeData(
+            color: isLightTheme ? Color(0xFF004A54) : PubColors.ghostWhite,
+          ),
+          fontFamily: 'Metropolis',
+          accentColor: PubColors.turquoiseSurf,
+          primaryColorDark: PubColors.darkGunmetal,
+          scaffoldBackgroundColor:
+              isLightTheme ? PubColors.ghostWhite : PubColors.darkGunmetal,
+          brightness: brightness,
+          primarySwatch: PubColors.turquoiseSurf,
+          primaryColorBrightness: brightness,
+          cardColor:
+              isLightTheme ? PubColors.ghostWhite : ThemeData.dark().cardColor,
+          appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                brightness: brightness,
+                color: isLightTheme
+                    ? PubColors.ghostWhite
+                    : PubColors.darkGunmetal,
+              ),
+          sliderTheme: SliderThemeData(
+            disabledActiveTrackColor: PubColors.turquoiseSurf,
+            disabledActiveTickMarkColor: PubColors.turquoiseSurf,
+          ),
+        );
+      },
       themedWidgetBuilder: (context, theme) {
         return MaterialApp(
           theme: theme,
@@ -118,7 +134,7 @@ class PubDevClientApp extends StatelessWidget {
                   return MaterialPageRoute(
                     builder: (BuildContext context) =>
                         BlocProvider<PackageDetailsBloc>(
-                      builder: (context) => PackageDetailsBloc(
+                      create: (context) => PackageDetailsBloc(
                         packageName: packageDetailsArguments.packageName,
                       ),
                       child: PackageDetailsScreen(),

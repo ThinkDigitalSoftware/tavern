@@ -68,7 +68,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       slivers: <Widget>[
                         SliverAppBar(
                           elevation: 0,
-                          backgroundColor: Theme.of(context).canvasColor,
+                          backgroundColor:
+                              DynamicTheme.of(context).data.appBarTheme.color,
                           centerTitle: true,
                           automaticallyImplyLeading: false,
                           snap: true,
@@ -162,6 +163,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             ),
                           ),
                         ),
+                        SliverPadding(
+                          padding: EdgeInsets.only(top: 10),
+                        ),
                         PackageListView(
                           pageQuery: PageQuery(
                             filterType: widget.homeState.filterType,
@@ -231,4 +235,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         return 'Dart';
     }
   }
+}
+
+bool isLightTheme(BuildContext context) {
+  return DynamicTheme.of(context).brightness == Brightness.light;
 }

@@ -31,7 +31,7 @@ class PlatformFilter extends StatelessWidget {
             unselectedColor:
                 DynamicTheme.of(context).brightness == Brightness.light
                     ? Theme.of(context).canvasColor
-                    : PubColors.darkAccent,
+                    : PubColors.gunmetal,
             borderRadius: 5.0,
             onSegmentChosen: onSegmentChosen,
           ),

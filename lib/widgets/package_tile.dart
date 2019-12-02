@@ -46,7 +46,9 @@ class PackageTile extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
-      subtitle: Text(packageVersionString),
+      subtitle: Text("\n$packageVersionString \n"
+          "\n"
+          "${package.platformCompatibilityTags.join(' | ')}"),
       trailing: packageScore != null
           ? CircleAvatar(
               backgroundColor: Theme.of(context).brightness == Brightness.light

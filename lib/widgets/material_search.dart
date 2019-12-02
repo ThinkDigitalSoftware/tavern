@@ -142,6 +142,11 @@ abstract class SearchDelegate<T> {
   /// string should be updated to that suggestion via the setter.
   String get query => _queryTextController.text;
 
+  bool isExactPhrase = false;
+  bool isPrefix = false;
+  bool isDependency = false;
+  bool isEmail = false;
+
   set query(String value) {
     assert(query != null);
     _queryTextController.text = value;
@@ -386,6 +391,7 @@ class _SearchPageState<T> extends State<_SearchPage<T>> {
     String routeName;
     switch (defaultTargetPlatform) {
       case TargetPlatform.iOS:
+      case TargetPlatform.macOS:
         routeName = '';
         break;
       case TargetPlatform.android:

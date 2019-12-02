@@ -28,8 +28,8 @@ class _PackageListViewState extends State<PackageListView> {
       key: pageWiseSliverListKey,
       pageSize: 10,
       pageFuture: (index) async {
-        const int offset =
-            1; // page numbering starts at 1, so we need to add 1.
+        // page numbering starts at 1, so we need to add 1.
+        const int offset = 1;
         final completer = Completer<Page>();
         HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
         homeBloc.add(
@@ -43,8 +43,18 @@ class _PackageListViewState extends State<PackageListView> {
         return completer.future;
       },
       itemBuilder: (BuildContext context, entry, int index) {
-        return PackageTile(
-          package: entry,
+        var indent = MediaQuery.of(context).size.width / 8;
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            PackageTile(
+              package: entry,
+            ),
+            Divider(
+              indent: 15,
+              endIndent: indent,
+            )
+          ],
         );
       },
       loadingBuilder: (context) => Opacity(

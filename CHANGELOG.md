@@ -53,3 +53,7 @@ Add syntax highlighting ✍️
 
 ## 1.4.0
 Fix UI 
+
+##1.5.0
+Theme Adjustments
+Fix missing notification icon error

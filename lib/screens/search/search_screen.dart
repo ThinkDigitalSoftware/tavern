@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/screens/package_details/package_details_screen.dart';
+import 'package:tavern/screens/search/search_qualifiers.dart';
 import 'package:tavern/src/enums.dart';
 import 'package:tavern/widgets/material_search.dart';
 import 'package:tavern/widgets/package_tile.dart';
@@ -19,7 +20,9 @@ class PubSearchDelegate extends SearchDelegate {
   Widget buildResults(BuildContext context) {
     searchBloc.add(
       GetSearchResultsEvent(
-        query: SearchQuery(query),
+        query: SearchQuery(
+          query,
+        ),
       ),
     );
     return Material(
@@ -82,35 +85,63 @@ class PubSearchDelegate extends SearchDelegate {
         ),
         child: Container(
           width: MediaQuery.of(context).size.width - 16,
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: TextField(
-                  controller: controller,
+          child: TextField(
+            controller: controller,
 //                    focusNode: focusNode,
-                  autofocus: true,
-                  textInputAction: textInputAction,
-                  onSubmitted: onSubmitted,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Search Dart packages',
-                    icon: IconButton(
-                      padding: EdgeInsets.only(left: 8),
-                      icon: Icon(
-                        Icons.arrow_back,
-                      ),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        Icons.search,
-                      ),
-                      onPressed: () => showResults(context),
-                    ),
+
+            autofocus: true,
+            textInputAction: textInputAction,
+            onSubmitted: onSubmitted,
+            style: TextStyle(fontSize: 20),
+            decoration: InputDecoration(
+              alignLabelWithHint: true,
+              border: InputBorder.none,
+              hintText: 'Search Dart packages',
+              icon: IconButton(
+                padding: EdgeInsets.only(left: 8),
+                icon: Icon(
+                  Icons.arrow_back,
+                ),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              suffixIcon: Container(
+                padding: EdgeInsets.only(right: 15),
+                child: PopupMenuButton<SearchQualifier>(
+                  offset: Offset(0, -20),
+                  initialValue: SearchQualifier.none,
+                  icon: Icon(
+                    Icons.search,
                   ),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: SearchQualifier.none,
+                      child: Text('None'),
+                    ),
+                    PopupMenuItem(
+                      value: SearchQualifier.exactPhrase,
+                      child: Text('Exact Phrase'),
+                    ),
+                    PopupMenuItem(
+                      value: SearchQualifier.dependency,
+                      child: Text('Search Dependencies'),
+                    ),
+                    PopupMenuItem(
+                      value: SearchQualifier.email,
+                      child: Text('Search by Email'),
+                    ),
+                    PopupMenuItem(
+                      value: SearchQualifier.prefix,
+                      child: Tooltip(
+                          message:
+                              "Searches for packages that begin with prefix. Use this feature to find packages in the same framework",
+                          child: Text('Search by prefix')),
+                    ),
+                  ],
+                  onSelected: (searchQualifier) => SearchBloc.of(context)
+                      .add(SetSearchQualifierEvent(searchQualifier)),
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),

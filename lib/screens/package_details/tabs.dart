@@ -1,4 +1,3 @@
-import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:pub_client/pub_client.dart';
@@ -239,13 +238,35 @@ class ScoreSlider extends StatelessWidget {
   }
 }
 
-class DependenciesSection extends StatelessWidget {
+class DependenciesSection extends StatefulWidget {
   const DependenciesSection({
     Key key,
     @required this.dependencies,
   }) : super(key: key);
 
   final List<BasicDependency> dependencies;
+
+  @override
+  _DependenciesSectionState createState() => _DependenciesSectionState();
+}
+
+class _DependenciesSectionState extends State<DependenciesSection> {
+  final ScrollController _controller = ScrollController();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future.delayed(Duration(seconds: 2));
+      _controller.jumpTo(-1.0);
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -262,23 +283,26 @@ class DependenciesSection extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 10),
             height: MediaQuery.of(context).size.height / 3.5,
-            child: ListView.builder(
-              padding: EdgeInsets.zero,
-              shrinkWrap: true,
-              itemCount: dependencies.length,
-              itemBuilder: (BuildContext context, int index) {
-                final dependency = dependencies[index];
-                return ListTile(
-                  title: Text(dependency.name),
-                  trailing: Text(
-                    dependency.constraint?.toString() ??
-                        dependency.resolved?.toString() ??
-                        '',
-                    style: Theme.of(context).primaryTextTheme.caption,
-                  ),
-                  onTap: () {},
-                );
-              },
+            child: Scrollbar(
+              child: ListView.builder(
+                controller: _controller,
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemCount: widget.dependencies.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final dependency = widget.dependencies[index];
+                  return ListTile(
+                    title: Text(dependency.name),
+                    trailing: Text(
+                      dependency.constraint?.toString() ??
+                          dependency.resolved?.toString() ??
+                          '',
+                      style: Theme.of(context).primaryTextTheme.caption,
+                    ),
+                    onTap: () {},
+                  );
+                },
+              ),
             ),
           ),
         ),
