@@ -1,3 +1,4 @@
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pub_client/pub_client.dart';
@@ -11,11 +12,10 @@ class FavoriteIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SubscriptionBloc _subscriptionBloc =
-        BlocProvider.of<SubscriptionBloc>(context);
+    final _subscriptionBloc = BlocProvider.of<SubscriptionBloc>(context);
     return BlocBuilder<SubscriptionBloc, SubscriptionState>(
       builder: (context, state) {
-        bool isFavorited = _subscriptionBloc.hasSubscriptionFor(package.name);
+        final isFavorited = _subscriptionBloc.hasSubscriptionFor(package.name);
         return IconButton(
           color: color,
           tooltip: "Favorite",
@@ -27,17 +27,17 @@ class FavoriteIconButton extends StatelessWidget {
                 ..removeCurrentSnackBar()
                 ..showSnackBar(
                   unsubscribedSnackBar(
-                    subscription: _package,
+                    subscription: package,
                     subscriptionBloc: _subscriptionBloc,
                   ),
                 );
             } else {
-              _subscriptionBloc.add(AddSubscription(_package));
+              _subscriptionBloc.add(AddSubscription(package));
               Scaffold.of(context)
                 ..removeCurrentSnackBar()
                 ..showSnackBar(
                   subscribedSnackBar(
-                    subscription: _package,
+                    subscription: package,
                     subscriptionBloc: _subscriptionBloc,
                   ),
                 );

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +12,7 @@ import 'package:tavern/screens/settings/settings_event.dart';
 import 'package:simple_auth/simple_auth.dart';
 import 'package:simple_auth_flutter/simple_auth_flutter.dart';
 import 'package:tavern/secrets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
   final SettingsState state;
@@ -187,18 +190,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 onPressed: () async {
-                  final githubApi = GithubApi(
-                    "github",
-                    gitHubClientId,
-                    gitHubClientSecret,
-                    "com.thinkdigital.software",
-                    scopes: [
-                      "repo",
-                      "public_repo",
-                    ],
+                  var flow = OAuth2Flow(gitHubClientId, gitHubClientSecret);
+                  var authUrl = flow.createAuthorizeUrl();
+                  // Display to the User and handle the redirect URI, and also get the code.
+//                  flow.exchange(code).then((response) {
+//                    var github = new GitHub(
+//                        auth: new Authentication.withToken(response.token));
+//                    // Use the GitHub Client
+//                  });
+//                  final githubApi = GithubApi(
+//                    "github",
+//                    gitHubClientId,
+//                    gitHubClientSecret,
+//                    "com.thinkdigital.software",
+//                    scopes: [
+//                      "repo",
+//                      "public_repo",
+//                    ],
+//                  );
+//                  login(githubApi);
+                  launch(
+                    '$authUrl&redirect_uri=http://127.0.0.1:8080/redirect ',
                   );
-                  login(githubApi);
-
+                  HttpServer server =
+                      await HttpServer.bind(InternetAddress.loopbackIPv4, 8080);
+                  server.listen((HttpRequest request) async {
+                    request.response
+                      ..statusCode = 200
+                      ..headers.set("Content-Type", ContentType.html.mimeType)
+                      ..write(
+                          "<html><h1>You can now close this window</h1></html>");
+                    await request.response.close();
+                    await server.close(force: true);
+                  });
                   settingsBloc.add(
                     AuthenticateWithGithub(
                       username: _usernameController.text,
