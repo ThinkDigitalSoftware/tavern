@@ -167,7 +167,7 @@ class SearchResultTile extends StatelessWidget {
           context,
           Routes.packageDetailsScreen,
           arguments: PackageDetailsArguments(
-            package.name,
+            package,
           ),
         ),
       ),

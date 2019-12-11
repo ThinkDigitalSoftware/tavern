@@ -113,7 +113,7 @@ class FavoritesTile extends StatelessWidget {
         context,
         Routes.packageDetailsScreen,
         arguments: PackageDetailsArguments(
-          subscription.name,
+          subscription.toPackage,
         ),
       ),
     );

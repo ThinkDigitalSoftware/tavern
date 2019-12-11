@@ -1,23 +1,23 @@
 name: tavern
-version: 1.5.0
+version: 1.5.1
 description: An open-source pub.dev client for searching and subscribing to packages
-environment: 
+environment:
   sdk: '>=2.6.0 <3.0.0'
 
-dependencies: 
+dependencies:
   provider: ^3.2.0
   flutter_bloc: ^2.1.1
   dynamic_overflow_menu_bar: ^0.1.2
-  package_info: ^0.4.0+11
+  package_info: ^0.4.0+13
   dynamic_theme: ^1.0.1
   get_it: ^3.0.3
   hive: ^1.1.1
-  url_launcher: ^5.2.7
-  cupertino_icons: ^0.1.2
+  url_launcher: ^5.4.0
+  cupertino_icons: ^0.1.3
   groovin_material_icons: ^1.1.6
   rounded_modal: ^1.0.1
   html2md: ^0.5.1
-  material_segmented_control: ^2.0.7
+  material_segmented_control: ^2.0.9
   groovin_widgets: ^1.4.2
   bloc: ^2.0.0
   flutter_pagewise: any
@@ -27,36 +27,39 @@ dependencies:
   flutter_local_notifications: ^0.8.4+3
   flutter_markdown: ^0.3.2
   flutter_svg: ^0.15.0
-  share: ^0.6.3+3
+  share: ^0.6.3+5
   syntax_highlighter:
     git: https://github.com/ThinkDigitalSoftware/syntax_highlighter.git
+  flutter_secure_storage: ^3.3.1+1
+  simple_auth_flutter: ^2.0.4
+  github: ^6.0.2
+  flutter_progress_button: ^1.0.0
 
-
-
-  flutter: 
+  flutter:
     sdk: flutter
   pub_client:
     git: https://github.com/ThinkDigitalSoftware/pub_client.git
 
-dev_dependencies: 
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
   build_runner: ^1.7.2
   hanzo: ^1.0.2
-  pedantic: ^1.8.0+1
   pubspec: ^0.1.2
-  github: ^6.0.2
   args: ^1.5.2
+  effective_dart: ^1.1.1
+
+
 
 flutter:
-  assets: 
+  assets:
     - images/
-  fonts: 
-    - 
-      family: Metropolis
-      fonts: 
-        - 
-          asset: fonts/Metropolis-Regular.otf
+  fonts:
+    - family: Metropolis
+      fonts:
+        - asset: fonts/Metropolis-Regular.otf
   uses-material-design: true
 
-authors: 
+authors:
   - Jonathan White <jwhite@thinkdigital.software>
   - GroovinChip <groovinchip@gmail.com>

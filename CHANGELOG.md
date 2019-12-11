@@ -57,3 +57,6 @@ Fix UI
 ##1.5.0
 Theme Adjustments
 Fix missing notification icon error
+
+## 1.5.1
+Fix packages showing up as not available

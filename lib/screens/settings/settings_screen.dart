@@ -24,6 +24,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  bool enableGithub = false;
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',
@@ -155,44 +156,47 @@ class _SettingsScreenState extends State<SettingsScreen> {
               debugPrint('Caches cleared');
             },
           ),
-          ExpansionTile(
-            title: Text("Sign In to GitHub"),
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: TextField(
-                  controller: _usernameController,
-                  decoration:
-                      InputDecoration(labelText: "Username", isDense: true),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: "Password",
-                    isDense: true,
-                  ),
-                  obscureText: true,
-                ),
-              ),
-              ProgressButton(
-                animate: true,
-                type: ProgressButtonType.Flat,
-                defaultWidget:
-                    Text(state.isAuthenticated ? 'Sign Out' : 'Sign In'),
-                progressWidget: AspectRatio(
-                  aspectRatio: 1,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CircularProgressIndicator(),
+          if (enableGithub)
+            ExpansionTile(
+              title: Text("Sign In to GitHub"),
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: TextField(
+                    controller: _usernameController,
+                    decoration:
+                        InputDecoration(labelText: "Username", isDense: true),
                   ),
                 ),
-                onPressed: () async {
-                  var flow = OAuth2Flow(gitHubClientId, gitHubClientSecret);
-                  var authUrl = flow.createAuthorizeUrl();
-                  // Display to the User and handle the redirect URI, and also get the code.
+                if (enableGithub)
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: TextField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                        isDense: true,
+                      ),
+                      obscureText: true,
+                    ),
+                  ),
+                if (enableGithub)
+                  ProgressButton(
+                    animate: true,
+                    type: ProgressButtonType.Flat,
+                    defaultWidget:
+                        Text(state.isAuthenticated ? 'Sign Out' : 'Sign In'),
+                    progressWidget: AspectRatio(
+                      aspectRatio: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                    onPressed: () async {
+                      var flow = OAuth2Flow(gitHubClientId, gitHubClientSecret);
+                      var authUrl = flow.createAuthorizeUrl();
+                      // Display to the User and handle the redirect URI, and also get the code.
 //                  flow.exchange(code).then((response) {
 //                    var github = new GitHub(
 //                        auth: new Authentication.withToken(response.token));
@@ -209,30 +213,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
 //                    ],
 //                  );
 //                  login(githubApi);
-                  launch(
-                    '$authUrl&redirect_uri=http://127.0.0.1:8080/redirect ',
-                  );
-                  HttpServer server =
-                      await HttpServer.bind(InternetAddress.loopbackIPv4, 8080);
-                  server.listen((HttpRequest request) async {
-                    request.response
-                      ..statusCode = 200
-                      ..headers.set("Content-Type", ContentType.html.mimeType)
-                      ..write(
-                          "<html><h1>You can now close this window</h1></html>");
-                    await request.response.close();
-                    await server.close(force: true);
-                  });
-                  settingsBloc.add(
-                    AuthenticateWithGithub(
-                      username: _usernameController.text,
-                      password: _passwordController.text,
-                    ),
-                  );
-                },
-              )
-            ],
-          ),
+                      launch(
+                        '$authUrl&redirect_uri=http://127.0.0.1:8080/redirect ',
+                      );
+                      HttpServer server = await HttpServer.bind(
+                          InternetAddress.loopbackIPv4, 8080);
+                      server.listen((HttpRequest request) async {
+                        request.response
+                          ..statusCode = 200
+                          ..headers
+                              .set("Content-Type", ContentType.html.mimeType)
+                          ..write(
+                              "<html><h1>You can now close this window</h1></html>");
+                        await request.response.close();
+                        await server.close(force: true);
+                      });
+                      settingsBloc.add(
+                        AuthenticateWithGithub(
+                          username: _usernameController.text,
+                          password: _passwordController.text,
+                        ),
+                      );
+                    },
+                  )
+              ],
+            ),
           Expanded(child: SizedBox()),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12),

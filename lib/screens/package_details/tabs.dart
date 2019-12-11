@@ -179,33 +179,49 @@ class ErrorReport extends StatelessWidget {
 
 class AnalysisTab extends StatelessWidget {
   final AnalysisPackageTab packageTab;
+  final TabController tabController = null;
+  final Animation<double> animation;
 
-  const AnalysisTab({Key key, this.packageTab}) : super(key: key);
+  const AnalysisTab({Key key, this.packageTab, this.animation})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.all(15),
-      children: <Widget>[
-        ScoreSlider(
-          name: 'Popularity:',
-          score: packageTab.popularity,
-        ),
-        ScoreSlider(
-          name: 'Health:',
-          score: packageTab.health,
-        ),
-        ScoreSlider(
-          name: 'Maintenance:',
-          score: packageTab.maintenance,
-        ),
-        ScoreSlider(
-          name: 'Overall:',
-          score: packageTab.overall,
-        ),
-        DependenciesSection(dependencies: packageTab.dependencies),
-      ],
-    );
+    return AnimatedBuilder(
+        animation: animation,
+        builder: (context, child) {
+          double percentage;
+          percentage = animation.value % 1;
+          if (percentage == 0) {
+            percentage = 1;
+          }
+          return ListView(
+            padding: EdgeInsets.all(15),
+            children: <Widget>[
+              ScoreSlider(
+                name: 'Popularity:',
+                value: packageTab.popularity * percentage,
+                score: packageTab.popularity,
+              ),
+              ScoreSlider(
+                name: 'Health:',
+                value: packageTab.health * percentage,
+                score: packageTab.health,
+              ),
+              ScoreSlider(
+                name: 'Maintenance:',
+                value: packageTab.maintenance * percentage,
+                score: packageTab.maintenance,
+              ),
+              ScoreSlider(
+                name: 'Overall:',
+                value: packageTab.overall * percentage,
+                score: packageTab.overall,
+              ),
+              DependenciesSection(dependencies: packageTab.dependencies),
+            ],
+          );
+        });
   }
 }
 
@@ -213,11 +229,13 @@ class ScoreSlider extends StatelessWidget {
   const ScoreSlider({
     @required this.name,
     @required this.score,
+    @required this.value,
   })  : assert(name != null),
         assert(score != null);
 
   final String name;
   final int score;
+  final double value;
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +244,7 @@ class ScoreSlider extends StatelessWidget {
         Text(name),
         Expanded(
           child: Slider(
-            value: score.toDouble(),
+            value: value,
             onChanged: null,
             min: 0,
             max: 100,

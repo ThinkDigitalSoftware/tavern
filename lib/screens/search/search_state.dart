@@ -9,8 +9,11 @@ class SearchState {
   final List<Package> searchResults;
   final SearchQualifier searchQualifier;
 
-  const SearchState(
-      {this.searchHistory, this.searchResults, this.searchQualifier});
+  const SearchState({
+    this.searchHistory,
+    this.searchResults,
+    this.searchQualifier,
+  });
 
   SearchState copyWith({
     List<String> searchHistory,

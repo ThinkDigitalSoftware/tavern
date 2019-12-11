@@ -135,7 +135,7 @@ class PubDevClientApp extends StatelessWidget {
                     builder: (BuildContext context) =>
                         BlocProvider<PackageDetailsBloc>(
                       create: (context) => PackageDetailsBloc(
-                        packageName: packageDetailsArguments.packageName,
+                        package: packageDetailsArguments.package,
                       ),
                       child: PackageDetailsScreen(),
                     ),
