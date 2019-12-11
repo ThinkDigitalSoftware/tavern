@@ -21,6 +21,6 @@ class InitialPackageDetailsState extends PackageDetailsState {
 class PackageDetailsErrorState extends PackageDetailsState {
   final Exception error;
 
-  PackageDetailsErrorState(this.error, {@required FullPackage package})
+  PackageDetailsErrorState(this.error, {@required dynamic package})
       : super(package: package);
 }

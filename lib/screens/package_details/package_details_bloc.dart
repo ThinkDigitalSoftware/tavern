@@ -11,19 +11,19 @@ import 'package:tavern/src/repository.dart';
 
 class PackageDetailsBloc
     extends Bloc<PackageDetailsEvent, PackageDetailsState> {
-  String packageName;
+  Package package;
   final FullPackageRepository _packageRepository;
 
-  PackageDetailsBloc({@required this.packageName})
+  PackageDetailsBloc({@required this.package})
       : _packageRepository = GetIt.I.get<FullPackageRepository>() {
     add(
-      GetPackageDetailsEvent(packageName: packageName),
+      GetPackageDetailsEvent(package: package),
     );
   }
 
   @override
   PackageDetailsState get initialState =>
-      InitialPackageDetailsState(packageName);
+      InitialPackageDetailsState(package.name);
 
   @override
   Stream<PackageDetailsState> mapEventToState(
@@ -31,14 +31,15 @@ class PackageDetailsBloc
   ) async* {
     try {
       if (event is GetPackageDetailsEvent) {
-        FullPackage package = await _packageRepository.get(event.packageName);
+        FullPackage package =
+            await _packageRepository.getFromPackage(event.package);
 
         yield PackageDetailsState(package: package);
         FullPackage newerPackage =
-            await _packageRepository.getIfNewer(event.packageName);
+            await _packageRepository.getIfNewer(event.package);
         if (newerPackage != null) {
           debugPrint(
-              '${event.packageName} has been updated since your last query. Updating');
+              '${event.package} has been updated since your last query. Updating');
           yield PackageDetailsState(package: newerPackage);
         }
         event.onComplete.complete();
@@ -51,11 +52,7 @@ class PackageDetailsBloc
     } on Exception catch (e) {
       yield PackageDetailsErrorState(
         e,
-        package: FullPackage(
-          name: packageName,
-          url: null,
-          author: null,
-        ),
+        package: package,
       );
     }
   }
@@ -78,7 +75,7 @@ class FullPackageCache extends Cache<String, FullPackage> {
           shouldPersist: true,
           valueToJsonEncodable: (fullPackage) => fullPackage?.toJson(),
           valueFromJsonEncodable: (json) =>
-              FullPackage.fromJson((json as Map).cast<String, dynamic>()),
+              FullPackage.fromJson((json as Map)?.cast<String, dynamic>()),
         ) {
     getIt.registerSingleton<FullPackageCache>(this);
   }
@@ -100,20 +97,30 @@ class FullPackageRepository extends Repository<String, FullPackage> {
     }
   }
 
+  Future<FullPackage> getFromPackage(Package package) async {
+    if (_packageCache.containsKey(package.name)) {
+      return _packageCache[package.name];
+    } else {
+      FullPackage fullPackage = await package.toFullPackage();
+      _packageCache.add(package.name, fullPackage);
+      return fullPackage;
+    }
+  }
+
   /// Runs a get call just like [get], but only returns a value if the package
   /// has been updated since the last [get] call, otherwise, it returns null.
-  Future<FullPackage> getIfNewer(String query) async {
-    FullPackage oldPackage = _packageCache[query];
+  Future<FullPackage> getIfNewer(Package package) async {
+    FullPackage oldPackage = _packageCache[package.name];
     assert(oldPackage != null,
         "This function should be run AFTER get so oldPackage should not return null");
-    FullPackage newPackage = await client.get(query);
+    FullPackage newPackage = await package.toFullPackage();
 
     if (newPackage is DartLibraryFullPackage) {
       return null;
     }
 
     if (newPackage.latestSemanticVersion > oldPackage.latestSemanticVersion) {
-      _packageCache.add(query, newPackage);
+      _packageCache.add(package.name, newPackage);
       return newPackage;
     } else {
       return null;

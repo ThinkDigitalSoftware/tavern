@@ -313,7 +313,9 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                 centerTitle: false,
                 backgroundColor:
                     DynamicTheme.of(context).data.appBarTheme.color,
-                title: Text(packageDetailsState.package.name),
+                title: Text(
+                  packageDetailsState.package.name,
+                ),
               )
             : null,
         body: scaffoldBody,
@@ -343,7 +345,7 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
 }
 
 class PackageDetailsArguments {
-  final String packageName;
+  final Package package;
 
-  PackageDetailsArguments(this.packageName);
+  PackageDetailsArguments(this.package);
 }
