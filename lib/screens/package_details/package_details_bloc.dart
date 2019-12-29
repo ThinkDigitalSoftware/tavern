@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
@@ -13,6 +14,7 @@ class PackageDetailsBloc
     extends Bloc<PackageDetailsEvent, PackageDetailsState> {
   Package package;
   final FullPackageRepository _packageRepository;
+  bool hasRetried = false;
 
   PackageDetailsBloc({@required this.package})
       : _packageRepository = GetIt.I.get<FullPackageRepository>() {
@@ -50,9 +52,17 @@ class PackageDetailsBloc
         return;
       }
     } on Exception catch (e) {
+      if (e is SocketException && event is GetPackageDetailsEvent) {
+        if (!hasRetried) {
+          add(event);
+          hasRetried = true;
+          debugPrint('$e \nretrying');
+          return;
+        }
+      }
       yield PackageDetailsErrorState(
         e,
-        package: package,
+        package: event.package,
       );
     }
   }

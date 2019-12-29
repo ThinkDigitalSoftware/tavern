@@ -98,8 +98,7 @@ Future uploadExistingApks(
         assetData: File(apk.path).readAsBytesSync(),
         contentType: "application/vnd.android.package-archive");
   });
-  final List<ReleaseAsset> releaseAssets = await repositoriesService
-      .uploadReleaseAssets(release, createReleaseAssets);
+  await repositoriesService.uploadReleaseAssets(release, createReleaseAssets);
   stdout.write('Upload Complete for ${release.tagName}\n'
       'Url: ${release.url}\n');
 }
@@ -115,7 +114,9 @@ Future<Release> getRelease(RepositoriesService repositoriesService,
         tavernRepositorySlug,
         createRelease,
       );
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
     retryCount--;
   } while (release == null && retryCount > 0);
   return release;

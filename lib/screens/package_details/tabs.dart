@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/widgets/html_view.dart';
@@ -177,52 +180,88 @@ class ErrorReport extends StatelessWidget {
   }
 }
 
-class AnalysisTab extends StatelessWidget {
+class AnalysisTab extends StatefulWidget {
   final AnalysisPackageTab packageTab;
-  final TabController tabController = null;
-  final Animation<double> animation;
+  final TabController controller;
 
-  const AnalysisTab({Key key, this.packageTab, this.animation})
-      : super(key: key);
+  const AnalysisTab({
+    Key key,
+    @required this.packageTab,
+    @required this.controller,
+  }) : super(key: key);
+
+  @override
+  _AnalysisTabState createState() => _AnalysisTabState();
+}
+
+class _AnalysisTabState extends State<AnalysisTab>
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  AnimationController animationController;
+  final Completer visibilityCompleter = Completer<bool>();
+
+  @override
+  void initState() {
+    animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    _listenForVisibility();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+    if (!visibilityCompleter.isCompleted) {
+      if (mounted) {
+        visibilityCompleter.complete(true);
+      }
+    }
     return AnimatedBuilder(
-        animation: animation,
+        animation: animationController,
         builder: (context, child) {
-          double percentage;
-          percentage = animation.value % 1;
-          if (percentage == 0) {
-            percentage = 1;
-          }
+          double percentage = animationController.value;
           return ListView(
             padding: EdgeInsets.all(15),
             children: <Widget>[
               ScoreSlider(
                 name: 'Popularity:',
-                value: packageTab.popularity * percentage,
-                score: packageTab.popularity,
+                value: widget.packageTab.popularity * percentage,
+                score: widget.packageTab.popularity,
               ),
               ScoreSlider(
                 name: 'Health:',
-                value: packageTab.health * percentage,
-                score: packageTab.health,
+                value: widget.packageTab.health * percentage,
+                score: widget.packageTab.health,
               ),
               ScoreSlider(
                 name: 'Maintenance:',
-                value: packageTab.maintenance * percentage,
-                score: packageTab.maintenance,
+                value: widget.packageTab.maintenance * percentage,
+                score: widget.packageTab.maintenance,
               ),
               ScoreSlider(
                 name: 'Overall:',
-                value: packageTab.overall * percentage,
-                score: packageTab.overall,
+                value: widget.packageTab.overall * percentage,
+                score: widget.packageTab.overall,
               ),
-              DependenciesSection(dependencies: packageTab.dependencies),
+              DependenciesSection(dependencies: widget.packageTab.dependencies),
             ],
           );
         });
   }
+
+  Future<void> _listenForVisibility() async {
+    await visibilityCompleter.future;
+
+    animationController.forward();
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class ScoreSlider extends StatelessWidget {
@@ -275,7 +314,14 @@ class _DependenciesSectionState extends State<DependenciesSection> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(Duration(seconds: 2));
-      _controller.jumpTo(-1.0);
+//      Timer.periodic(Duration(milliseconds: 500), (Timer timer) {
+      if (_controller.hasClients) {
+        _controller.jumpTo(-1.0);
+//          timer.cancel();
+      } else {
+        debugPrint("controller doesn't have clients yet.");
+      }
+//      });
     });
     super.initState();
   }

@@ -16,10 +16,13 @@ class _MainDrawerState extends State<MainDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: BlocBuilder<SettingsBloc, SettingsState>(
-        builder: (BuildContext context, SettingsState state) => SettingsScreen(
-          state: state,
+    return SafeArea(
+      child: Drawer(
+        child: BlocBuilder<SettingsBloc, SettingsState>(
+          builder: (BuildContext context, SettingsState state) =>
+              SettingsScreen(
+            state: state,
+          ),
         ),
       ),
     );

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -8,6 +10,7 @@ import 'package:syntax_highlighter/syntax_highlighter.dart'
     as syntaxHighlighter;
 import 'package:tavern/screens/bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart';
 
 class HtmlView extends StatelessWidget {
   final String html;
@@ -68,13 +71,29 @@ class HtmlView extends StatelessWidget {
           }
         },
         imageBuilder: (uri) {
-          if (isSvg(uri)) {
-            return SvgPicture.network(
-              uri.toString(),
-            );
-          } else {
-            return Image.network(uri.toString());
-          }
+          return FutureBuilder<Response>(
+            future: get(uri.toString()),
+            builder: (BuildContext context, AsyncSnapshot<Response> snapshot) {
+              if (snapshot.connectionState != ConnectionState.done ||
+                  !snapshot.hasData) {
+                return Container(
+                  width: 50,
+                  height: 30,
+                );
+              }
+              Uint8List image = snapshot.data.bodyBytes;
+              var _imageType = imageType(snapshot.data);
+              if (_imageType == ImageType.svg) {
+                return SvgPicture.memory(image);
+              }
+              if (_imageType == ImageType.image) {
+                return Image.memory(image);
+              }
+              debugPrint(
+                  'The image type ${snapshot.data.headers['content-type']} is not currently supported');
+              return Icon(Icons.broken_image);
+            },
+          );
         },
         syntaxHighlighter:
             DartSyntaxHighlighter(DynamicTheme.of(context).brightness),
@@ -83,8 +102,20 @@ class HtmlView extends StatelessWidget {
     );
   }
 
-  bool isSvg(Uri uri) =>
-      uri.toString().contains('.svg') || uri.host == 'img.shields.io';
+  ImageType imageType(Response response) {
+    var contentType = response.headers['content-type'];
+    debugPrint(contentType);
+    if (contentType.contains('image/svg')) {
+      return ImageType.svg;
+    }
+    if (contentType.contains('image')) {
+      return ImageType.image;
+    }
+    if (contentType.contains('svg')) {
+      return ImageType.svg;
+    }
+    return ImageType.unknown;
+  }
 }
 
 class DartSyntaxHighlighter extends SyntaxHighlighter {
@@ -117,3 +148,6 @@ class DartSyntaxHighlighter extends SyntaxHighlighter {
       syntaxHighlighter.DartSyntaxHighlighter(syntaxHighlighterStyle)
           .format(source);
 }
+
+enum ImageType { image, svg, imageSvg, unknown }
+//https://img.shields.io/discord/649708778631200778.svg?logo=discord&color=blue

@@ -265,5 +265,7 @@ void login(AuthenticatedApi api) async {
     await for (final gist in github.gists.listCurrentUserGists()) {
       print(gist.htmlUrl);
     }
-  } catch (e) {}
+  } catch (e) {
+    print(e);
+  }
 }

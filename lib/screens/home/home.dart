@@ -13,6 +13,7 @@ import 'package:tavern/widgets/package_list_view.dart';
 import 'package:tavern/widgets/platform_filter.dart';
 import 'package:tavern/widgets/search_bar.dart';
 import 'package:tavern/widgets/tavern_logo.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
   final HomeState homeState;
@@ -98,22 +99,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     Text(
-                                      'Browse ${_convertFilterTypeToString(widget.homeState.filterType)} Packages',
-                                      style: Theme.of(context)
-                                          .primaryTextTheme
-                                          .title
-                                          .copyWith(
-                                            color: DynamicTheme.of(context)
-                                                        .brightness ==
-                                                    Brightness.light
-                                                ? Colors.black
-                                                : Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                      'Browse ${_convertFilterTypeToString(widget.homeState.filterType)} packages',
+                                      style: GoogleFonts.notoSans(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                     PopupMenuButton<SortType>(
                                       initialValue: widget.homeState.sortType,
                                       offset: Offset(-20, -20),
+                                      tooltip: 'Sort',
                                       icon: Icon(
                                         GroovinMaterialIcons.filter_outline,
                                         color: DynamicTheme.of(context)
@@ -232,7 +227,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         return 'Web';
       case FilterType.all:
       default:
-        return 'Dart';
+        return 'all';
     }
   }
 }

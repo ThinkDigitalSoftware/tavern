@@ -34,12 +34,13 @@ class SearchBar extends StatelessWidget {
               child: IconButton(
                 icon: Icon(
                   Icons.menu,
+                  color: DynamicTheme.of(context).data.iconTheme.color,
                 ),
                 onPressed: () => _scaffoldKey.currentState.openDrawer(),
               ),
             ),
             Text(
-              'Search Dart packages',
+              'Search packages',
               style: TextStyle(
                 color: DynamicTheme.of(context).brightness == Brightness.light
                     ? PubColors.searchBarItemsColor
@@ -51,9 +52,7 @@ class SearchBar extends StatelessWidget {
               padding: const EdgeInsets.only(right: 16),
               child: Icon(
                 Icons.search,
-                color: DynamicTheme.of(context).brightness == Brightness.light
-                    ? PubColors.searchBarItemsColor
-                    : Colors.white,
+                color: DynamicTheme.of(context).data.iconTheme.color,
               ),
             ),
           ],

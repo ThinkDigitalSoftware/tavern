@@ -22,5 +22,17 @@ class PackageDetailsErrorState extends PackageDetailsState {
   final Exception error;
 
   PackageDetailsErrorState(this.error, {@required dynamic package})
-      : super(package: package);
+      : super(package: toFullPackage(package));
+
+  static FullPackage toFullPackage(dynamic package) {
+    if (package is FullPackage) {
+      return package;
+    }
+    if (package is Package) {
+      return FullPackage(
+          name: package.name, url: package.packageUrl, author: '');
+    }
+    throw UnsupportedError(
+        "Object of type ${package.runtimeType} is not supported");
+  }
 }

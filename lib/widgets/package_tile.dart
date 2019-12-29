@@ -39,6 +39,8 @@ class PackageTile extends StatelessWidget {
       packageVersionString = "";
     }
 
+    bool hasPackageTag(String tag) =>
+        package.platformCompatibilityTags.contains(tag.toLowerCase());
     return ListTile(
       title: Text(
         packageName,
@@ -46,9 +48,30 @@ class PackageTile extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
-      subtitle: Text("\n$packageVersionString \n"
-          "\n"
-          "${package.platformCompatibilityTags.join(' | ')}"),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text("\n$packageVersionString"),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              for (String tag in platformCompatibilityTags)
+                if (hasPackageTag(tag))
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 3),
+                    child: Chip(
+                      backgroundColor: Colors.transparent,
+                      label: Text(
+                        tag,
+                      ),
+                      labelStyle:
+                          TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                    ),
+                  )
+            ],
+          )
+        ],
+      ),
       trailing: packageScore != null
           ? CircleAvatar(
               backgroundColor: Theme.of(context).brightness == Brightness.light
@@ -74,3 +97,13 @@ class PackageTile extends StatelessWidget {
     );
   }
 }
+
+const List<String> platformCompatibilityTags = [
+  'FLUTTER',
+  'ANDROID',
+  'IOS',
+  'WEB',
+  'DART',
+  'NATIVE',
+  'JS'
+];

@@ -60,3 +60,6 @@ Fix missing notification icon error
 
 ## 1.5.1
 Fix packages showing up as not available
+
+## 1.5.2
+Fix some svgs not displaying.

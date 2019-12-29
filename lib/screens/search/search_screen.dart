@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide SearchDelegate;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -87,8 +88,6 @@ class PubSearchDelegate extends SearchDelegate {
           width: MediaQuery.of(context).size.width - 16,
           child: TextField(
             controller: controller,
-//                    focusNode: focusNode,
-
             autofocus: true,
             textInputAction: textInputAction,
             onSubmitted: onSubmitted,
@@ -96,7 +95,7 @@ class PubSearchDelegate extends SearchDelegate {
             decoration: InputDecoration(
               alignLabelWithHint: true,
               border: InputBorder.none,
-              hintText: 'Search Dart packages',
+              hintText: 'Search packages',
               icon: IconButton(
                 padding: EdgeInsets.only(left: 8),
                 icon: Icon(
@@ -109,9 +108,8 @@ class PubSearchDelegate extends SearchDelegate {
                 child: PopupMenuButton<SearchQualifier>(
                   offset: Offset(0, -20),
                   initialValue: SearchQualifier.none,
-                  icon: Icon(
-                    Icons.search,
-                  ),
+                  icon: Icon(Icons.search,
+                      color: DynamicTheme.of(context).data.iconTheme.color),
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       value: SearchQualifier.none,

@@ -298,8 +298,9 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                 versions: _package.versions,
               ),
               AnalysisTab(
-                  packageTab: _package.packageTabs['AnalysisPackageTab'],
-                  animation: _tabController.animation),
+                packageTab: _package.packageTabs['AnalysisPackageTab'],
+                controller: _tabController,
+              ),
               AboutTab(
                 package: _package,
               ),
