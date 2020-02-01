@@ -125,11 +125,11 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                             _package.name,
                             overflow: TextOverflow.fade,
                             softWrap: true,
-                            style: Theme.of(context).primaryTextTheme.title,
+                            style: Theme.of(context).primaryTextTheme.headline6,
                           ),
                           Text(
                             _package.latestSemanticVersion.toString(),
-                            style: Theme.of(context).primaryTextTheme.subtitle,
+                            style: Theme.of(context).primaryTextTheme.subtitle2,
                           )
                         ],
                       ),

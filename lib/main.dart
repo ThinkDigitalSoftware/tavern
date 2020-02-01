@@ -60,35 +60,8 @@ class PubDevClientApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return DynamicTheme(
       defaultBrightness: Brightness.light,
-      data: (brightness) {
-        bool isLightTheme = brightness == Brightness.light;
-        return ThemeData(
-          indicatorColor: PubColors.turquoiseSurf,
-          iconTheme: IconThemeData(
-            color: isLightTheme ? Color(0xFF004A54) : PubColors.ghostWhite,
-          ),
-          fontFamily: 'Metropolis',
-          accentColor: PubColors.turquoiseSurf,
-          primaryColorDark: PubColors.darkGunmetal,
-          scaffoldBackgroundColor:
-              isLightTheme ? PubColors.ghostWhite : PubColors.darkGunmetal,
-          brightness: brightness,
-          primarySwatch: PubColors.turquoiseSurf,
-          primaryColorBrightness: brightness,
-          cardColor:
-              isLightTheme ? PubColors.ghostWhite : ThemeData.dark().cardColor,
-          appBarTheme: Theme.of(context).appBarTheme.copyWith(
-                brightness: brightness,
-                color: isLightTheme
-                    ? PubColors.ghostWhite
-                    : PubColors.darkGunmetal,
-              ),
-          sliderTheme: SliderThemeData(
-            disabledActiveTrackColor: PubColors.turquoiseSurf,
-            disabledActiveTickMarkColor: PubColors.turquoiseSurf,
-          ),
-        );
-      },
+      data: (brightness) =>
+          PubColors.theme(brightness: brightness, context: context),
       themedWidgetBuilder: (context, theme) {
         return MaterialApp(
           theme: theme,

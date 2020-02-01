@@ -31,7 +31,6 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
       key: _scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Theme.of(context).canvasColor,
         title: Text("Favorites"),
         centerTitle: false,
       ),

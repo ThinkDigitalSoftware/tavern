@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 
 abstract class Cache<KeyType, ValueType> with MapMixin<KeyType, ValueType> {
   Box box;
@@ -129,7 +130,7 @@ abstract class Cache<KeyType, ValueType> with MapMixin<KeyType, ValueType> {
       throw TypeError();
     }
     if (shouldPersist) {
-      assert(box.isOpen);
+      assert(box?.isOpen ?? false);
       return box.containsKey(key);
     } else {
       return _cache.containsKey(key);
@@ -137,6 +138,9 @@ abstract class Cache<KeyType, ValueType> with MapMixin<KeyType, ValueType> {
   }
 
   Future initialize() async {
-    box = await Hive.openBox('${ValueType.toString()}');
+    var applicationsDocumentDirectory =
+        await getApplicationDocumentsDirectory();
+    var hiveBoxPath = '${applicationsDocumentDirectory.path}';
+    box = await Hive.openBox(ValueType.toString(), path: hiveBoxPath);
   }
 }

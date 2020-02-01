@@ -340,7 +340,7 @@ class _DependenciesSectionState extends State<DependenciesSection> {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             "Dependencies",
-            style: Theme.of(context).textTheme.headline,
+            style: Theme.of(context).textTheme.headline5,
           ),
         ),
         Card(

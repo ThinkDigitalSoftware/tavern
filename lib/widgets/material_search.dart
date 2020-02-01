@@ -404,30 +404,35 @@ class _SearchPageState<T> extends State<_SearchPage<T>> {
       scopesRoute: true,
       namesRoute: true,
       label: routeName,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            backgroundColor: Colors.transparent.withAlpha(50),
-            automaticallyImplyLeading: false,
-            iconTheme: theme.primaryIconTheme,
-            textTheme: theme.primaryTextTheme,
-            brightness: theme.primaryColorBrightness,
-            elevation: 0,
-            title: widget.delegate.buildSearchBar(
-              context: context,
-              controller: queryTextController,
-              focusNode: widget.delegate._focusNode,
-              textInputAction: TextInputAction.search,
-              onSubmitted: (String _) {
-                widget.delegate.showResults(context);
-              },
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).pop();
+        },
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+//            backgroundColor: Colors.transparent.withAlpha(50),
+              automaticallyImplyLeading: false,
+              iconTheme: theme.primaryIconTheme,
+              textTheme: theme.primaryTextTheme,
+              brightness: theme.primaryColorBrightness,
+              elevation: 0,
+              title: widget.delegate.buildSearchBar(
+                context: context,
+                controller: queryTextController,
+                focusNode: widget.delegate._focusNode,
+                textInputAction: TextInputAction.search,
+                onSubmitted: (String _) {
+                  widget.delegate.showResults(context);
+                },
+              ),
             ),
-          ),
-          body: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: body,
+            body: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: body,
+            ),
           ),
         ),
       ),

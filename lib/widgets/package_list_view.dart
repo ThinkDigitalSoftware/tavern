@@ -43,17 +43,12 @@ class _PackageListViewState extends State<PackageListView> {
         return completer.future;
       },
       itemBuilder: (BuildContext context, entry, int index) {
-        var indent = MediaQuery.of(context).size.width / 8;
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             PackageTile(
               package: entry,
             ),
-            Divider(
-              indent: 15,
-              endIndent: indent,
-            )
           ],
         );
       },

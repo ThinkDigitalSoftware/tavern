@@ -41,59 +41,71 @@ class PackageTile extends StatelessWidget {
 
     bool hasPackageTag(String tag) =>
         package.platformCompatibilityTags.contains(tag.toLowerCase());
-    return ListTile(
-      title: Text(
-        packageName,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
+    return Card(
+      elevation: 3,
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12.0),
+        child: ListTile(
+          title: Text(
+            packageName,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text("\n$packageVersionString"),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  for (String tag in platformCompatibilityTags)
+                    if (hasPackageTag(tag))
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 3),
+                        child: Chip(
+                          backgroundColor: Theme.of(context).accentColor,
+                          label: Text(
+                            tag,
+                          ),
+                          labelStyle: TextStyle(
+                              fontSize: 10, fontWeight: FontWeight.bold),
+                        ),
+                      )
+                ],
+              )
+            ],
+          ),
+          trailing: packageScore != null
+              ? Tooltip(
+                  message: 'Package Score',
+                  child: CircleAvatar(
+                    backgroundColor:
+                        Theme.of(context).brightness == Brightness.light
+                            ? scoreColor
+                            : scoreColor.withAlpha(75),
+                    child: Text(
+                      "${package.score}",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                )
+              : null,
+          onTap: () {
+            if (package.name.startsWith('dart:')) {
+              launch(package.packageUrl,
+                  forceSafariVC: true, forceWebView: true);
+            } else {
+              HomeBloc.of(context).add(
+                ShowPackageDetailsPageEvent(context: context, package: package),
+              );
+            }
+          },
         ),
       ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text("\n$packageVersionString"),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              for (String tag in platformCompatibilityTags)
-                if (hasPackageTag(tag))
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 3),
-                    child: Chip(
-                      backgroundColor: Colors.transparent,
-                      label: Text(
-                        tag,
-                      ),
-                      labelStyle:
-                          TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-                    ),
-                  )
-            ],
-          )
-        ],
-      ),
-      trailing: packageScore != null
-          ? CircleAvatar(
-              backgroundColor: Theme.of(context).brightness == Brightness.light
-                  ? scoreColor
-                  : scoreColor.withAlpha(75),
-              child: Text(
-                "${package.score}",
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            )
-          : null,
-      onTap: () {
-        if (package.name.startsWith('dart:')) {
-          launch(package.packageUrl, forceSafariVC: true, forceWebView: true);
-        } else {
-          HomeBloc.of(context).add(
-            ShowPackageDetailsPageEvent(context: context, package: package),
-          );
-        }
-      },
     );
   }
 }

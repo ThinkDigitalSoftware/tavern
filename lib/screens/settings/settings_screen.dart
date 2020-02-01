@@ -65,8 +65,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        elevation: 0,
-        backgroundColor: Theme.of(context).canvasColor,
         title: Text(
           'Settings',
           style: TextStyle(

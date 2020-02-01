@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide showSearch;
@@ -29,6 +30,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   ScrollController _scrollController;
   PageController _pageController;
   bool showAnimation = true;
+  double fontRatio;
 
   @override
   void initState() {
@@ -44,6 +46,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   @override
+  void didChangeDependencies() {
+    fontRatio = MediaQuery.of(context).size.width / 17;
+    super.didChangeDependencies();
+  }
+
+  @override
   void dispose() {
     _scrollController.dispose();
     _pageController.dispose();
@@ -52,10 +60,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final double expandedHeight = 200;
+    final double bottomHeight = 80;
+    final double searchBarHeight = 30;
+    final double headerTextPadding =
+        (expandedHeight - (bottomHeight + searchBarHeight + 20)) /
+            2; // 20 accounts for extra padding
     HomeBloc _homeBloc = BlocProvider.of<HomeBloc>(context);
+
     return Scaffold(
       key: _scaffoldKey,
-      drawer: MainDrawer(),
       body: showLogo
           ? TavernAnimatedLogo()
           : SafeArea(
@@ -68,91 +82,50 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       controller: _scrollController,
                       slivers: <Widget>[
                         SliverAppBar(
-                          elevation: 0,
+                          elevation: 3,
+                          forceElevated: true,
                           backgroundColor:
                               DynamicTheme.of(context).data.appBarTheme.color,
                           centerTitle: true,
                           automaticallyImplyLeading: false,
                           snap: true,
                           floating: true,
-                          title: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).pushNamed(
-                                Routes.searchScreen,
-                                arguments: PubSearchDelegate(
-                                  searchBloc:
-                                      BlocProvider.of<SearchBloc>(context),
-                                ),
-                              );
-                            },
-                            child: Hero(
-                              tag: 'SearchBar',
-                              child: SearchBar(scaffoldKey: _scaffoldKey),
-                            ),
-                          ),
+                          expandedHeight: expandedHeight,
+                          title: headerTextWidget,
                           bottom: PreferredSize(
-                            preferredSize:
-                                Size(MediaQuery.of(context).size.width, 80),
+                            preferredSize: Size(
+                                MediaQuery.of(context).size.width,
+                                bottomHeight),
                             child: Column(
                               children: <Widget>[
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      'Browse ${_convertFilterTypeToString(widget.homeState.filterType)} packages',
-                                      style: GoogleFonts.notoSans(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    PopupMenuButton<SortType>(
-                                      initialValue: widget.homeState.sortType,
-                                      offset: Offset(-20, -20),
-                                      tooltip: 'Sort',
-                                      icon: Icon(
-                                        GroovinMaterialIcons.filter_outline,
-                                        color: DynamicTheme.of(context)
-                                                    .brightness ==
-                                                Brightness.light
-                                            ? Colors.black
-                                            : Colors.white,
-                                      ),
-                                      itemBuilder: (context) => [
-                                        PopupMenuItem(
-                                          child: Text('Overall Score'),
-                                          value: SortType.overAllScore,
-                                        ),
-                                        PopupMenuItem(
-                                          child: Text('Recently Updated'),
-                                          value: SortType.recentlyUpdated,
-                                        ),
-                                        PopupMenuItem(
-                                          child: Text('Newest Package'),
-                                          value: SortType.newestPackage,
-                                        ),
-                                        PopupMenuItem(
-                                          child: Text('Popularity'),
-                                          value: SortType.popularity,
-                                        ),
-                                      ],
-                                      onSelected: (selection) => _homeBloc.add(
-                                        GetPageOfPackagesEvent(
-                                          sortBy: selection,
-                                          filterBy: widget.homeState.filterType,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                PlatformFilter(
-                                  value: widget.homeState.filterType,
-                                  onSegmentChosen: (filterType) {
-                                    _homeBloc.add(
-                                      ChangeFilterTypeEvent(
-                                        filterType: filterType,
+                                GestureDetector(
+                                  child: Hero(
+                                    tag: 'SearchBar',
+                                    child: SearchBar(),
+                                  ),
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                      Routes.searchScreen,
+                                      arguments: PubSearchDelegate(
+                                        searchBloc: BlocProvider.of<SearchBloc>(
+                                            context),
                                       ),
                                     );
                                   },
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(bottom: 8.0, top: 18),
+                                  child: PlatformFilter(
+                                    value: widget.homeState.filterType,
+                                    onSegmentChosen: (filterType) {
+                                      _homeBloc.add(
+                                        ChangeFilterTypeEvent(
+                                          filterType: filterType,
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ],
                             ),
@@ -174,6 +147,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       ],
                     ),
                     SubscriptionsPage(),
+                    MainDrawer(),
                   ],
                   onPageChanged: (index) {
                     _homeBloc.add(
@@ -199,20 +173,19 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               icon: Icon(Icons.settings), title: Text("Settings")),
         ],
         onTap: (index) {
-          switch (index) {
-            case 0:
-            case 1:
-              {
-                _pageController.jumpToPage(index);
-                _homeBloc.add(ChangeBottomNavigationBarIndex(index));
-                break;
-              }
-            case 2:
-              {
-                _scaffoldKey.currentState.openDrawer();
-              }
-          }
+          _pageController.jumpToPage(index);
+          _homeBloc.add(ChangeBottomNavigationBarIndex(index));
         },
+      ),
+    );
+  }
+
+  Widget get headerTextWidget {
+    return AutoSizeText(
+      'Top ${_convertFilterTypeToString(widget.homeState.filterType)}packages',
+      minFontSize: fontRatio.ceilToDouble(),
+      style: GoogleFonts.poppins(
+        fontWeight: FontWeight.bold,
       ),
     );
   }
@@ -222,12 +195,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   String _convertFilterTypeToString(FilterType filterType) {
     switch (filterType) {
       case FilterType.flutter:
-        return 'Flutter';
+        return 'Flutter ';
       case FilterType.web:
-        return 'Web';
+        return 'Web ';
       case FilterType.all:
       default:
-        return 'all';
+        return '';
     }
   }
 }

@@ -45,8 +45,10 @@ class HtmlView extends StatelessWidget {
               color: codeBackgroundColor,
               borderRadius: BorderRadius.circular(2.0),
             ),
-            blockquote:
-                Theme.of(context).textTheme.title.copyWith(color: Colors.grey),
+            blockquote: Theme.of(context)
+                .textTheme
+                .headline6
+                .copyWith(color: Colors.grey),
             blockquoteDecoration: BoxDecoration(
               color: DynamicTheme.of(context).data.scaffoldBackgroundColor,
               border: Border(
