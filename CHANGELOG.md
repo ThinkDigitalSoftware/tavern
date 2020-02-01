@@ -66,3 +66,8 @@
 ## 1.5.3
 - Add Logo
 - Fix hive db failure to create file
+
+## 1.5.3+1
+- Adjust App Store logo
+- Remove simple_auth_flutter
+- Fix status bar color not toggling with theme.

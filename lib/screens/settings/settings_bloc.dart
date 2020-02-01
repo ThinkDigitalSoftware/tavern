@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -56,11 +57,14 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
   }
 
   Brightness _toggleTheme(BuildContext context) {
-    Brightness newBrightness = Theme.of(context).brightness == Brightness.dark
-        ? Brightness.light
-        : Brightness.dark;
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+    bool isLight = !isDark;
+    Brightness newBrightness = isDark ? Brightness.light : Brightness.dark;
 
     DynamicTheme.of(context).setBrightness(newBrightness);
+    final systemUiOverlayStyle =
+        isLight ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark;
+    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
     return newBrightness;
   }
 

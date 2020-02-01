@@ -9,8 +9,6 @@ import 'package:package_info/package_info.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/screens/settings/settings_event.dart';
-import 'package:simple_auth/simple_auth.dart';
-import 'package:simple_auth_flutter/simple_auth_flutter.dart';
 import 'package:tavern/secrets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -37,7 +35,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   void initState() {
-    SimpleAuthFlutter.init(context);
+//    SimpleAuthFlutter.init(context);
     _initPackageInfo();
     _usernameController = TextEditingController();
     _passwordController = TextEditingController();
@@ -253,17 +251,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
   SettingsState get state => widget.state;
 }
 
-void login(AuthenticatedApi api) async {
-  try {
-    final success = await api.authenticate();
-    print(success);
-    final github = GitHub(
-      auth: Authentication.withToken(''),
-    );
-    await for (final gist in github.gists.listCurrentUserGists()) {
-      print(gist.htmlUrl);
-    }
-  } catch (e) {
-    print(e);
-  }
-}
+//void login(AuthenticatedApi api) async {
+//  try {
+//    final success = await api.authenticate();
+//    print(success);
+//    final github = GitHub(
+//      auth: Authentication.withToken(''),
+//    );
+//    await for (final gist in github.gists.listCurrentUserGists()) {
+//      print(gist.htmlUrl);
+//    }
+//  } catch (e) {
+//    print(e);
+//  }
+//}
