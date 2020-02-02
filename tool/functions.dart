@@ -25,6 +25,12 @@ bool changelogUpdated() {
   return modifiedFiles.contains('M	CHANGELOG.md');
 }
 
+int numOfGitCommits() {
+  ProcessResult results =
+      Process.runSync('git', ['rev-list', 'master', '--count']);
+  return int.parse(results.stdout);
+}
+
 bool changelogHasEntryForVersion(dynamic version) {
   String changelog = File('CHANGELOG.MD').readAsStringSync();
   return changelog.contains(version.toString());

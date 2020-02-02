@@ -8,6 +8,9 @@ import 'package:pubspec/pubspec.dart';
 import 'functions.dart';
 
 main(List<String> arguments) async {
+  final int result = numOfGitCommits();
+
+  exit(0);
   Directory currentDirectory = Directory.current;
   File pubspecFile = File("${currentDirectory.path}/pubspec.yaml");
   if (!pubspecFile.existsSync()) {

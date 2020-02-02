@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
@@ -63,6 +64,11 @@ class PubDevClientApp extends StatelessWidget {
       data: (brightness) =>
           PubColors.theme(brightness: brightness, context: context),
       themedWidgetBuilder: (context, theme) {
+        bool isLight = theme.brightness == Brightness.light;
+
+        final systemUiOverlayStyle =
+            isLight ? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light;
+        SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
         return MaterialApp(
           theme: theme,
           title: "Tavern",
