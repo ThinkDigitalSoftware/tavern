@@ -9,6 +9,7 @@ import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/screens/search/search_screen.dart';
 import 'package:tavern/screens/subscriptions/subscriptions_page.dart';
 import 'package:tavern/src/enums.dart';
+import 'package:tavern/src/pub_colors.dart';
 import 'package:tavern/widgets/main_drawer.dart';
 import 'package:tavern/widgets/package_list_view.dart';
 import 'package:tavern/widgets/platform_filter.dart';
@@ -82,6 +83,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       controller: _scrollController,
                       slivers: <Widget>[
                         SliverAppBar(
+                          titleSpacing: 4,
                           elevation: 3,
                           forceElevated: true,
                           backgroundColor:
@@ -118,7 +120,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                       EdgeInsets.only(bottom: 8.0, top: 18),
                                   child: PlatformFilter(
                                     value: widget.homeState.filterType,
-                                    onSegmentChosen: (filterType) {
+                                    onSegmentChosen: (FilterType filterType) {
                                       _homeBloc.add(
                                         ChangeFilterTypeEvent(
                                           filterType: filterType,
@@ -147,7 +149,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       ],
                     ),
                     SubscriptionsPage(),
-                    MainDrawer(),
+                    SettingsPage(),
                   ],
                   onPageChanged: (index) {
                     _homeBloc.add(
@@ -181,12 +183,22 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Widget get headerTextWidget {
-    return AutoSizeText(
-      'Top ${_convertFilterTypeToString(widget.homeState.filterType)}packages',
+    return AutoSizeText.rich(
+      TextSpan(text: 'Top ', children: [
+        TextSpan(
+          text: _convertFilterTypeToString(widget.homeState.filterType),
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        TextSpan(
+          text: 'packages',
+        ),
+      ]),
       minFontSize: fontRatio.ceilToDouble(),
       style: GoogleFonts.poppins(
-        fontWeight: FontWeight.bold,
+//        fontWeight: FontWeight.bold,
+        fontSize: 35,
       ),
+      textAlign: TextAlign.left,
     );
   }
 

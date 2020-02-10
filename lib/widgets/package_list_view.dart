@@ -21,6 +21,8 @@ class PackageListView extends StatefulWidget {
 class _PackageListViewState extends State<PackageListView> {
   // used to reset the list when we change filter or sort types.
   Key pageWiseSliverListKey = GlobalKey();
+  double opacity = 1;
+  Map<int, PackageTile> oldPackages = {};
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class _PackageListViewState extends State<PackageListView> {
         // page numbering starts at 1, so we need to add 1.
         const int offset = 1;
         final completer = Completer<Page>();
-        HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
+        HomeBloc homeBloc = context.bloc<HomeBloc>();
         homeBloc.add(
           GetPageOfPackagesEvent(
             pageNumber: index + offset,
@@ -42,20 +44,21 @@ class _PackageListViewState extends State<PackageListView> {
         );
         return completer.future;
       },
-      itemBuilder: (BuildContext context, entry, int index) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            PackageTile(
-              package: entry,
-            ),
-          ],
+      itemBuilder: (BuildContext context, Package entry, int index) {
+        PackageTile packageTile = PackageTile(
+          package: entry,
         );
+        oldPackages[entry.hashCode] = packageTile;
+        return packageTile;
       },
       loadingBuilder: (context) => Opacity(
         opacity: .5,
-        child: ListTile(
-          title: Text("Loading"),
+        child: AnimatedOpacity(
+          duration: Duration(milliseconds: 100),
+          opacity: opacity,
+          child: Container(
+            color: Colors.black,
+          ),
         ),
       ),
     );
@@ -66,7 +69,13 @@ class _PackageListViewState extends State<PackageListView> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.pageQuery.filterType != widget.pageQuery.filterType ||
         oldWidget.pageQuery.sortType != widget.pageQuery.sortType) {
+      setState(() {
+        opacity = 0;
+      });
       pageWiseSliverListKey = GlobalKey();
+      setState(() {
+        opacity = 1;
+      });
     }
   }
 }

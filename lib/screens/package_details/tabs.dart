@@ -256,7 +256,6 @@ class _AnalysisTabState extends State<AnalysisTab>
 
   Future<void> _listenForVisibility() async {
     await visibilityCompleter.future;
-
     animationController.forward();
   }
 

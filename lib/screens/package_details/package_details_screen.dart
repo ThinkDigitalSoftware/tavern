@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dynamic_overflow_menu_bar/dynamic_overflow_menu_bar.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
@@ -121,11 +122,15 @@ class _PackageDetailsScreenState extends State<PackageDetailsScreen>
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(
+                          AutoSizeText(
                             _package.name,
-                            overflow: TextOverflow.fade,
+                            maxFontSize: 80,
+//                            overflow: TextOverflow.fade,
                             softWrap: true,
-                            style: Theme.of(context).primaryTextTheme.headline6,
+                            style: Theme.of(context)
+                                .primaryTextTheme
+                                .headline5
+                                .copyWith(fontWeight: FontWeight.bold),
                           ),
                           Text(
                             _package.latestSemanticVersion.toString(),

@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/screens/settings/settings_screen.dart';
 
-class MainDrawer extends StatefulWidget {
+class SettingsPage extends StatefulWidget {
   @override
-  _MainDrawerState createState() => _MainDrawerState();
+  _SettingsPageState createState() => _SettingsPageState();
 }
 
-class _MainDrawerState extends State<MainDrawer> {
+class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
