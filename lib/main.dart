@@ -99,9 +99,7 @@ class PubDevClientApp extends StatelessWidget {
                     builder: (BuildContext context) =>
                         BlocBuilder<SettingsBloc, SettingsState>(
                       builder: (BuildContext context, SettingsState state) =>
-                          SettingsScreen(
-                        state: state,
-                      ),
+                          SettingsScreen(state: state),
                     ),
                   );
                 }

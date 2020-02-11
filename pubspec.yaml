@@ -5,13 +5,13 @@ environment:
   sdk: '>=2.6.0 <3.0.0'
 
 dependencies:
-  provider: ^4.0.2
+  provider: ^4.0.3
   flutter_bloc: ^3.2.0
   dynamic_overflow_menu_bar: ^0.1.2
   package_info: ^0.4.0+13
   dynamic_theme: ^1.0.1
   get_it: ^3.1.0
-  hive: ^1.3.0
+  hive: ^1.4.0+1
   url_launcher: ^5.4.1
   cupertino_icons: ^0.1.3
   groovin_material_icons: ^1.1.6
@@ -24,18 +24,19 @@ dependencies:
   hydrated_bloc: ^3.0.0
   webfeed: ^0.4.2
   background_fetch: ^0.4.0
-  flutter_local_notifications: ^1.1.5+1
+  flutter_local_notifications: ^1.1.6
   flutter_markdown: ^0.3.3
   flutter_svg: ^0.17.1
   share: ^0.6.3+5
   syntax_highlighter:
     git: https://github.com/ThinkDigitalSoftware/syntax_highlighter.git
   flutter_secure_storage: ^3.3.1+1
-  github: ^6.1.0
+  github: ^6.1.2
   flutter_progress_button: ^1.0.0
-  google_fonts: ^0.3.6
+  google_fonts: ^0.3.8
   auto_size_text: ^2.1.0
   flutter_launcher_icons: ^0.7.4
+  autotrie: ^0.1.2
 
   flutter:
     sdk: flutter
@@ -45,9 +46,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^1.7.3
+  build_runner: ^1.7.4
   hanzo: ^1.0.2
-  pubspec: ^0.1.3
+  pubspec: ^0.1.4
   args: ^1.5.2
   effective_dart: ^1.2.1
 

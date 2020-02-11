@@ -10,8 +10,10 @@ class PubColors {
   static Color turquoiseSurf = Colors.cyan;
   static Color ghostWhite = Color(0xFFFAFAFF);
 
-  static ThemeData theme(
-      {@required Brightness brightness, @required BuildContext context}) {
+  static ThemeData theme({
+    @required Brightness brightness,
+    @required BuildContext context,
+  }) {
     bool isLightTheme = brightness == Brightness.light;
 
     return ThemeData(

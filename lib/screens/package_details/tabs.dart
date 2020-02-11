@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:pub_client/pub_client.dart';
+import 'package:tavern/screens/package_details/section.dart';
 import 'package:tavern/widgets/html_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -123,8 +124,28 @@ class AboutTab extends StatelessWidget {
       ),
       child: ListView(
         children: <Widget>[
-          Text(package.description),
-          Text('Author: ${package.author ?? "No author listed"}'),
+          Section(
+            headline: 'Description',
+            content: SelectableText(package.description),
+          ),
+          Section(
+            headline: 'Repository',
+            content: SelectableText(package.repositoryUrl),
+            margin: EdgeInsets.symmetric(vertical: 30),
+          ),
+          if (package.author != null) Text('Author: ${package.author}'),
+          if (package.publisher != null)
+            SelectableText.rich(
+              TextSpan(
+                  text: 'Publisher: ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  children: [
+                    TextSpan(
+                      text: package.publisher.name,
+                      style: TextStyle(color: Colors.blue),
+                    )
+                  ]),
+            ),
           if (package.uploaders?.isNotEmpty ?? false) Text('Uploaders:'),
           for (String uploader in package?.uploaders ?? [])
             Row(
@@ -198,6 +219,7 @@ class _AnalysisTabState extends State<AnalysisTab>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   AnimationController animationController;
   final Completer visibilityCompleter = Completer<bool>();
+  bool animationControllerHasBeenDisposed = false;
 
   @override
   void initState() {
@@ -210,6 +232,7 @@ class _AnalysisTabState extends State<AnalysisTab>
   @override
   void dispose() {
     animationController.dispose();
+    animationControllerHasBeenDisposed = true;
     super.dispose();
   }
 
@@ -217,7 +240,7 @@ class _AnalysisTabState extends State<AnalysisTab>
   Widget build(BuildContext context) {
     super.build(context);
     if (!visibilityCompleter.isCompleted) {
-      if (mounted) {
+      if (mounted && !animationControllerHasBeenDisposed) {
         visibilityCompleter.complete(true);
       }
     }
@@ -257,7 +280,9 @@ class _AnalysisTabState extends State<AnalysisTab>
   Future<void> _listenForVisibility() async {
     await visibilityCompleter.future;
 
-    animationController.forward();
+    if (mounted) {
+      animationController.forward();
+    }
   }
 
   @override
@@ -340,7 +365,8 @@ class _DependenciesSectionState extends State<DependenciesSection> {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             "Dependencies",
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme.of(context).textTheme.display1,
+//            style: Theme.of(context).textTheme.headline5,
           ),
         ),
         Card(

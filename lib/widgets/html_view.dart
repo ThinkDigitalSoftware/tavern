@@ -47,7 +47,8 @@ class HtmlView extends StatelessWidget {
             ),
             blockquote: Theme.of(context)
                 .textTheme
-                .headline6
+                .headline
+//                .headline6
                 .copyWith(color: Colors.grey),
             blockquoteDecoration: BoxDecoration(
               color: DynamicTheme.of(context).data.scaffoldBackgroundColor,

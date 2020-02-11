@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:autotrie/autotrie.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/screens/search/search_event.dart';
@@ -47,6 +49,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
 class SearchCache extends Cache<SearchQuery, List<Package>> {
   List<String> searchHistory;
+  AutoComplete engine;
 
   SearchCache()
       : super(
@@ -65,6 +68,7 @@ class SearchCache extends Cache<SearchQuery, List<Package>> {
   Future initialize() async {
     await super.initialize();
     searchHistory = box.get('searchHistory') ?? [];
+//    engine = AutoComplete(bank: searchHistory);
   }
 
   @override
@@ -78,6 +82,7 @@ class SearchCache extends Cache<SearchQuery, List<Package>> {
 class SearchRepository extends Repository<SearchQuery, List<Package>> {
   final PubHtmlParsingClient client;
   final SearchCache _searchCache = SearchCache();
+  Box searchBox;
 
   SearchRepository({@required this.client});
 

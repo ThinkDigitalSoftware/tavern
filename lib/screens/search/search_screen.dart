@@ -19,10 +19,12 @@ class PubSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
+    final state = searchBloc.state;
     searchBloc.add(
       GetSearchResultsEvent(
         query: SearchQuery(
           query,
+          searchQualifier: state.searchQualifier,
         ),
       ),
     );
@@ -82,7 +84,9 @@ class PubSearchDelegate extends SearchDelegate {
       child: Material(
         elevation: 8,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
         ),
         child: Container(
           width: MediaQuery.of(context).size.width - 16,
@@ -105,44 +109,68 @@ class PubSearchDelegate extends SearchDelegate {
               ),
               suffixIcon: Container(
                 padding: EdgeInsets.only(right: 15),
-                child: PopupMenuButton<SearchQualifier>(
-                  offset: Offset(0, -20),
-                  initialValue: SearchQualifier.none,
-                  icon: Icon(Icons.search,
-                      color: DynamicTheme.of(context).data.iconTheme.color),
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: SearchQualifier.none,
-                      child: Text('None'),
-                    ),
-                    PopupMenuItem(
-                      value: SearchQualifier.exactPhrase,
-                      child: Text('Exact Phrase'),
-                    ),
-                    PopupMenuItem(
-                      value: SearchQualifier.dependency,
-                      child: Text('Search Dependencies'),
-                    ),
-                    PopupMenuItem(
-                      value: SearchQualifier.email,
-                      child: Text('Search by Email'),
-                    ),
-                    PopupMenuItem(
-                      value: SearchQualifier.prefix,
-                      child: Tooltip(
-                          message:
-                              "Searches for packages that begin with prefix. Use this feature to find packages in the same framework",
-                          child: Text('Search by prefix')),
-                    ),
-                  ],
-                  onSelected: (searchQualifier) => SearchBloc.of(context)
-                      .add(SetSearchQualifierEvent(searchQualifier)),
+                child: SearchQualifierPopup(
+                  selected: SearchBloc.of(context).state.searchQualifier,
+                  onSelected: (searchQualifier) {
+                    SearchBloc.of(context)
+                        .add(SetSearchQualifierEvent(searchQualifier));
+                  },
                 ),
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class SearchQualifierPopup extends StatelessWidget {
+  final Function(SearchQualifier) onSelected;
+  final SearchQualifier selected;
+
+  const SearchQualifierPopup({
+    Key key,
+    this.selected = SearchQualifier.none,
+    @required this.onSelected,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<SearchQualifier>(
+      offset: Offset(0, 120),
+      initialValue: selected,
+      icon: Icon(
+        Icons.search,
+        color: DynamicTheme.of(context).data.iconTheme.color,
+      ),
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          value: SearchQualifier.none,
+          child: Text('None'),
+        ),
+        PopupMenuItem(
+          value: SearchQualifier.exactPhrase,
+          child: Text('Exact Phrase'),
+        ),
+        PopupMenuItem(
+          value: SearchQualifier.dependency,
+          child: Text('Search Dependencies'),
+        ),
+        PopupMenuItem(
+          value: SearchQualifier.email,
+          child: Text('Search by Email'),
+        ),
+        PopupMenuItem(
+          value: SearchQualifier.prefix,
+          child: Tooltip(
+            message:
+                "Searches for packages that begin with prefix. Use this feature to find packages in the same framework",
+            child: Text('Search by prefix'),
+          ),
+        ),
+      ],
+      onSelected: onSelected,
     );
   }
 }
