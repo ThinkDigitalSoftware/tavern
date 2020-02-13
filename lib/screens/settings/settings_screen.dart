@@ -9,7 +9,7 @@ import 'package:package_info/package_info.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/screens/settings/settings_event.dart';
-import 'package:tavern/secrets.dart';
+// import 'package:tavern/secrets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -190,8 +190,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                     onPressed: () async {
-                      var flow = OAuth2Flow(gitHubClientId, gitHubClientSecret);
-                      var authUrl = flow.createAuthorizeUrl();
+                      // var flow = OAuth2Flow(gitHubClientId, gitHubClientSecret);
+                      // var authUrl = flow.createAuthorizeUrl();
                       // Display to the User and handle the redirect URI, and also get the code.
 //                  flow.exchange(code).then((response) {
 //                    var github = new GitHub(
@@ -209,9 +209,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 //                    ],
 //                  );
 //                  login(githubApi);
-                      launch(
-                        '$authUrl&redirect_uri=http://127.0.0.1:8080/redirect ',
-                      );
+                      // launch(
+                      //   '$authUrl&redirect_uri=http://127.0.0.1:8080/redirect ',
+                      // );
                       HttpServer server = await HttpServer.bind(
                           InternetAddress.loopbackIPv4, 8080);
                       server.listen((HttpRequest request) async {
