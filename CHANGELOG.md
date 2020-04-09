@@ -74,3 +74,6 @@
 
 ## 1.5.3+2
 - Fix status bar not starting up with the right color.
+
+## 1.5.4
+- Add macOS desktop support.

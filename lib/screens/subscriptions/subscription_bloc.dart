@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,30 +23,32 @@ class SubscriptionBloc
       super.initialState ?? InitialSubscriptionState();
 
   SubscriptionBloc({@required this.client}) {
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
-    final initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    final initializationSettingsIOS = IOSInitializationSettings(
-        onDidReceiveLocalNotification:
-            onDidReceiveLocalNotification); // TODO: implement
-    final initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification); // TODO: implement
-    // bloc's state is loaded by this point. So we can access the packages.
-    BackgroundFetch.configure(
-        BackgroundFetchConfig(
-          minimumFetchInterval: 15,
-          stopOnTerminate: false,
-          startOnBoot: true,
-          enableHeadless: true,
-        ), () {
-      checkForUpdates(state.subscribedPackages).then((updatedPackages) {
-        debugPrint(
-            'Notifying user of updates to ${updatedPackages.length} packages.');
+    if (Platform.isAndroid || Platform.isIOS) {
+      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+          FlutterLocalNotificationsPlugin();
+      final initializationSettingsAndroid =
+          AndroidInitializationSettings('@mipmap/ic_launcher');
+      final initializationSettingsIOS = IOSInitializationSettings(
+          onDidReceiveLocalNotification:
+              onDidReceiveLocalNotification); // TODO: implement
+      final initializationSettings = InitializationSettings(
+          initializationSettingsAndroid, initializationSettingsIOS);
+      flutterLocalNotificationsPlugin.initialize(initializationSettings,
+          onSelectNotification: onSelectNotification); // TODO: implement
+      // bloc's state is loaded by this point. So we can access the packages.
+      BackgroundFetch.configure(
+          BackgroundFetchConfig(
+            minimumFetchInterval: 15,
+            stopOnTerminate: false,
+            startOnBoot: true,
+            enableHeadless: true,
+          ), () {
+        checkForUpdates(state.subscribedPackages).then((updatedPackages) {
+          debugPrint(
+              'Notifying user of updates to ${updatedPackages.length} packages.');
+        });
       });
-    });
+    }
   }
 
   @override

@@ -1,5 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Page;
 import 'package:meta/meta.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/src/convert.dart';

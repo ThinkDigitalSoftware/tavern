@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart' hide Page;
 import 'package:meta/meta.dart';
 import 'package:pub_client/pub_client.dart';
 

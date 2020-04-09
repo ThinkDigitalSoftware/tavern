@@ -1,4 +1,5 @@
 # Tavern
+[![Codemagic build status](https://api.codemagic.io/apps/5cff0c5e082482205cec0c9b/5cff0c5e082482205cec0c9a/status_badge.svg)](https://codemagic.io/apps/5cff0c5e082482205cec0c9b/5cff0c5e082482205cec0c9a/latest_build)
 
 An open-source pub.dev client for searching and subscribing to packages. 
 
