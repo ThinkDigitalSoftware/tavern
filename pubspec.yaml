@@ -1,12 +1,12 @@
 name: tavern
-version: 1.5.4
+version: 1.5.5
 description: An open-source pub.dev client for searching and subscribing to packages
 environment:
   sdk: '>=2.6.0 <3.0.0'
 
 dependencies:
   provider: ^4.0.3
-  flutter_bloc: ^3.2.0
+  flutter_bloc: ^4.0.0
   dynamic_overflow_menu_bar: ^0.1.2
   package_info: ^0.4.0+16
   dynamic_theme: ^1.0.1
@@ -18,10 +18,10 @@ dependencies:
   rounded_modal: ^1.0.1
   html2md: ^0.5.1
   material_segmented_control: ^2.0.9
-  groovin_widgets: ^1.4.2
-  bloc: ^3.0.0
+  groovin_widgets: ^1.5.0+2
+  bloc: ^4.0.0
   flutter_pagewise: any
-  hydrated_bloc: ^3.0.0
+  hydrated_bloc: ^4.1.1
   webfeed: ^0.4.2
   background_fetch: ^0.4.0
   flutter_local_notifications: ^1.1.6

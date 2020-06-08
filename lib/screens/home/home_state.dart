@@ -33,7 +33,7 @@ class HomeState {
   }
 
   Map<String, dynamic> toJson() => {
-        'page': page.toJson(),
+        'page': page?.toJson(),
         'sortType': convertSortTypeToString(sortType),
         'filterType': convertFilterTypeToString(filterType),
         'bottomNavigationBarIndex': bottomNavigationBarIndex,

@@ -77,3 +77,6 @@
 
 ## 1.5.4
 - Add macOS desktop support.
+
+## 1.5.5
+- Bug fixes.

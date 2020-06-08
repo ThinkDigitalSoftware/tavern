@@ -3,6 +3,7 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide showSearch;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/bloc.dart';
@@ -14,7 +15,6 @@ import 'package:tavern/widgets/package_list_view.dart';
 import 'package:tavern/widgets/platform_filter.dart';
 import 'package:tavern/widgets/search_bar.dart';
 import 'package:tavern/widgets/tavern_logo.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
   final HomeState homeState;
@@ -37,7 +37,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     super.initState();
     _scrollController = ScrollController();
     _pageController = PageController(
-        initialPage: widget.homeState.bottomNavigationBarIndex ?? 0);
+        initialPage: widget.homeState?.bottomNavigationBarIndex ?? 0);
     Future.delayed(Duration(seconds: 2)).then((_) {
       setState(() {
         showAnimation = false;
