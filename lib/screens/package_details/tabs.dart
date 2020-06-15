@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/package_details/section.dart';
+import 'package:tavern/src/enums.dart';
 import 'package:tavern/widgets/html_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -145,6 +146,9 @@ class AboutTab extends StatelessWidget {
                       style: TextStyle(color: Colors.blue),
                     )
                   ]),
+              onTap: () => Navigator.pushNamed(
+                  context, Routes.publisherPackageScreen,
+                  arguments: package.publisher.name),
             ),
           if (package.uploaders?.isNotEmpty ?? false) Text('Uploaders:'),
           for (String uploader in package?.uploaders ?? [])

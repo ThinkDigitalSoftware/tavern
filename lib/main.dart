@@ -17,6 +17,10 @@ import 'package:tavern/src/enums.dart';
 import 'package:tavern/src/pub_colors.dart';
 import 'package:tavern/widgets/material_search.dart';
 
+import 'screens/publisher_package/publisher_bloc.dart';
+import 'screens/publisher_package/publisher_package.dart';
+import 'screens/publisher_package/publisher_state.dart';
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   BlocSupervisor.delegate = await HydratedBlocDelegate.build();
@@ -49,7 +53,11 @@ Future main() async {
         BlocProvider<SubscriptionBloc>(
           create: (BuildContext context) =>
               SubscriptionBloc(client: _htmlParsingClient),
-        )
+        ),
+        // BlocProvider<PublisherBloc>(
+        //   create: (BuildContext context) =>
+        //       PublisherBloc(client: _htmlParsingClient),
+        // ),
       ],
       child: PubDevClientApp(),
     ),
@@ -92,6 +100,36 @@ class PubDevClientApp extends StatelessWidget {
                   return SearchPageRoute(
                     delegate: routeSettings.arguments,
                   );
+                }
+              case Routes.publisherPackageScreen:
+                {
+                  var arg = routeSettings.arguments;
+                  PubHtmlParsingClient _htmlParsingClient =
+                      PubHtmlParsingClient();
+                  return MaterialPageRoute(
+                    builder: (BuildContext context) => BlocProvider<
+                            PublisherBloc>(
+                        create: (context) =>
+                            PublisherBloc(client: _htmlParsingClient, url: arg),
+                        child: BlocBuilder<PublisherBloc, PublisherState>(
+                          builder:
+                              (BuildContext context, PublisherState state) =>
+                                  PublisherPackakge(
+                            publisher: arg,
+                            publisherState: state,
+                          ),
+                        )),
+                  );
+                  // return MaterialPageRoute(
+                  //   builder: (BuildContext context) =>
+                  //       BlocBuilder<PublisherBloc, PublisherState>(
+                  //     builder: (BuildContext context, PublisherState state) =>
+                  //         PublisherPackakge(
+                  //       publisher: arg,
+                  //       publisherState: state,
+                  //     ),
+                  //   ),
+                  // );
                 }
               case Routes.settingsScreen:
                 {
