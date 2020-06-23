@@ -56,7 +56,7 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "images/tavern-logo-v7-filled.png"
+  image_path: "assets/logo-only-gradient.png"
 
 flutter:
   assets:
