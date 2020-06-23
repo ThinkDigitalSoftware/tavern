@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:html2md/html2md.dart' as html2md;
+import 'package:http/http.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:syntax_highlighter/syntax_highlighter.dart'
     as syntaxHighlighter;
 import 'package:tavern/screens/bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart';
 
 class HtmlView extends StatelessWidget {
   final String html;
@@ -73,7 +73,7 @@ class HtmlView extends StatelessWidget {
             launch(link);
           }
         },
-        imageBuilder: (uri) {
+        imageBuilder: (Uri uri, String title, String alt) {
           return FutureBuilder<Response>(
             future: get(uri.toString()),
             builder: (BuildContext context, AsyncSnapshot<Response> snapshot) {

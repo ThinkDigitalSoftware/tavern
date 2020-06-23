@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart' hide Page;
 import 'package:meta/meta.dart';
 import 'package:pub_client/pub_client.dart';
-import 'package:tavern/src/convert.dart';
 
 @immutable
 class PublisherState {
@@ -32,9 +31,5 @@ class PublisherState {
 }
 
 class InitialPublisherState extends PublisherState {
-  final String publisherN;
-  const InitialPublisherState(this.publisherN)
-      : super(page: null, publisherName: publisherN
-            //"firebase.google.com",
-            );
+  const InitialPublisherState() : super(page: null, publisherName: null);
 }

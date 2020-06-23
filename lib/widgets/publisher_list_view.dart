@@ -6,10 +6,11 @@ import 'package:flutter_pagewise/flutter_pagewise.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/publisher_package/publisher_bloc.dart';
 import 'package:tavern/screens/publisher_package/publisher_event.dart';
+import 'package:tavern/screens/publisher_package/publisher_page_repository.dart';
 import 'package:tavern/widgets/package_tile.dart';
 
 class PublisherListView extends StatefulWidget {
-  final PageQuery pageQuery;
+  final PublisherPageQuery pageQuery;
 
   const PublisherListView({Key key, @required this.pageQuery})
       : assert(pageQuery != null),
@@ -35,9 +36,10 @@ class _PublisherListViewState extends State<PublisherListView> {
         PublisherBloc publisherBloc = BlocProvider.of<PublisherBloc>(context);
         publisherBloc.add(
           GetPageOfPublisherPackagesEvent(
-              pageNumber: index + offset,
-              completer: completer,
-              publisherName: widget.pageQuery.publisherName),
+            pageNumber: index + offset,
+            completer: completer,
+            publisherName: widget.pageQuery.publisherName,
+          ),
         );
         return completer.future;
       },
@@ -60,12 +62,12 @@ class _PublisherListViewState extends State<PublisherListView> {
     );
   }
 
-  // @override
-  // void didUpdateWidget(PublisherListView oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   // if (oldWidget.pageQuery..pageNumber != widget.pageQuery.filterType ||
-  //   //     oldWidget.pageQuery.sortType != widget.pageQuery.sortType) {
-  //   pageWiseSliverListKey = GlobalKey();
-  //   //}
-  // }
+// @override
+// void didUpdateWidget(PublisherListView oldWidget) {
+//   super.didUpdateWidget(oldWidget);
+//   // if (oldWidget.pageQuery..pageNumber != widget.pageQuery.filterType ||
+//   //     oldWidget.pageQuery.sortType != widget.pageQuery.sortType) {
+//   pageWiseSliverListKey = GlobalKey();
+//   //}
+// }
 }

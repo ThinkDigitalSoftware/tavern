@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/package_details/section.dart';
+import 'package:tavern/screens/publisher_package/publisher_bloc.dart';
+import 'package:tavern/screens/publisher_package/publisher_event.dart';
 import 'package:tavern/src/enums.dart';
 import 'package:tavern/widgets/html_view.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -129,11 +132,12 @@ class AboutTab extends StatelessWidget {
             headline: 'Description',
             content: SelectableText(package.description),
           ),
-          Section(
-            headline: 'Repository',
-            content: SelectableText(package.repositoryUrl),
-            margin: EdgeInsets.symmetric(vertical: 30),
-          ),
+          if (package?.repositoryUrl != null)
+            Section(
+              headline: 'Repository',
+              content: SelectableText(package.repositoryUrl),
+              margin: EdgeInsets.symmetric(vertical: 30),
+            ),
           if (package.author != null) Text('Author: ${package.author}'),
           if (package.publisher != null)
             SelectableText.rich(
@@ -146,9 +150,19 @@ class AboutTab extends StatelessWidget {
                       style: TextStyle(color: Colors.blue),
                     )
                   ]),
-              onTap: () => Navigator.pushNamed(
-                  context, Routes.publisherPackageScreen,
-                  arguments: package.publisher.name),
+              onTap: () async {
+                BlocProvider.of<PublisherBloc>(context).add(
+                  GetPageOfPublisherPackagesEvent(
+                    pageNumber: 1,
+                    publisherName: package.publisher.name,
+                  ),
+                );
+                return Navigator.pushNamed(
+                  context,
+                  Routes.publisherPackageScreen,
+                  arguments: package.publisher.name,
+                );
+              },
             ),
           if (package.uploaders?.isNotEmpty ?? false) Text('Uploaders:'),
           for (String uploader in package?.uploaders ?? [])

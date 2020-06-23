@@ -5,15 +5,20 @@ import 'package:meta/meta.dart';
 import 'package:pub_client/pub_client.dart';
 
 @immutable
-abstract class PublisherEvent {}
+abstract class PublisherEvent {
+  final StackTrace _stackTrace = StackTrace.current;
+}
 
 class GetPageOfPublisherPackagesEvent extends PublisherEvent {
   final int pageNumber;
   final String publisherName;
   final Completer<Page> completer;
 
-  GetPageOfPublisherPackagesEvent(
-      {this.pageNumber = 1, this.completer, this.publisherName});
+  GetPageOfPublisherPackagesEvent({
+    this.pageNumber = 1,
+    this.completer,
+    this.publisherName,
+  });
 
   GetPageOfPublisherPackagesEvent copyWith({
     int pageNumber,

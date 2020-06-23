@@ -12,6 +12,7 @@ import 'package:pub_client/pub_client.dart';
 import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/screens/home/home.dart';
 import 'package:tavern/screens/package_details/package_details_screen.dart';
+import 'package:tavern/screens/publisher_package/publisher_page_repository.dart';
 import 'package:tavern/screens/settings/settings_screen.dart';
 import 'package:tavern/src/enums.dart';
 import 'package:tavern/src/pub_colors.dart';
@@ -35,7 +36,8 @@ Future main() async {
     ..registerSingleton<PubHtmlParsingClient>(_htmlParsingClient)
     ..registerSingleton<FullPackageRepository>(
       FullPackageRepository(client: _htmlParsingClient),
-    );
+    )
+    ..registerSingleton(PublisherPageCache.instance);
   runApp(
     MultiBlocProvider(
       providers: [
@@ -54,10 +56,10 @@ Future main() async {
           create: (BuildContext context) =>
               SubscriptionBloc(client: _htmlParsingClient),
         ),
-        // BlocProvider<PublisherBloc>(
-        //   create: (BuildContext context) =>
-        //       PublisherBloc(client: _htmlParsingClient),
-        // ),
+        BlocProvider<PublisherBloc>(
+          create: (BuildContext context) =>
+              PublisherBloc(client: _htmlParsingClient),
+        ),
       ],
       child: PubDevClientApp(),
     ),
@@ -103,33 +105,18 @@ class PubDevClientApp extends StatelessWidget {
                 }
               case Routes.publisherPackageScreen:
                 {
-                  var arg = routeSettings.arguments;
-                  PubHtmlParsingClient _htmlParsingClient =
-                      PubHtmlParsingClient();
+                  final publisherName = routeSettings.arguments;
+
                   return MaterialPageRoute(
-                    builder: (BuildContext context) => BlocProvider<
-                            PublisherBloc>(
-                        create: (context) =>
-                            PublisherBloc(client: _htmlParsingClient, url: arg),
-                        child: BlocBuilder<PublisherBloc, PublisherState>(
-                          builder:
-                              (BuildContext context, PublisherState state) =>
-                                  PublisherPackakge(
-                            publisher: arg,
-                            publisherState: state,
-                          ),
-                        )),
+                    builder: (BuildContext context) =>
+                        BlocBuilder<PublisherBloc, PublisherState>(
+                      builder: (BuildContext context, PublisherState state) =>
+                          PublisherPackagesPage(
+                        publisher: publisherName,
+                        publisherState: state,
+                      ),
+                    ),
                   );
-                  // return MaterialPageRoute(
-                  //   builder: (BuildContext context) =>
-                  //       BlocBuilder<PublisherBloc, PublisherState>(
-                  //     builder: (BuildContext context, PublisherState state) =>
-                  //         PublisherPackakge(
-                  //       publisher: arg,
-                  //       publisherState: state,
-                  //     ),
-                  //   ),
-                  // );
                 }
               case Routes.settingsScreen:
                 {

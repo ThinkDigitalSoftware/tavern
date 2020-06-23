@@ -4,39 +4,33 @@ import 'package:flutter/material.dart' hide Page;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:pub_client/pub_client.dart';
-import 'package:tavern/screens/bloc.dart';
 import 'package:tavern/screens/package_details/package_details_screen.dart';
 import 'package:tavern/screens/publisher_package/publisher_event.dart';
-import 'package:tavern/screens/publisher_package/publisher_package.dart';
+import 'package:tavern/screens/publisher_package/publisher_page_repository.dart';
 import 'package:tavern/screens/publisher_package/publisher_state.dart';
-import 'package:tavern/src/cache.dart';
 import 'package:tavern/src/enums.dart';
-import 'package:tavern/src/repository.dart';
 
 class PublisherBloc extends HydratedBloc<PublisherEvent, PublisherState> {
   final PubHtmlParsingClient client;
-  final String url;
+  final PublisherPageRepository _publisherPageRepository;
+
   @override
   PublisherState get initialState =>
-      super.initialState ?? InitialPublisherState(url);
-  PageRepository _pageRepository;
+      super.initialState ?? InitialPublisherState();
 
-  PublisherBloc({@required this.client, @required this.url}) {
-    add(
-      GetPageOfPublisherPackagesEvent(pageNumber: 1, publisherName: url),
-    );
-    _pageRepository = PageRepository(client: client);
-  }
+  PublisherBloc({@required this.client})
+      : _publisherPageRepository = PublisherPageRepository(client: client);
 
   @override
   Stream<PublisherState> mapEventToState(PublisherEvent event) async* {
     if (event is GetPageOfPublisherPackagesEvent) {
-      Page page;
-      final pageQuery = PageQuery(
+      yield InitialPublisherState();
+      final pageQuery = PublisherPageQuery(
         pageNumber: event.pageNumber,
         publisherName: event.publisherName,
       );
-      page = await _pageRepository.get(pageQuery);
+
+      Page page = await _publisherPageRepository.get(pageQuery);
       yield state.copyWith(page: page, publisherName: event.publisherName);
       // for queries that need to be notified on the successful result.
       if (event.completer != null) {
@@ -44,6 +38,7 @@ class PublisherBloc extends HydratedBloc<PublisherEvent, PublisherState> {
       }
       return;
     }
+
     if (event is ChangeFilterEvent) {
       add(
         GetPageOfPublisherPackagesEvent(
@@ -52,10 +47,7 @@ class PublisherBloc extends HydratedBloc<PublisherEvent, PublisherState> {
       );
       return;
     }
-    // if (event is ChangeBottomNavigationBarIndex) {
-    //   yield state.copyWith(bottomNavigationBarIndex: event.index);
-    //   return;
-    // }
+
     if (event is ShowPackageDetailsEvent) {
       Navigator.pushNamed(
         event.context,
@@ -72,7 +64,7 @@ class PublisherBloc extends HydratedBloc<PublisherEvent, PublisherState> {
     try {
       return PublisherState.fromJson(json);
     } on Exception {
-      return null;
+      return initialState;
     }
   }
 
@@ -81,12 +73,17 @@ class PublisherBloc extends HydratedBloc<PublisherEvent, PublisherState> {
     try {
       return state.toJson();
     } on Exception {
-      return null;
+      return initialState.toJson();
     }
   }
 
   static PublisherBloc of(BuildContext context) =>
       BlocProvider.of<PublisherBloc>(context);
+
+  @override
+  Future<void> close() {
+    return super.close();
+  }
 }
 
 class HomePreferences {
@@ -98,44 +95,4 @@ class HomePreferences {
     @required this.filterType,
   })  : assert(sortType != null, "sortType cannot be null."),
         assert(filterType != null, "filterType cannot be null.");
-}
-
-/// Used as a data class for specifying details about queries in the PageClass
-class PageQuery {
-  final int pageNumber;
-  final String publisherName;
-  PageQuery({@required this.pageNumber, @required this.publisherName});
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is PageQuery &&
-          runtimeType == other.runtimeType &&
-          pageNumber == other.pageNumber;
-
-  @override
-  int get hashCode => pageNumber.hashCode;
-}
-
-class PageCache extends Cache<PageQuery, Page> {
-  PageCache() : super(shouldPersist: false) {
-    getIt.registerSingleton(this);
-  }
-}
-
-class PageRepository extends Repository<PageQuery, Page> {
-  final PubHtmlParsingClient client;
-  final PageCache _pageCache = PageCache();
-
-  PageRepository({@required this.client});
-
-  Future<Page> get(PageQuery query) async {
-    if (_pageCache.containsKey(query)) {
-      return _pageCache[query];
-    } else {
-      Page page = await client.getPageofPublisherPackages(
-          pageNumber: query.pageNumber, publishername: query.publisherName);
-      _pageCache.add(query, page);
-      return page;
-    }
-  }
 }
