@@ -55,11 +55,11 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/logo-only-gradient.png"
+  image_path: "assets/web_hi_res_512.png"
 
 flutter:
   assets:
-    - images/
+    - assets/
   fonts:
     - family: Metropolis
       fonts:
