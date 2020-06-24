@@ -41,8 +41,7 @@ dependencies:
   flutter:
     sdk: flutter
   pub_client:
-#    git: https://github.com/ThinkDigitalSoftware/pub_client.git
-    path: ../pub_client
+    git: https://github.com/ThinkDigitalSoftware/pub_client.git
 
 dev_dependencies:
   flutter_test:
