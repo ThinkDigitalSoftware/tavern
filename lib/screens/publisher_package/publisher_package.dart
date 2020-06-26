@@ -97,8 +97,10 @@ class PublisherPackagesPage extends StatelessWidget {
             'Packages by $publisher',
             style: GoogleFonts.poppins(
               fontWeight: FontWeight.bold,
+              fontSize: MediaQuery.of(context).size.width / 22,
             ),
-            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            maxLines: 2,
             minFontSize: 2,
             maxFontSize: 30,
             wrapWords: true,
